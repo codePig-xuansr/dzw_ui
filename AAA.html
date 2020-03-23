@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="css/index.css" />
+		<link href="css/common.css" rel="stylesheet" type="text/css" />
+		<link href="css/style.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="js/vue.js"></script>
+	</head>
+	<style type="text/css">
+		[v-cloak] {
+				display: none;
+			}
+	</style>
+	<body>
+		<div id="aaa" v-cloak>
+			
+		</div>
+	</body>
+	
+	<script type="text/javascript" src="js/jquery-1.12.4.js"></script>
+	<script type="text/javascript" src="js/index.js"></script>
+	<script>
+		//http://127.0.0.1:8080/api/
+		/*$.ajax(``,{
+						type:"post",
+						dataType:"json",
+						contentType:"application/json",
+						data:JSON.stringify(),
+						success(){
+							
+						}
+					});*/
+		var aaa=new Vue({
+			el:"#aaa",
+			data:{
+				
+			},
+			methods:{
+				
+			},
+			mounted(){
+				let _this=this;
+			}
+		})
+	</script>
+</html>

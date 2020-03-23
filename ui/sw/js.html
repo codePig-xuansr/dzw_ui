@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+
+		<style>
+			.el-row {
+				margin-bottom: 20px;
+				&:last-child {
+					margin-bottom: 0;
+				}
+			}
+			
+			.el-col {
+				border-radius: 4px;
+			}
+			
+			.bg-purple-dark {
+				background: #FAF8F6;
+			}
+			
+			.bg-purple {
+				background: #FAF8F6;
+			}
+			
+			.bg-purple-light {
+				background: #FAF8F6;
+			}
+			
+			.grid-content {
+				border-radius: 4px;
+				min-height: 36px;
+			}
+			
+			.row-bg {
+				padding: 10px 0;
+				background-color: #FAF8F6;
+			}
+			
+			.demo-table-expand {
+				font-size: 0;
+			}
+			
+			.demo-table-expand label {
+				width: 90px;
+				color: #99a9bf;
+			}
+			
+			.demo-table-expand .el-form-item {
+				margin-right: 0;
+				margin-bottom: 0;
+				width: 50%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="JsVm">
+			<el-row>
+				<el-col :span="24">
+					<div class="grid-content bg-purple-dark"></div>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :span="12">
+					<div class="grid-content bg-purple">
+						<span class="demonstration">开单日期</span>
+						<el-date-picker v-model="value2" type="daterange" align="right" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
+						</el-date-picker>
+					</div>
+				</el-col>
+				<el-col :span="12">
+					<div class="grid-content bg-purple-light">
+						<span class="demonstration">车牌号</span>
+						<el-input placeholder="请输入内容" v-model="input" clearable>
+						</el-input>
+					</div>
+				</el-col>
+			</el-row>
+
+			<el-row>
+				<el-col :span="4">
+					<div class="grid-content bg-purple"> <span class="demonstration">车牌号</span>
+						<el-input placeholder="请输入内容" v-model="input" clearable>
+						</el-input>
+					</div>
+				</el-col>
+				<el-col :span="4">
+					<div class="grid-content bg-purple-light"> <span class="demonstration">车牌号</span>
+						<el-input placeholder="请输入内容" v-model="input" clearable>
+						</el-input>
+					</div>
+				</el-col>
+				<el-col :span="4"><span class="demonstration">车牌号</span>
+					<div class="grid-content bg-purple">
+						<template>
+							<el-select v-model="value" clearable placeholder="请选择">
+								<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+								</el-option>
+							</el-select>
+						</template>
+					</div>
+				</el-col>
+				<el-col :span="4"><span class="demonstration">车牌号</span>
+					<div class="grid-content bg-purple-light">
+						<template>
+							<el-select v-model="value" clearable placeholder="请选择">
+								<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+								</el-option>
+							</el-select>
+						</template>
+					</div>
+				</el-col>
+				<el-col :span="4">
+					<div class="grid-content bg-purple"></div>
+				</el-col>
+				<el-col :span="4">
+					<div class="grid-content bg-purple-light">
+						<el-button type="primary" icon="el-icon-search">搜索</el-button>
+					</div>
+				</el-col>
+			</el-row>
+
+			<template>
+				<el-table :data="js.list" style="width: 100%">
+					<el-table-column type="expand">
+						<template slot-scope="props">
+							<el-form label-position="left" inline class="demo-table-expand">
+								<el-form-item label="销售单号">
+									<span>{{ props.row.rorder }}</span>
+								</el-form-item>
+								<el-form-item label="单据类型">
+									<span>{{ props.row.orderType }}</span>
+								</el-form-item>
+								<el-form-item label="单据状态">
+									<span>{{ props.row.status }}</span>
+								</el-form-item>
+								<el-form-item label="结算方式">
+									<span>{{ props.row.clearing }}</span>
+								</el-form-item>
+								<el-form-item label="结算状态">
+									<span v-if="props.row.colsing==null">未结算</span>
+									<span v-if="props.row.colsing!=null">已结算<span>
+									
+								</el-form-item>
+								<el-form-item label="结算时间">
+									<span>{{ props.row.colsing }}</span>
+								</el-form-item>
+								<el-form-item label="结算金额">
+									<span>{{ props.row.estimated }}</span>
+								</el-form-item>
+								<el-form-item label="业务类型">
+									<span>{{ props.row.businessType }}</span>
+								</el-form-item>
+								<el-form-item label="客户名称">
+									<span>{{ props.row.khname }}</span>
+								</el-form-item>
+								<el-form-item label="维修班组">
+									<span>{{ props.row.wxgroup }}</span>
+								</el-form-item>
+								<el-form-item label="车牌号">
+									<span>{{ props.row.carHno }}</span>
+								</el-form-item>
+								<el-button type="success" icon="el-icon-check" @click="js1(props.row.rorder)" circle>结算</el-button>
+							</el-form>
+							<el-button type="text" @click="cx1( props.row.rorder)">费用明细</el-button>
+
+							<el-dialog title="提示" :visible.sync="isShow1" width="30%" :before-close="handleClose">
+								<h4  class="modal-title">费用明细</h4>
+								<small class="font-bold">销售单号:{{props.row.rorder}}</small>
+								<h5 class="font-bold">客户名：{{props.row.khname}} 客户级别：{{vip}} 客户折扣：{{vipzk}}</h5>
+								<p class="font-bold">车牌号码&nbsp;&nbsp;&nbsp;&nbsp;{{props.row.carHno}}</p>
+								<p class="font-bold">该小组维修 工时费:{{gsf}}</p>  <p class="font-bold">当前消耗工时:&nbsp;&nbsp;&nbsp;{{gs}}</p> 
+								<p class="font-bold">共消费&nbsp;&nbsp;&nbsp;{{gxf}}</p>
+								 <p style="color: #999999; size: 5px;">计算方式：(小组工时费×共消耗工时)×客户折扣</p>
+								 <p></p>
+								<template>
+									<el-table :data="xm" style="width: 100%">
+										<el-table-column prop="xmName" label="维修项目" width="180">
+										</el-table-column>
+										<el-table-column prop="wxgroup" label="维修班组" width="180">
+										</el-table-column>
+										<el-table-column prop="orderTime" label="开单时间">
+										</el-table-column>
+										 
+									</el-table>
+									
+								</template>
+								<span slot="footer" class="dialog-footer">
+    <el-button @click="isShow1 = false">取 消</el-button>
+    <el-button type="primary" @click="isShow1 = false">确 定</el-button>
+  </span>
+							</el-dialog>
+						</template>
+					</el-table-column>
+					<el-table-column label="销售单号" prop="rorder">
+					</el-table-column>
+					<el-table-column label="结算时间" prop="colsing">
+					</el-table-column>
+					<el-table-column label="车牌号" prop="carHno">
+					</el-table-column>
+				</el-table>
+			</template>
+		</div>
+
+	</body>
+	<script>
+		function getNow(s) {
+			return s < 10 ? '0' + s : s;
+		}
+		var JsVm = new Vue({
+			el: '#JsVm',
+			data: {
+				options: [{
+					value: '选项1',
+					label: '黄金糕'
+				}, {
+					value: '选项2',
+					label: '双皮奶'
+				}, {
+					value: '选项3',
+					label: '蚵仔煎'
+				}, {
+					value: '选项4',
+					label: '龙须面'
+				}, {
+					value: '选项5',
+					label: '北京烤鸭'
+				}],
+				isShow1: false,
+				value: '',
+				input: '',
+				js: {},
+			
+				xm: {},
+				
+				vip: "",
+				vipzk:"",
+				gsf:"",
+				gs:"",
+				gxf:""
+			},
+			methods: {
+				formatter(row, column) {
+					return row.address;
+				},
+				handleClose(done) {
+					this.$confirm('确认关闭？')
+						.then(_ => {
+							done();
+						})
+						.catch(_ => {});
+				},
+				cx(pageNum) {
+					let _this = this
+					$.getJSON(`http://127.0.0.1:8080/api/m/${pageNum}`, function(data) {
+
+						_this.js = data
+
+					});
+				},
+				js1(dh){
+					$.getJSON(`http://127.0.0.1:8080/api/m/mss/${dh}`, function(data) {
+
+									 _this.$message({
+          message: '结算成功',
+          type: 'success'
+        });
+
+						})
+				},
+			cx1(dh){
+						this.xm =""
+						let _this = this
+						let k=""
+						let y=""
+						
+						$.getJSON(`http://127.0.0.1:8080/api/m/ms/${dh}`, function(data) {
+
+							_this.xm = data
+						
+							_this.vip=_this.xm[0].viplb
+							_this.vipzk=_this.xm[0].vipjglx
+							_this.gsf =_this.xm[0].manHour
+							y=_this.xm[0].estimated
+							
+								
+								var myDate = new Date();
+					var year = myDate.getFullYear(); //获取当前年
+					var month = myDate.getMonth() + 1; //获取当前月
+					var date = myDate.getDate(); //获取当前日
+
+					var h = myDate.getHours(); //获取当前小时数(0-23)
+					var m = myDate.getMinutes(); //获取当前分钟数(0-59)
+
+					var now = year + '-' + getNow(month) + "-" + getNow(date) + " " + getNow(h) + ':' + getNow(m);
+				
+					 	kd = _this.xm[0].orderTime
+				
+					kd = new Date(kd.replace(/-/g, '/'));
+					now = new Date(now.replace(/-/g, '/'));
+					
+					var ms = Math.abs(now.getTime() - kd.getTime());
+					_this.gs = (ms / 1000 / 60 / 60).toFixed(1);
+	
+			var z=_this.xm[0].manHour*_this.gs
+			var z1=_this.xm[0].estimated 
+			var z2=parseInt(z)+parseInt(z1)
+					 _this.gxf =z2*_this.vipzk
+					 _this.isShow1=true
+						})
+					
+					},
+						
+			},
+
+			mounted() {
+
+				this.cx(1)
+			}
+		});
+	</script>
+
+</html>
