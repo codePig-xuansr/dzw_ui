@@ -201,18 +201,24 @@
 				user: "admin",
 				pwd: "admin"
 			},
-			methods() {
+			methods:{
 				login() {
+					let _this=this;
 					if(this.user != "admin" || this.pwd != "admin") {
-						this.$message({
+						_this.$message({
 							message: '用户名或密码错误',
-							type: 'warning'
+							type: 'error'
 						});
 					} else {
-						this.$message({
+						_this.$message({
 							message: '登陆成功',
 							type: 'success'
 						});
+						sessionStorage.setItem("name","admin");
+						sessionStorage.setItem("id","p001");
+						sessionStorage.setItem("name","admin");
+						sessionStorage.setItem("name","admin");
+						location.href='index.html';
 					}
 				}
 			}
