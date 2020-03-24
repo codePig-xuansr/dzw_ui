@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			#orderVm{
+				padding: 5px 0 0 5px;
+			}
+			.kg{
+				margin: 0 25px;
+			}
+			.tt{
+				color: rgb(30, 190, 137);
+			}
+			.el-table__header tr,.el-table__header th {
+				padding: 0;
+				height: 40px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="orderVm">
+			<el-row>
+			  <el-col :span="24">
+				<el-card class="box-card">
+					<div slot="header" class="clearfix">
+						<el-link :underline="false">维修单号</el-link>
+						<el-link type="danger" :underline="false">{{pickcar.mrecord.rorder}}</el-link>
+						<span style="margin-left: 600px;"></span>
+						<template v-if="pickcar.estimated!=0">
+							<el-popover placement="top-start" title="温馨提示" width="200" trigger="hover">
+								<p style="color: red;"><a v-if="fy">该费用仅包含维修项目费，不包含维修工时费</a><a v-if="!fy">该费用包含维修项目费和接车费，不包含维修工时费</a></p>
+							<a style="color: coral;" slot="reference">预估金额：￥<span style="color: red;">{{pickcar.estimated}}</span>元</a>
+						  </el-popover>
+						</template>
+						<span style="margin-left: 50px;"></span>
+						<el-button type="success" @click="addwx">添加维修单</el-button>
+					</div>
+					<div>
+						<el-row>
+						  <el-col :span="24">
+							  <el-form :inline="true" :rules="rus2" :model="pickcar" ref="pickcar">
+								  <el-form-item v-if="xde">
+									<a>车牌号码：</a><a class="tt" v-if="pickinfo[0]!=undefined">{{pickinfo[0].vehiclecp}}</a><span class="kg"></span> 
+									<a>车主姓名：</a><a class="tt" v-if="pickinfo[0]!=undefined">{{pickinfo[0].clientname}}</a><span class="kg"></span> 
+									<a>车辆型号：</a><a class="tt" v-if="pickinfo[0]!=undefined">{{pickinfo[0].motorcyclecxmc}}</a><span class="kg"></span> 
+									<a>车辆品牌：</a><a class="tt" v-if="pickinfo[0]!=undefined">{{pickinfo[0].brandname}}</a><span class="kg"></span> 
+									<a>发动机品牌：</a><a class="tt" v-if="pickinfo[0]!=undefined">{{pickinfo[0].enginename}}</a><span class="kg"></span> 
+									<a>发动机号：</a><a class="tt" v-if="pickinfo[0]!=undefined">{{pickinfo[0].vehicleffdjh}}</a><span class="kg"></span> 
+								  </el-form-item>
+								<br>
+								<el-form-item label="服务顾问" prop="consultant">
+									<template>
+										<el-select v-model="pickcar.consultant" placeholder="请选择" size="small" style="width: 120px;">
+										  <el-option v-for="(temp,index) in cs" :label="temp.name" :value="temp.name" :key="temp.name"></el-option>
+										</el-select>
+									  </template>
+								</el-form-item>
+								<span class="kg"></span>
+								<el-form-item label="业务类别：" prop="businesstype"> 
+									<template>
+										<el-select v-model="pickcar.businesstype" placeholder="请选择" size="small" style="width: 120px;">
+										  <el-option v-for="(temp,index) in bs" :label="temp.name" :value="temp.name" :key="temp.name"></el-option>
+										</el-select>
+									  </template>
+								</el-form-item>
+								<span class="kg"></span>
+								<el-form-item label="施工班次：" prop="construction">
+									<template>
+										<el-select v-model="pickcar.construction" placeholder="请选择" size="small" style="width: 120px;">
+										  <el-option label="白天" value="白天"></el-option>
+										  <el-option label="晚上" value="晚上"></el-option>
+										</el-select>
+									  </template>
+								</el-form-item>
+								<span class="kg"></span>
+								<el-form-item label="结算方式" prop="clearing">
+									<template>
+										<el-select v-model="pickcar.clearing" placeholder="请选择" size="small" style="width: 120px;">
+										  <el-option label="现结" value="现结"></el-option>
+										  <el-option label="挂账" value="挂账"></el-option>
+										  <el-option label="返修" value="返修"></el-option>
+										</el-select>
+									  </template>
+								</el-form-item>
+								<br><br>
+								<el-form-item label="驾驶员：" prop="driver">
+									<template> <el-input v-model="pickcar.driver" size="small" style="width: 120px;"></el-input></template>
+								</el-form-item>
+								<span class="kg"></span>
+								<el-form-item label="联系电话：" prop="driverphone">
+									<template> <el-input v-model="pickcar.driverphone" oninput="this.value=this.value.replace(/[^\d]/g,'')" size="small" style="width: 170px;"></el-input></template>
+								</el-form-item>
+								<span class="kg"></span>
+								<el-form-item label="预计完工：">
+									<el-link type="danger" :underline="false">2小时内</el-link>
+								</el-form-item>
+								<br><br>
+								<el-form-item label="备注说明" prop="repairs">
+									<template><el-input v-model="pickcar.repairs" type="textarea" style="width: 300px;"></el-input></template>
+								</el-form-item>
+								<el-form-item v-if="lc" label="接车里程数：">
+									<template><el-input v-model="km" oninput="this.value=this.value.replace(/[^\d]/g,'')" size="small" placeholder="单位：km"></el-input> </template>
+								</el-form-item>
+							  </el-form>
+							  <el-form>
+								<el-form-item>
+									<el-tabs type="border-card" >				
+										<el-tab-pane label="维修项目">
+											<template>
+												<el-row>
+												  <el-col :span="24">
+													  <el-button type="warning" @click="addone=true">添加维修项目</el-button>
+													  <span style="margin-left: 840px;"></span>
+													  <el-button type="danger" icon="el-icon-delete" @click="del">删除</el-button>
+												  </el-col>
+												</el-row>
+												<div style="margin-top: 5px;"></div>
+												<el-row>
+												  <el-col :span="24">
+													  <template>
+														  <el-table :data="pickcar.maintains" border empty-text="请添加维修项目">
+															<el-table-column v-for="(temp,index) in ms" :label="temp.name" :align="'center'" :resizable="false" :key="temp.name">
+																<template slot-scope="scope">
+																	<span v-if="temp.values!=0">{{scope.row[temp.values]}}</span>
+																	<span v-if="temp.values==0">
+																		<template>
+																			<el-checkbox-group v-model="wxs">
+																				<el-checkbox :label="scope.row.coding">&nbsp;</el-checkbox>
+																			</el-checkbox-group>
+																		  </template>
+																	</span>
+																  </template>
+															</el-table-column>
+														  </el-table>
+													  </template>
+												  </el-col>
+												</el-row>
+											</template>
+										</el-tab-pane>
+										<el-tab-pane label="领料情况"></el-tab-pane>
+										<el-tab-pane label="附加项目"></el-tab-pane>
+										<el-tab-pane label="结算信息"></el-tab-pane>
+									  </el-tabs>
+								</el-form-item>
+							  </el-form>
+						  </el-col>
+						</el-row>
+					</div>
+				</el-card>
+			  </el-col>
+			</el-row>
+			<!--模态框-->
+			<el-dialog @opened="oo" title="添加维修项目" :visible.sync="addone">
+				<el-dialog width="930px" @opened="ss"  title="选择维修项目" :visible.sync="adds" append-to-body>
+					<div id="sont"></div>
+					<div slot="footer" class="dialog-footer">
+						<el-button @click="scc">确认</el-button>
+					  </div>
+				</el-dialog>
+				<div id="ocnt"></div>
+				<div slot="footer" class="dialog-footer">
+				  <el-button @click="addone = false">取 消</el-button>
+				  <el-button type="primary" @click="save1">确定</el-button>
+				</div>
+			  </el-dialog>
+		</div>
+	</body>
+	<script>
+		
+		var orderVm =new Vue({
+			el:'#orderVm',
+			data:{
+				xde:false,
+				fy:true,
+				lc:false,
+				km:'',
+				d:true,
+				checked:false,
+				addone:false,
+				adds:false,
+				pickinfo:{},
+				cs:[{name:'包组长'},{name:'刘来钱'},{name:'花生奶'},{name:'黄渤'},{name:'郭建'}],
+				bs:[{name:'中国重汽'},{name:'陕汽重卡'},{name:'中国一汽'},{name:'上汽红岩'},{name:'中轻型车'},{name:'钣喷'},{name:'保养'}],
+				ms:[{name:'项目编码',values:'coding'},{name:'项目名称',values:'itemName'},{name:'数量',values:'num'},{name:'优惠前单价',values:'standard'},{name:'优惠后单价',values:'vIP'},{name:'故障描述',values:'gztext'},{name:'故障原因',values:'gzcause'},{name:'维修班组',values:'wxgroup'},{name:'操作',values:'0'}],
+				pickcar:{
+					carno:'',
+					consultant:'',
+					businesstype:'',
+					construction:'',
+					clearing:'',
+					repairs:'',
+					driver: '',
+					driverphone: '',
+					estimated:'0',
+					mrecord: {
+							rorder: '',
+							status1: '接车中', 
+							ordertype: '维修'
+						},
+					maintains:[]
+				},
+				wxs:[],
+				//表单基础验证
+				rus2:{
+					consultant:[{required: true, message:'请选择服务顾问', trigger: 'change'}],
+					businesstype:[{required: true, message:'请选择业务类别', trigger: 'change'}],
+					construction:[{required: true, message:'请选择施工班次', trigger: 'change'}],
+					clearing:[{required: true, message:'请选择结算方式', trigger: 'change'}],
+					repairs:[{required: true, message:'请填写备注说明', trigger: 'blur'}],
+					driver:[{required: true, message:'请填写驾驶员', trigger: 'blur'}],
+					driverphone:[{required: true, message:'请填写手机号码', trigger: 'blur'}]
+					
+				}
+			},
+			methods:{
+				oo(){
+					$("#ocnt").load('html/lt/addOne.html');
+				},
+				//添加维修项目确定
+				save1(){
+					let _this=this;
+					oneVm.$refs['minfo'].validate((valid)=>{
+						if(valid){
+							//选择维修项目判断
+							if(oneVm.coding[0]==undefined){
+								this.$message({
+									type:'error',
+									message:'请至少选择一项维修项目'
+								});
+								return;
+							}
+							let cd= oneVm.coding;
+							for(let i=0;i<cd.length;i++){
+								cd[i].num=1;
+								cd[i].gztext = oneVm.minfo.gztext;
+								cd[i].gzcause = oneVm.minfo.gzcause;
+								cd[i].wxgroup = oneVm.minfo.wxgroup;
+								//计算价格
+								_this.pickcar.estimated = parseInt(_this.pickcar.estimated) + parseInt(cd[i].standard);
+							}
+							_this.addone=false;
+							_this.pickcar.maintains=cd;
+						}else{
+							return false;
+						}
+					});
+				},
+				ss(){
+					$("#sont").load("html/lt/addS.html");
+				},
+				//选择维修项目确定框
+				scc(){
+					let c= addsVm.checked;
+					//每次添加前清空数组
+					oneVm.wxs1=[];
+					addsVm.checked=[];
+					for(let i=0;i<c.length;i++){
+						//添加维修项目名到多选框,数组绑定
+						oneVm.wxs1.push(c[i].itemName);
+					}
+					//主体数据
+					oneVm.coding=c;
+					this.adds=false;
+				},
+				del(){
+					//console.log(this.wxs);
+				},
+				//新增接车 
+				addwx(){
+					let _this=this;
+					_this.pickcar.carno=sessionStorage.getItem("cno");
+					orderVm.$refs['pickcar'].validate((valid)=>{
+						if(valid){
+							//验证维修项目
+							if(_this.pickcar.maintains[0]==undefined){
+								this.$message({
+									type:'error',
+									message:'请至少选择一项维修项目'
+								});
+								return;
+							}
+
+							this.$confirm('确认添加? 添加后不可撤销', '警告', {
+							confirmButtonText: '确定',
+							cancelButtonText: '取消',
+							type: 'warning',
+							}).then(() => {
+								jQuery.ajax({
+									url: 'http://localhost:8080/api/cars/addcar',
+									type: 'post',
+									dataType: 'json',
+									contentType: 'application/json',
+									data: JSON.stringify(_this.pickcar),
+									success() {
+										_this.$message({
+											type: 'success',
+											message: '新增成功!'
+										});
+										//重新加载页面
+										indexVm.To('html/lt/maintenanceOrder.html');
+									},
+									error() {
+										_this.$message({
+											type: 'error',
+											message: '未知错误!'
+										});
+									}
+								})
+        					});
+						}else{
+							return false;
+						}
+					});
+				}
+			},
+			mounted(){
+				let _this=this;
+
+				jQuery.getJSON('http://localhost:8080/api/cars/mNo',(data)=>{
+						_this.pickcar.mrecord.rorder="ER"+data;
+				});
+
+
+				let d=sessionStorage.getItem("d");
+				if(d=='1'){
+					//获取之后清除缓存
+					sessionStorage.removeItem("d");
+					//显示里程数
+					_this.lc=true;
+					_this.fy=false;
+					_this.pickcar.mrecord.ordertype='救援';
+					//如果为救援开单，成功后需修改该车状态，结算同样
+					
+				}else{
+					_this.xde=true;
+					let carno=sessionStorage.getItem("cno");
+					jQuery.getJSON(`http://localhost:8080/api/cars/pickinfo/${carno}`,(data)=>{
+						_this.pickinfo = data;
+						_this.pickcar.driver = data[0].vehiclejsy;
+						_this.pickcar.driverphone = data[0].vehicledh;
+					});
+				}
+				sessionStorage.removeItem("cno");
+			}
+		});
+	</script>
+</html>

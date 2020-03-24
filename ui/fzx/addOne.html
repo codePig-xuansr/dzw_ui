@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			#oneVm{
+				padding: 5px 0 0 5px;
+			}
+			#xz{
+				color: red;
+			}
+			#xz:hover{
+				text-decoration: underline red;
+			}
+			body{
+				padding-right: 0 !important;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="oneVm">
+			<el-row>
+			  <el-col :span="24">
+				  <el-form :rules="rules" :model="minfo" ref="minfo">
+					<el-form-item  label="维修项目：">
+						<template>
+							<el-select v-model="wxs1" multiple>
+								 <el-option v-for="item in wxs1" :label="item" :value="item">
+								</el-option> 
+							  </el-select>
+						</template>
+						<span style="margin-left: 10px;"></span>
+						<el-button type="danger" plain size="small" @click="open">选择项目</el-button>
+					</el-form-item>
+					<el-form-item prop="wxgroup" label="维修班组">
+						<template>
+							<el-select v-model="minfo.wxgroup">
+								<el-option-group v-for="(temp,index) in arts" :label=`${temp.classname}${k}${temp.manHour}元小时`>
+								  <el-option v-for="(tmp,dex) in temp.teams" :lable="tmp.teamname" :value="tmp.teamname"></el-option>
+								</el-option-group>
+							</el-select>
+						</template>
+					</el-form-item>
+					<el-form-item prop="gztext" label="故障描述：">
+						<el-input v-model="minfo.gztext" type="textarea"></el-input>
+					</el-form-item>
+					<el-form-item prop="gzcause" label="故障原因：">
+						<el-input v-model="minfo.gzcause" type="textarea"></el-input>
+					</el-form-item>
+				  </el-form>
+			  </el-col>
+			</el-row>
+		</div>
+	</body>
+	<script>
+		var oneVm=new Vue({
+			el:'#oneVm',
+			data:{
+				k:'  ',
+				wxs1:[],
+				coding:[],
+				minfo: {
+					gztext:'',
+					gzcause:'',
+					wxgroup:''
+				},
+				arts:{},
+				//表单基础验证
+				rules:{
+					wxgroup:[{required: true, message:'请选择维修班组', trigger: 'change'}],
+					gztext:[{required: true, message:'请输入故障描述', trigger: 'blur'}],
+					gzcause:[{required: true, message:'请输入故障原因', trigger: 'blur'}]
+				}
+			},
+			mounted(){
+				let _this=this;
+				jQuery.getJSON('http://localhost:8080/api/cars/art', function(data) {
+					_this.arts = data;
+				});
+			},
+			methods:{
+				open(){
+					orderVm.adds=true;
+				}
+			}
+		});
+	</script>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="css/lt/mdui.css">
+		<link rel="stylesheet" href="css/lt/app.css">
+		<style>
+			#addsVm{
+				padding: 5px 0 0 5px;
+			}
+			.el-dialog__body{
+				padding-top: 0 !important;
+				padding-left: 5px !important;
+			}
+			body{
+				padding-right: 0 !important;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="addsVm">
+			<el-row>
+			  <el-col :span="6">
+				<ul class="mdui-list app-slide-menu app-collapse-menu" mdui-collapse="{accordion: true}">
+					<li class="mdui-collapse-item  app-hide-list  app-collapse-list" v-for="(temp,index) in type">
+						<div class="mdui-collapse-item-header mdui-list-item mdui-ripple  mdui-p-x-0">
+							<div class="menu-click mdui-list-item-content mdui-text-left">
+								{{temp.pname}}
+								<i class="mdui-collapse-item-arrow mdui-icon material-icons mdui-float-right">&#xe5cc;</i>
+							</div>
+						</div>
+						<ul class="mdui-collapse-item-body mdui-list mdui-list-dense">
+							<li class="mdui-list-item mdui-ripple app-sub-list  app-hide-list" v-for="(tmp,idx) in temp.pdetails" @click="info(tmp.detailno)">
+								<a href="#" class="app-list-item-link mdui-text-left" >{{tmp.detailno+tmp.projectchild}}</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			  </el-col>
+			  <el-col :span="18">
+				<template>
+					<el-table :data="minfo" border>
+						<el-table-column v-for="(temp,index) in ms" :label="temp.name" align="center" :resizable="false">
+							<template slot-scope="scope">
+								<span v-if="temp.values!=0">{{scope.row[temp.values]}}</span>
+								 <span v-if="temp.values==0">
+									<template>
+										<el-checkbox-group v-model="checked">
+											<!-- 空格为了不让lable显示 -->
+											<el-checkbox :label="scope.row">&nbsp;</el-checkbox>
+										</el-checkbox-group>
+									  </template>
+								</span> 
+							  </template>
+						</el-table-column>
+					</el-table>
+				</template>
+			  </el-col>
+			</el-row>
+		</div>
+	</body>
+	<script>
+		var addsVm=new Vue({
+			el:'#addsVm',
+			data:{
+				type:{},
+				minfo:[],
+				ms:[{name:'选择',values:'0'},{name:'项目类型',values:'projectChild'},{name:'项目编码',values:'coding'},
+				{name:'项目名称',values:'itemName'},{name:'售价按',values:'priceType'},
+				{name:'标准价',values:'standard'},{name:'会员价',values:'vIP'}],
+				checked:[]
+			},
+			methods:{
+				info(pno){
+					let _this=this;
+					jQuery.getJSON(`http://localhost:8080/api/cars/minfo/${pno}`,{},function(data){
+						_this.minfo=data;
+					});
+				},
+			},
+			mounted(){
+				let _this=this;
+				this.$nextTick(()=>{
+					jQuery.getJSON("http://localhost:8080/api/cars/ptype",function(data){
+						_this.type=data;
+					})
+				//默认查询一项
+					jQuery.getJSON(`http://localhost:8080/api/cars/minfo/12`,{},function(data){
+						_this.minfo=data;
+					});
+				})
+				
+			}
+		});
+	</script>
+	<script src="js/lt/mdui.js"></script>
+</html>

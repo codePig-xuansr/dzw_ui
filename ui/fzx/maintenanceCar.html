@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			#CarVm{
+				padding: 5px 0 0 5px;
+			}
+			.el-divider--horizontal{
+				margin: 5px 0 !important;
+			}
+			.kg{
+				margin: 0 10px;
+			}
+			.demo-table-expand {
+    			font-size: 0;
+  			}
+  			.demo-table-expand label {
+    			width: 90px;
+    			color: #99a9bf;
+  			}
+  			.demo-table-expand .el-form-item {
+				margin-right: 0;
+				margin-bottom: 0;
+				width: 50%;
+  			}
+			  .myse .el-input__inner{
+				border-top:0;
+				border-left:0;
+				border-right:0;
+				border-radius: 0;
+				width: 130px;
+				border-bottom: 1px solid #409eff;
+				color:#409eff;
+			}
+			.myse .el-input__inner:hover{
+				border-bottom: 1px solid #409eff !important;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="CarVm">
+			  <el-col :span="24">
+				<el-card class="box-card">
+					<div slot="header" class="clearfix">
+					  <el-link :underline="false" type="success">业务类型：</el-link>
+					  <el-select class="myse" v-model="yw">
+						<el-option label="维修接车" value="1"></el-option>
+						<el-option label="救援开单" value="2"></el-option>
+					  </el-select>
+					  <span style="margin-left:770px;"></span>
+					  <el-button v-if="yw=='1'" type="primary" @click="jcar">维修接车</el-button>
+					  <el-button v-if="yw=='2'" type="danger" @click="jcar">救援开单</el-button>
+					</div>
+					<div v-if="yw=='1'">
+						<el-row>
+							<el-form :inline="true" :model="form1" label-width="80px" >
+							  <el-form-item>
+								<template>
+									<el-select @change="carinfo" v-model="carNo" filterable remote reserve-keyword placeholder="请输入车牌号"
+									  :remote-method="remoteMethod"
+									  :loading="loading">
+									  <el-option v-for="item in vcps" :key="item.vehiclecp" :label="item.vehiclecp" :value="item.vehiclecp">
+									  </el-option>
+									</el-select>
+								  </template>
+							  </el-form-item>
+							  	<br>
+							  <div>
+							  <el-form-item>
+								<a>车主：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].clientname}}</a> <span class="kg"></span> 
+								<a>地址：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].clientaddress}}</a> <span class="kg"></span> 
+								<a>驾驶员：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].vehiclejsy}}</a> <span class="kg"></span> 
+								<a>手机号：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].vehicledh}}</a> <span class="kg"></span> 
+							</el-form-item>
+							<br>
+							<el-form-item>
+								<a>品牌：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].brandname}}</a> <span class="kg"></span> 
+								<a>车型：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].motorcyclecxmc}}</a> <span class="kg"></span> 
+								<a>发动机品牌：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].enginename}}</a> <span class="kg"></span> 
+								<a>发动机号：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].vehicleffdjh}}</a> <span class="kg"></span> 
+							</el-form-item>
+						</div>
+							</el-form>
+							<template>
+								<el-tabs v-model="tabs" @tab-click="tabck">
+								  <el-tab-pane label="今日维修" name="1">
+									 <template>
+										<el-table :data="temps" >
+											<!--展开行-->
+											<el-table-column type="expand">
+												<template slot-scope="scope">
+													<el-form label-position="left" inline class="demo-table-expand">
+														<el-form-item v-for="(temp,index) in st" :label="temp.name">
+															<span v-if="scope.row[temp.value]!=''">{{scope.row[temp.value]}}</span>
+															<span v-if="scope.row[temp.value]==''">无</span>
+														  </el-form-item>
+													</el-form>
+												</template>
+											</el-table-column>
+											<!--基本显示行-->
+										  <el-table-column v-for="(temp,index) in stsy" :label="temp.name" align="center" :resizable="false">
+											  <template slot-scope="scope">
+												<span>{{scope.row[temp.value]}}</span>
+											  </template>
+										  </el-table-column>
+										</el-table>
+									</template> 
+									<div v-if="temps[0]==undefined">
+										<el-link type="danger" :underline="false">暂时还没有数据哦</el-link>
+									</div>
+								  </el-tab-pane>
+								  <el-tab-pane label="历史维修" name="2">
+									<template>
+										<el-table :data="temps" >
+											<!--展开行-->
+											<el-table-column type="expand">
+												<template slot-scope="scope">
+													<el-form label-position="left" inline class="demo-table-expand">
+														<el-form-item v-for="temp in st" :key="temp.value" :label="temp.name" >
+															<span v-if="scope.row[temp.value]!=''">{{scope.row[temp.value]}}</span>
+															<span v-if="scope.row[temp.value]==''">无</span>
+														  </el-form-item>
+													</el-form>
+												</template>
+											</el-table-column>
+											<!--基本显示行-->
+										  <el-table-column v-for="temp in stsy" :key="temp.value" :label="temp.name" :align="'center'" :resizable="false" >
+											  <template slot-scope="scope">
+												<span>{{scope.row[temp.value]}}</span>
+											  </template>
+										  </el-table-column>
+										</el-table>
+									</template> 
+								  </el-tab-pane>
+								</el-tabs>
+							  </template>
+						</el-row>
+					</div>
+					<div v-if="yw=='2'">
+						<el-row>
+						  <el-col :span="24">
+							  <span style="font-size: 14px;">请选择派车车辆：</span>
+							  <el-select v-model="pc" placeholder="请选择">
+								<el-option v-for="temp in pcs" :value="temp.cno" v-if="temp.status=='0'" :key="temp.cno">
+								  <span style="float: left">{{temp.cno}}</span>
+								  <span style="float: right; color: #8492a6; font-size: 13px">空闲</span>
+								</el-option>
+								<el-option v-for="temp in pcs" value="temp.cno" v-if="temp.status!='0'" :disabled="true" :key="temp.cno">
+									<span style="float: left">{{temp.cno}}</span>
+									<span style="float: right; color: #8492a6; font-size: 13px">派车中</span>
+								  </el-option>
+							  </el-select>
+						  </el-col>
+						</el-row>
+					</div>
+				  </el-card>
+			  </el-col>
+			</el-row>
+		</div>
+	</body>
+	<script>
+		var CarVm=new Vue({
+			el:'#CarVm',
+			data:{
+				yw:'1',
+				tabs:'1',
+				form1:{
+					carNo:'',
+				},
+				//详细显示列
+				st:[{name:'车牌号',value:'carHno'},{name:'维修单号',value:'orderType'},{name:'客户名称',value:'clientname'},{name:'手机',value:'clientiphone'},
+					{name:'业务类型',value:'btype'},{name:'单据状态',value:'status'},{name:'单据类型',value:'orderType'},{name:'服务顾问',value:'consultant'},{name:'开单时间',value:'orderTime'},
+					{name:'预计完工',value:'expectedCompletion'},{name:'完工时间',value:'complterTime'},{name:'结算时间',value:'colsing'}
+				],
+				//基本显示列
+				stsy:[{name:'维修单号',value:'rorder'},{name:'单据状态',value:'status'},{name:'业务类型',value:'btype'},{name:'车牌号',value:'carHno'},{name:'客户名称',value:'clientname'}],
+				carNo:'',
+				loading:false,
+				vcps:[],
+				ctcar:{},
+				temps:[{
+					carHno:'111',
+					rorder:'111',
+					orderType:'222',
+					clientname:'333',
+					clientiphone:'444',
+					btype:'555',
+					status:'666',
+					orderType:'777',
+					consultant:'888',
+					orderTime:'999',
+					expectedCompletion:'111',
+					complterTime:'222',
+					colsing:'333'
+				}],
+				pcs:[],
+				pc:'',
+				jct:true,
+			},
+			methods:{
+				tabck(){
+					let _this=this;
+					let carno= this.carNo;
+					//this.tabs 1=今日维修 2=历史维修
+					if(_this.tabs==1){
+						jQuery.getJSON(`http://localhost:8080/api/cars/vehicle/${carno}/1`,function(data) {
+							_this.temps = data;
+						});
+					}else{
+						jQuery.getJSON(`http://localhost:8080/api/cars/vehicle/${carno}/2`,function(data) {
+							_this.temps = data;
+						});
+					}
+				},
+				remoteMethod(info){
+					let _this=this;
+					if(info!=''){
+						_this.loading=true;
+						setTimeout(()=>{
+							_this.loading=false;
+							jQuery.getJSON(`http://localhost:8080/api/cars/vcp/${info}`,function(data){
+								_this.vcps=data;
+							});
+						},1200);
+					}else{
+						_this.vcps=[];
+					}
+					
+				},
+				carinfo(){
+					let _this=this;
+					let carno= this.carNo;
+					//车辆基本信息
+					jQuery.getJSON(`http://localhost:8080/api/cars/carinfo/${carno}`,function(data) {
+						_this.ctcar = data;
+					});
+					
+					//维修数据，判断当前选择下标
+					if(_this.tabs==1){
+						jQuery.getJSON(`http://localhost:8080/api/cars/vehicle/${carno}/1`,function(data) {
+							_this.temps = data;
+						});
+					}else{
+						jQuery.getJSON(`http://localhost:8080/api/cars/vehicle/${carno}/2`,function(data) {
+							_this.temps = data;
+						});
+					}
+				},
+				jcar(){
+					let _this=this;
+					//判断业务类型
+					if(_this.yw=='2'){
+						let carno= _this.pc;
+						if(carno==''){
+							_this.$message({
+									message: '请选择车辆',
+									type: 'error'
+								});
+							return;
+						}
+						sessionStorage.setItem('d',1);
+						sessionStorage.setItem("cno",carno);
+						indexVm.To('ui/fzx/maintenanceOrder.html');
+					}else{
+						let carno= _this.carNo;
+						if(carno==''){
+							_this.$message({
+									message: '请选择车辆',
+									type: 'error'
+								});
+							return;
+						}
+						//判断是否有接车中车辆
+						jQuery.getJSON(`http://localhost:8080/api/cars/pcar/${carno}`,(data)=>{
+							if(data=="false"){
+								_this.$message({
+									message: '该车辆正在接车,无法维修',
+									type: 'warning'
+								});
+								return;
+							}else{
+								sessionStorage.setItem("cno",carno);
+								indexVm.To('ui/fzx/maintenanceOrder.html');
+							}
+						});
+					}
+				}
+			},
+			mounted(){
+				let _this=this;
+				jQuery.getJSON('http://localhost:8080/api/cars/qas',(data)=>{
+					_this.pcs=data;
+				});
+			}
+		});
+	</script>
+</html>
