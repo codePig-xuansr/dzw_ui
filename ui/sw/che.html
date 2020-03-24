@@ -53,7 +53,7 @@
 				</el-col>
 				<p></p>
 				<h></h>
-	<el-dialog title="修改客户" :visible.sync="isShow3">
+				<el-dialog title="修改客户" :visible.sync="isShow3">
 					<el-form :model="xgkh" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 						<el-form-item label="客户编码" prop="name">
 							<el-input v-model="xgkh.clientid"></el-input>
@@ -148,9 +148,9 @@
 					<el-col :span="24">
 						<div class="grid-content bg-purple-dark">
 							<template>
-								<el-table v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)" :data="kh.list"   height="250" border style="width: 100%">
+								<el-table v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)" :data="kh.list" height="250" border style="width: 100%">
 
-									<el-table-column fixed prop="clientid" label="编号" width="150"  >
+									<el-table-column fixed prop="clientid" label="编号" width="150">
 									</el-table-column>
 
 									<el-table-column prop="clientname" label="客户姓名" width="120">
@@ -176,14 +176,10 @@
 											<el-button type="text" @click="dj(scope.row.clientid)">查看</el-button>
 											<el-button type="text" size="small">新增</el-button>
 											<el-button type="text" size="small" @click="xg(scope.row.clientid)">编辑</el-button>
-	
-<el-button  slot="reference" type="text" @click="sckh(scope.row.clientid)">删除</el-button>
 
-									
+											<el-button slot="reference" type="text" @click="sckh(scope.row.clientid)">删除</el-button>
 
 										</template>
-																			
-
 
 									</el-table-column>
 								</el-table>
@@ -200,7 +196,7 @@
 								<el-col :span="24">
 									<div class="grid-content bg-purple-dark">
 										<template>
-											<el-table :data="cl.list" border style="width: 100%"   height="250">
+											<el-table :data="cl.list" border style="width: 100%" height="250">
 												<el-table-column fixed prop="vehiclecp" label="车牌" width="150">
 												</el-table-column>
 
@@ -400,22 +396,22 @@
 						contentType: 'application/json',
 						data: JSON.stringify(_this.xzkh),
 						success(data) {
-							 _this.$message({
-          message: '恭喜你，这是一条成功消息',
-          type: 'success'
-        });
-					_this.cx(1, 1)
-					_this.cx1(1)		
+							_this.$message({
+								message: '恭喜你，这是一条成功消息',
+								type: 'success'
+							});
+							_this.cx(1, 1)
+							_this.cx1(1)
 						}
 					});
 				},
 				dj(id) {
-				
+
 					let _this = this
 					let pageNum = 1
 					let name = id
 					$.getJSON(`http://127.0.0.1:8080/api/ve/ves/${pageNum}/${name}`, function(data) {
-						
+
 						_this.cl = data
 
 					})
@@ -426,7 +422,7 @@
 					$.getJSON(`http://127.0.0.1:8080/api/client/${pageNum}`, function(data) {
 
 						_this.kh = data
-						
+
 					})
 					$.getJSON(`http://127.0.0.1:8080/api/vip/${pageNum1}`, function(data) {
 
@@ -439,7 +435,7 @@
 					$.getJSON(`http://127.0.0.1:8080/api/ve/${pageNum}`, function(data) {
 
 						_this.cl = data
-					
+
 					})
 				},
 				handleClose(done) {
@@ -479,8 +475,8 @@
 
 				},
 				xg(id) {
-				
-						const loading = this.$loading({
+
+					const loading = this.$loading({
 						lock: true,
 						text: '努力更新中....',
 						spinner: 'el-icon-loading',
@@ -488,22 +484,19 @@
 					});
 					//延迟2秒，模拟网络延迟
 					setTimeout(() => {
-							this.isShow3 = true
+						this.isShow3 = true
 						loading.close(); //关闭加载块【非常重要】
-						let _this =this;
-					
-							$.getJSON(`http://127.0.0.1:8080/api/client/clients/${id}`, function(data) {
-					
+						let _this = this;
+
+						$.getJSON(`http://127.0.0.1:8080/api/client/clients/${id}`, function(data) {
+
 							_this.xgkh = data
 							_this.cx(1, 1)
-					_this.cx1(1)
-							
+							_this.cx1(1)
+
 						})
-								
-						
 
 					}, 2000);
-				
 
 				},
 				xg1() {
@@ -513,42 +506,41 @@
 						contentType: 'application/json',
 						data: JSON.stringify(_this.xgkh),
 						success(data) {
-						 _this.$message({
-          message: '恭喜你，修改成功',
-          type: 'success'
-        });
-        	_this.cx(1, 1)
-					_this.cx1(1)
+							_this.$message({
+								message: '恭喜你，修改成功',
+								type: 'success'
+							});
+							_this.cx(1, 1)
+							_this.cx1(1)
 						}
 					});
 
 				},
-				sckh(id){
-					  this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$message({
-          	
-            type: 'success',
-            message: '删除成功!'
-          });
-          var _this=this
-          jQuery.ajax(`http://127.0.0.1:8080/api/client/clients/${id}`,{
-							type:'delete',
+				sckh(id) {
+					this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						type: 'warning'
+					}).then(() => {
+						this.$message({
+
+							type: 'success',
+							message: '删除成功!'
+						});
+						var _this = this
+						jQuery.ajax(`http://127.0.0.1:8080/api/client/clients/${id}`, {
+							type: 'delete',
 							success(data) {
 								_this.cx(1, 1)
-							_this.cx1(1)
+								_this.cx1(1)
 							}
 						});
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });          
-        });
-      
+					}).catch(() => {
+						this.$message({
+							type: 'info',
+							message: '已取消删除'
+						});
+					});
 
 				},
 				addPerson1() {

@@ -168,14 +168,15 @@
 							<el-button type="text" @click="cx1( props.row.rorder)">费用明细</el-button>
 
 							<el-dialog title="提示" :visible.sync="isShow1" width="30%" :before-close="handleClose">
-								<h4  class="modal-title">费用明细</h4>
+								<h4 class="modal-title">费用明细</h4>
 								<small class="font-bold">销售单号:{{props.row.rorder}}</small>
 								<h5 class="font-bold">客户名：{{props.row.khname}} 客户级别：{{vip}} 客户折扣：{{vipzk}}</h5>
 								<p class="font-bold">车牌号码&nbsp;&nbsp;&nbsp;&nbsp;{{props.row.carHno}}</p>
-								<p class="font-bold">该小组维修 工时费:{{gsf}}</p>  <p class="font-bold">当前消耗工时:&nbsp;&nbsp;&nbsp;{{gs}}</p> 
+								<p class="font-bold">该小组维修 工时费:{{gsf}}</p>
+								<p class="font-bold">当前消耗工时:&nbsp;&nbsp;&nbsp;{{gs}}</p>
 								<p class="font-bold">共消费&nbsp;&nbsp;&nbsp;{{gxf}}</p>
-								 <p style="color: #999999; size: 5px;">计算方式：(小组工时费×共消耗工时)×客户折扣</p>
-								 <p></p>
+								<p style="color: #999999; size: 5px;">计算方式：(小组工时费×共消耗工时)×客户折扣</p>
+								<p></p>
 								<template>
 									<el-table :data="xm" style="width: 100%">
 										<el-table-column prop="xmName" label="维修项目" width="180">
@@ -184,9 +185,9 @@
 										</el-table-column>
 										<el-table-column prop="orderTime" label="开单时间">
 										</el-table-column>
-										 
+
 									</el-table>
-									
+
 								</template>
 								<span slot="footer" class="dialog-footer">
     <el-button @click="isShow1 = false">取 消</el-button>
@@ -233,14 +234,14 @@
 				value: '',
 				input: '',
 				js: {},
-			
+
 				xm: {},
-				
+
 				vip: "",
-				vipzk:"",
-				gsf:"",
-				gs:"",
-				gxf:""
+				vipzk: "",
+				gsf: "",
+				gs: "",
+				gxf: ""
 			},
 			methods: {
 				formatter(row, column) {
@@ -261,59 +262,58 @@
 
 					});
 				},
-				js1(dh){
+				js1(dh) {
 					$.getJSON(`http://127.0.0.1:8080/api/m/mss/${dh}`, function(data) {
 
-									 _this.$message({
-          message: '结算成功',
-          type: 'success'
-        });
+						_this.$message({
+							message: '结算成功',
+							type: 'success'
+						});
 
-						})
+					})
 				},
-			cx1(dh){
-						this.xm =""
-						let _this = this
-						let k=""
-						let y=""
-						
-						$.getJSON(`http://127.0.0.1:8080/api/m/ms/${dh}`, function(data) {
+				cx1(dh) {
+					this.xm = ""
+					let _this = this
+					let k = ""
+					let y = ""
 
-							_this.xm = data
-						
-							_this.vip=_this.xm[0].viplb
-							_this.vipzk=_this.xm[0].vipjglx
-							_this.gsf =_this.xm[0].manHour
-							y=_this.xm[0].estimated
-							
-								
-								var myDate = new Date();
-					var year = myDate.getFullYear(); //获取当前年
-					var month = myDate.getMonth() + 1; //获取当前月
-					var date = myDate.getDate(); //获取当前日
+					$.getJSON(`http://127.0.0.1:8080/api/m/ms/${dh}`, function(data) {
 
-					var h = myDate.getHours(); //获取当前小时数(0-23)
-					var m = myDate.getMinutes(); //获取当前分钟数(0-59)
+						_this.xm = data
 
-					var now = year + '-' + getNow(month) + "-" + getNow(date) + " " + getNow(h) + ':' + getNow(m);
-				
-					 	kd = _this.xm[0].orderTime
-				
-					kd = new Date(kd.replace(/-/g, '/'));
-					now = new Date(now.replace(/-/g, '/'));
-					
-					var ms = Math.abs(now.getTime() - kd.getTime());
-					_this.gs = (ms / 1000 / 60 / 60).toFixed(1);
-	
-			var z=_this.xm[0].manHour*_this.gs
-			var z1=_this.xm[0].estimated 
-			var z2=parseInt(z)+parseInt(z1)
-					 _this.gxf =z2*_this.vipzk
-					 _this.isShow1=true
-						})
-					
-					},
-						
+						_this.vip = _this.xm[0].viplb
+						_this.vipzk = _this.xm[0].vipjglx
+						_this.gsf = _this.xm[0].manHour
+						y = _this.xm[0].estimated
+
+						var myDate = new Date();
+						var year = myDate.getFullYear(); //获取当前年
+						var month = myDate.getMonth() + 1; //获取当前月
+						var date = myDate.getDate(); //获取当前日
+
+						var h = myDate.getHours(); //获取当前小时数(0-23)
+						var m = myDate.getMinutes(); //获取当前分钟数(0-59)
+
+						var now = year + '-' + getNow(month) + "-" + getNow(date) + " " + getNow(h) + ':' + getNow(m);
+
+						kd = _this.xm[0].orderTime
+
+						kd = new Date(kd.replace(/-/g, '/'));
+						now = new Date(now.replace(/-/g, '/'));
+
+						var ms = Math.abs(now.getTime() - kd.getTime());
+						_this.gs = (ms / 1000 / 60 / 60).toFixed(1);
+
+						var z = _this.xm[0].manHour * _this.gs
+						var z1 = _this.xm[0].estimated
+						var z2 = parseInt(z) + parseInt(z1)
+						_this.gxf = z2 * _this.vipzk
+						_this.isShow1 = true
+					})
+
+				},
+
 			},
 
 			mounted() {

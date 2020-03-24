@@ -233,7 +233,7 @@
   </span>
 				</el-dialog>
 				<template>
-					<el-table :data="cl.list" border style="width: 100%"   height="250">
+					<el-table :data="cl.list" border style="width: 100%" height="250">
 						<el-table-column fixed prop="vehiclecp" label="车牌" width="150">
 						</el-table-column>
 
@@ -338,8 +338,8 @@
 						_this.isShow5 = true
 						alert(data)
 						_this.xzcl1 = data
-						
-					_this.xzcl1.vehiclefdj="001"
+
+						_this.xzcl1.vehiclefdj = "001"
 					})
 				},
 				xzpp(id, name) {
@@ -351,7 +351,7 @@
 					$.getJSON(`http://127.0.0.1:8080/api/client/cx/${id}`, function(data) {
 
 						_this.cx1 = data
-						
+
 					})
 
 				},
@@ -360,7 +360,7 @@
 					this.isShow3 = false
 					this.xzcl.vehiclexh = name
 					this.cxid = id
-					alert(this.cxid )
+					alert(this.cxid)
 				},
 				xzkh(id, name) {
 
@@ -370,7 +370,7 @@
 				},
 				qd() {
 					let _this = this;
-				
+
 					_this.xzcl.vehiclepp = _this.ppid
 					_this.xzcl.vehiclexh = _this.cxid
 					_this.xzcl.vehiclefname = _this.khid
@@ -382,19 +382,19 @@
 							_this.isShow1 = false
 							$.getJSON(`http://127.0.0.1:8080/api/ve/1`, function(data) {
 
-					_this.cl = data
-				
-				})
-				$.getJSON(`http://127.0.0.1:8080/api/client/pp`, function(data) {
+								_this.cl = data
 
-					_this.pp = data
-		
-				})
-				$.getJSON(`http://127.0.0.1:8080/api/client/kh`, function(data) {
+							})
+							$.getJSON(`http://127.0.0.1:8080/api/client/pp`, function(data) {
 
-					_this.kh = data
-					
-				})
+								_this.pp = data
+
+							})
+							$.getJSON(`http://127.0.0.1:8080/api/client/kh`, function(data) {
+
+								_this.kh = data
+
+							})
 						}
 					});
 				},
@@ -404,53 +404,53 @@
 					this.xzcl1.vehiclexh = this.cxid
 					this.xzcl1.vehiclefname = this.khid
 					alert(this.ppid)
-					jQuery.ajax(`http://127.0.0.1:8080/api/ve/vehicles`,{
-							type:'put',
-							contentType: 'application/json',
-							data: JSON.stringify(_this.xzcl1),
-							success(data) {
-								_this.isShow5 = false
-								$.getJSON(`http://127.0.0.1:8080/api/ve/1`, function(data) {
+					jQuery.ajax(`http://127.0.0.1:8080/api/ve/vehicles`, {
+						type: 'put',
+						contentType: 'application/json',
+						data: JSON.stringify(_this.xzcl1),
+						success(data) {
+							_this.isShow5 = false
+							$.getJSON(`http://127.0.0.1:8080/api/ve/1`, function(data) {
 
-					_this.cl = data
-				
-				})
-				$.getJSON(`http://127.0.0.1:8080/api/client/pp`, function(data) {
+								_this.cl = data
 
-					_this.pp = data
-		
-				})
-				$.getJSON(`http://127.0.0.1:8080/api/client/kh`, function(data) {
+							})
+							$.getJSON(`http://127.0.0.1:8080/api/client/pp`, function(data) {
 
-					_this.kh = data
-					
-				})
-							}
-						});
+								_this.pp = data
+
+							})
+							$.getJSON(`http://127.0.0.1:8080/api/client/kh`, function(data) {
+
+								_this.kh = data
+
+							})
+						}
+					});
 				},
-				yc(id){
-					let _this=this
-						
-						jQuery.ajax(`http://127.0.0.1:8080/api/ve/vehicles/${id}`,{
-							type:'delete',
-							success(data) {
-								$.getJSON(`http://127.0.0.1:8080/api/ve/1`, function(data) {
+				yc(id) {
+					let _this = this
 
-					_this.cl = data
-				
-				})
-				$.getJSON(`http://127.0.0.1:8080/api/client/pp`, function(data) {
+					jQuery.ajax(`http://127.0.0.1:8080/api/ve/vehicles/${id}`, {
+						type: 'delete',
+						success(data) {
+							$.getJSON(`http://127.0.0.1:8080/api/ve/1`, function(data) {
 
-					_this.pp = data
-		
-				})
-				$.getJSON(`http://127.0.0.1:8080/api/client/kh`, function(data) {
+								_this.cl = data
 
-					_this.kh = data
-					
-				})
-							}
-						});
+							})
+							$.getJSON(`http://127.0.0.1:8080/api/client/pp`, function(data) {
+
+								_this.pp = data
+
+							})
+							$.getJSON(`http://127.0.0.1:8080/api/client/kh`, function(data) {
+
+								_this.kh = data
+
+							})
+						}
+					});
 				}
 
 			},
@@ -460,17 +460,17 @@
 				$.getJSON(`http://127.0.0.1:8080/api/ve/1`, function(data) {
 
 					_this.cl = data
-				
+
 				})
 				$.getJSON(`http://127.0.0.1:8080/api/client/pp`, function(data) {
 
 					_this.pp = data
-		
+
 				})
 				$.getJSON(`http://127.0.0.1:8080/api/client/kh`, function(data) {
 
 					_this.kh = data
-					
+
 				})
 
 			}
