@@ -72,7 +72,7 @@
 							</template>
 							<!--子项-->
 							<el-menu-item index="7-1" @click="To('../sw/js.html')">结算中心</el-menu-item>
-							<el-menu-item index="7-1" @click="To('')">会员充值卡管理</el-menu-item>
+							<el-menu-item index="7-2" @click="To('')">会员充值卡管理</el-menu-item>
 
 						</el-submenu>
 						<el-submenu index="8" class="8">
@@ -82,6 +82,7 @@
 							</template>
 
 							<el-menu-item index="4-1" @click="dialogVisible = true">角色权限管理</el-menu-item>
+							<el-menu-item index="4-2" @click="dialogVisible2 = true">员工管理</el-menu-item>
 
 						</el-submenu>
 						<el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
