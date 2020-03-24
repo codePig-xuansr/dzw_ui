@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	
+		<style type="text/css">
+			#app{
+				
+				padding-left: 5px;
+				padding-top: 20px;
+			}
+			
+		</style>
+	</head>
+
+	<body>
+		<div id="app">
+			岗位编码：<el-input type="text" style="width: 200px;" placeholder="请输入岗位编码" v-model="record.postid" maxlength="10" show-word-limit class="pid" :disabled="edit">
+			</el-input>
+			岗位名称：<el-input type="text" style="width: 200px;" placeholder="请输入岗位名称" v-model="record.postname" maxlength="10" show-word-limit class="pname">
+			</el-input>
+			<el-button type="danger" @click="add">添加</el-button>
+			 <el-button type="warning" @click="xiu">保存</el-button>
+  
+			<br />
+			<br />
+			<template id="a1">
+				<el-table  :data="post" style="width: 35%" max-height="500" align="center" :resizable="false">
+					
+					<el-table-column prop="postid"   label="岗位编码" width="120">
+						 
+					</el-table-column>
+					<el-table-column prop="postname"   label="岗位名称" width="120">
+						 
+					</el-table-column>
+					
+					
+					
+					<el-table-column fixed="right" label="操作" width="120">
+						
+						<template slot-scope="temp">
+							<el-button @click="del(temp.row.postid)" type="text" size="small">
+								移除
+							</el-button>
+							<el-button @click="cha(temp.row.postid)" type="text"  size="small">
+								编辑
+							</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
+			</template>
+		</div>
+	</body>
+	
+	<script>var app = new Vue({
+	el: "#app",
+	data: {
+
+		post: [],
+		record: {
+			postid: "",
+			postname: "",
+		},
+		edit: false,
+
+	},
+	methods: {
+		show() {
+			let _this = this;
+			jQuery.getJSON(`http://127.0.0.1:8080/api/posts`, function(list) {
+
+				_this.post = list;
+			})
+
+		},
+		add() {
+			let _this = this;
+
+			jQuery.ajax(`http://127.0.0.1:8080/api/posts/post`, {
+				type: 'post',
+				dataType: 'json',
+				contentType: 'application/json',
+				data: JSON.stringify(_this.record),
+				success(data) {
+					if(data.code == "200") {
+
+						_this.show();
+					}
+				}
+
+			})
+
+		},
+		del(postid) {
+
+			var que = confirm("确认删除吗？")
+			if(que == true) {
+				jQuery.ajax(`http://127.0.0.1:8080/api/posts/post/${postid}`, {
+					type: 'delete',
+					success(data) {
+						if(data.code == "200") {
+
+							_this.show();
+						}
+					}
+				})
+
+			} else {
+				return;
+			}
+		},
+		cha(postid) {
+			let _this = this;
+			_this.edit = true;
+			jQuery.getJSON(`http://127.0.0.1:8080/api/posts/post/${postid}`, function(list) {
+
+				_this.record = list;
+			})
+
+		},
+		xiu() {
+			let _this = this;
+			jQuery.ajax(`http://127.0.0.1:8080/api/posts/post`, {
+				type: 'put',
+				dataType: 'json',
+				contentType: 'application/json',
+				data: JSON.stringify(_this.record),
+				success(data) {
+					if(data.code == "200") {
+
+						_this.show();
+
+					}
+				}
+			});
+
+		}
+	},
+	mounted() {
+		let _this = this;
+
+		_this.show();
+
+	}
+
+})</script>
+
+</html>

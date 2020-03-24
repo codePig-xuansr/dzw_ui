@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			/* 请为你的每个页面设置一个内边距 */
+			
+			#fish {
+				padding-left: 5px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!--绑定vue引擎，命名：页面名字+Vm-->
+		<div id="fish">
+			<el-row>
+				<el-col :span="24">
+					<template>
+						<!--<el-button type="button" class="btn btn-success btn-block" id="generate-excel"><i class="fa fa-file-excel-o" aria-hidden="true"></i> 将表格转换为Excel</el-button>-->
+							<el-button type="success" @click="add = true">添加数据</el-button>
+							
+						<el-table :data="carlist.list" border style="width: 100%">
+							<el-table-column v-for="(temp,index) in stsy" :label="temp.name" align="center" :resizable="false">
+								<template slot-scope="scope">
+									<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>
+									<el-button type="danger" v-if="temp.value==0" @click="delOne(scope.row.classno)">删除</el-button>
+								</template>
+							</el-table-column>
+						</el-table>
+						<el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="carlist.total" :page-sizes="[1,2,3,4,5]" :page-size="carlist.pageSize">
+					</template>
+				
+				</el-col>
+			</el-row>
+			<el-dialog title="新增等级" :visible.sync="add" width="30%" :before-close="handleClose">
+				<div>
+					<el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
+						<el-form-item label="等级编码">
+							<el-input v-model="formLabelAlign.classno"></el-input>
+						</el-form-item>
+						<el-form-item label="等级名称">
+							<el-input v-model="formLabelAlign.classname"></el-input>
+						</el-form-item>
+						<el-form-item label="提成权重">
+							<el-input v-model="formLabelAlign.weight"></el-input>
+						</el-form-item>
+						<el-form-item label="时长">
+							<el-input v-model="formLabelAlign.manHour"></el-input>
+						</el-form-item>
+					</el-form>
+				</div>
+				<span slot="footer" class="dialog-footer">
+   				 <el-button @click="add = false">取 消</el-button>
+   				 <el-button type="primary" @click="addall">保存</el-button>
+  				</span>
+			</el-dialog>
+		</div>
+	</body>
+	<script>
+		var fish = new Vue({
+			el: '#fish',
+			data: {
+				formLabelAlign:{
+					classno:'',
+					classname:'',
+					weight:'',
+					manHour:'',
+				},
+				add: false,
+				piges: {},
+				carlist: [],
+				list: [],
+				stsy: [{
+					name: '等级编码',
+					value: 'classno'
+				}, {
+					name: '等级名称',
+					value: 'classname'
+				}, {
+					name: '提成权重',
+					value: 'weight'
+				}, {
+					name: '时长',
+					value: 'manHour'
+				}, {
+					name: '操作',
+					value: '0'
+				}],
+			},
+			methods: {
+				delOne(classno) {
+					let _this = this;
+					if(confirm("确认删除？")) {
+						jQuery.post("http://127.0.0.1:8080/api/class1/del", {
+							classno: `${classno}`
+						}, function(data) {
+							alert("删除成功！");
+							location.reload();
+						});
+					}
+				},
+				page(num, size) {
+					let _this = this;
+					jQuery.getJSON(`http://127.0.0.1:8080/api/class1/page/${num}/${size}`, {}, function(pg) {
+						_this.carlist = pg;
+						_this.list = pg.list;
+					});
+				},
+				//页数改变事件
+
+				change(num) {
+					let _this = this;
+					this.page(num, _this.carlist.pageSize);
+				},
+				//pageSize选择事件
+				sizec(size) {
+					this.page(1, size);
+				},
+				//添加数据
+				addall() {
+					let _this=this;
+					jQuery.ajax("http://127.0.0.1:8080/api/class1/add",{
+						type:'post',
+						data:JSON.stringify(_this.formLabelAlign),
+						contentType: 'application/json; charset=UTF-8',
+						success(data){
+							if(data=="ok"){
+								alert("新增成功！");
+									this.add = false;
+								location.reload();
+							}else{
+								alert("新增失败！");
+							}
+						}
+					});
+				}
+			},
+			mounted() {
+				let _this = this;
+				_this.page(1, 5);
+			}
+		});
+	</script>
+
+</html>

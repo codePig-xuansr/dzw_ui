@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			#app{
+				
+				padding-left: 5px;
+				padding-top: 20px;
+			}
+		</style>
+	</head>
+	<body>
+<div id="app">
+	<template>
+		 <el-input type="text" style="width: 200px;" placeholder="按姓名模糊查询" v-model="empname" maxlength="10" show-word-limit>
+	
+	</template>
+	&nbsp;&nbsp;&nbsp;
+        <el-button icon="el-icon-search" circle  @click="page(1,3)">查询</el-button>
+        
+        <br />
+        <br />
+	<template id="a2">
+		<el-table :data="pageInfo.list" height="280" border style="width: 60%">
+			<el-table-column prop="departmentname" label="部门" width="120">
+			</el-table-column>
+			<el-table-column prop="empid" label="员工编号" width="120">
+			</el-table-column>
+			
+			<el-table-column prop="empname" label="员工姓名" width="120">
+			</el-table-column>
+			<el-table-column prop="emptelephone" label="电话号码" width="120">
+			</el-table-column>
+			<el-table-column prop="empemail" label="邮箱" width="120">
+			</el-table-column>
+		
+			<el-table-column label="操作" width="90">
+				<template slot-scope="temp">					
+					<el-button type="primary" icon="el-icon-edit" circle @click="cha(temp.row.empid)" ></el-button>
+					 
+					
+				</template>
+			</el-table-column>
+		</el-table>
+	</template>
+	
+	<el-dialog title="修改员工通讯信息" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
+	员工部门：
+	<el-input type="text" style="width: 200px;" disabled="" v-model="emp.departmentname" maxlength="10" show-word-limit/>&nbsp;&nbsp;&nbsp; 员工编号：
+	<el-input type="text" style="width: 200px;" disabled="" placeholder="" v-model="emp.empid" maxlength="10" show-word-limit/>
+	<br /><br /> 员工姓名：
+	<el-input type="text" style="width: 200px;" placeholder="" v-model="emp.empname" maxlength="10" show-word-limit/> &nbsp;&nbsp; 员工电话：
+	<el-input type="text" style="width: 200px;" placeholder="" v-model="emp.emptelephone" maxlength="11" show-word-limit/>
+	<br /><br /> 员工邮箱：
+	<el-input type="text" style="width: 200px;" placeholder="" v-model="emp.empemail" maxlength="20" show-word-limit/>
+
+      
+	<span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="xiu">确 定</el-button>
+  </span>
+</el-dialog>
+	
+	
+	<template>
+
+	<div class="block" style="margin-top: 20px;">		
+		<el-pagination v-if="pageInfo.total!=0"  @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[3, 6, 9]" :page-size="pageInfo.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.total">
+		</el-pagination>
+	</div>
+</template>
+</div>
+	</body>
+	<script>var app = new Vue({
+	el: "#app",
+	data: {
+
+		pageInfo: [],
+		empname: "",
+		currentPage: 1,
+		 dialogVisible: false,
+		emp:{
+			departmentname:"",
+			empid:"",
+			empname:"",
+			emptelephone:"",
+			empemail:"",
+		},
+
+	},
+	methods: {
+		handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
+     },
+		handleSizeChange(size) {
+			this.pageSize = size;
+
+			this.page(this.currentPage, this.pageSize);
+		},
+		handleCurrentChange(currentPage) {
+
+			this.currentPage = currentPage;
+			
+			this.page(this.currentPage, this.pageInfo.pageSize);
+		},
+		page(p, s) {
+
+			let _this = this;
+
+			jQuery.getJSON(`http://127.0.0.1:8080/api/dimissions/commun/${p}/${s}/${_this.empname}`, function(list) {
+
+				_this.pageInfo = list;
+			})
+
+		},cha(empid){
+					let _this=this;
+				
+					_this.dialogVisible=true;
+				  jQuery.getJSON(`http://127.0.0.1:8080/api/dimissions/com/${empid}`,function(com){
+    					
+    					_this.emp=com;
+    				})
+		},xiu(){
+			let _this=this;
+			_this.dialogVisible=false;
+			jQuery.ajax(`http://127.0.0.1:8080/api/dimissions/di`,{
+						type:'put',
+						contentType:'application/json',
+						data:JSON.stringify(_this.emp),
+						success(data){
+							if(data.code=="200"){
+								alert("保存成功！")
+								
+								_this.page(1,3);
+							}
+						}
+					});
+			
+		}
+
+	},
+	mounted() {
+		let _this = this;
+		_this.page(1, 3);
+	}
+
+})</script>
+</html>

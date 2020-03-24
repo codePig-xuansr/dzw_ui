@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		
+		<script type="text/javascript" src="js/lr/theme.js" ></script>
+		
+		
+	</head>
+	<body>
+<div id="app">
+	<div class="row" style="margin-top: 20px;">
+	&nbsp;&nbsp;
+	</el-input>
+	<el-input type="text" style="width: 200px;" placeholder="按姓名模糊查询" maxlength="10" v-model="empname" show-word-limit>
+	</el-input>
+	<el-button type="primary" icon="el-icon-search" @click="page(1,3)">搜索</el-button>
+	<el-button type="warning" @click="addd">添加员工</el-button>
+	</div>
+	<el-divider></el-divider>
+	 <el-row :gutter="20">
+		 <el-col :span="5" style="margin-top: -20px;">
+		 <div class="grid-content bg-purple">
+			<div class="content_left" style="margin-left: 10px;">
+				<div class="title" style="width: 168px;"><span style="color: black;">北京德召文卡车系统</span></div>
+				<div class="left_nav" style="width: 210px;height: 180px;">
+					<ul>
+						<div class="t" style="margin-left: 50px;"><i></i>
+							<a href="#"><img src="img/lr/z-2.jpg" id="tt" />--0000-成高</a>
+						</div>
+						<li style="margin-left: 50px;" v-for="(temp,i) in department" class="lii">
+
+							<div class="txt" style="margin-left: 30px;">
+								<p>
+									<a href="#" @click="dj(1,3,temp.departmentid)"><img src="img/lr/u=1960593201,1950517229&fm=26&gp=0.jpg" width="15px" />--{{temp.departmentname}}</a>
+								</p>
+
+							</div>
+						</li>
+
+					</ul>
+
+				</div>
+			</div>
+		</div>
+	 </el-col>
+	 <el-col :span="19" style="margin-top: 30px;margin-left: -25px;" id="yin">
+			<div class="grid-content bg-purple">
+			<template id="a2">
+		<el-table :data="pageInfoo.list" height="280" border style="width: 100%;"  header-row-class-name="tableHead">
+			<el-table-column fixed prop="departmentname" label="部门" width="120">
+			</el-table-column>
+			<el-table-column prop="empid" label="员工编号" width="100">
+			</el-table-column>
+			<el-table-column prop="postname" label="职位" width="100">
+			</el-table-column>
+			<el-table-column prop="empname" label="员工姓名" width="100">
+			</el-table-column>
+			<el-table-column prop="empsex" label="性别" width="100">
+			</el-table-column>
+			<el-table-column prop="empaddress" label="居住地址" width="100">
+			</el-table-column>
+			<el-table-column prop="emptelephone" label="电话号码" width="100">
+			</el-table-column>
+			<el-table-column prop="empemail" label="邮箱" width="100">
+			</el-table-column>
+			<el-table-column  prop="empentrytime" label="入职时间" width="160">
+			</el-table-column>
+		
+			<el-table-column fixed="right" label="操作" width="120">
+				<template slot-scope="temp">					
+					<el-button type="primary" icon="el-icon-edit" circle @click="cha(temp.row.empid)" ></el-button>
+					 <el-button type="danger" icon="el-icon-delete" circle></el-button>
+					
+				</template>
+			</el-table-column>
+		</el-table>
+	</template>
+	</div>
+	  
+	<div class="block" style="margin-top: 20px">		
+		<el-pagination v-if="pageInfoo.total!=0"  @size-change="handleSizeChangee" @current-change="handleCurrentChangee" :current-page="currentPagee" :page-sizes="[3, 6, 9]" :page-size="pageInfoo.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pageInfoo.total">
+		</el-pagination>
+	</div>
+	</el-col>
+	   
+       		<el-col :span="19" style="margin-top: 30px;margin-left: -25px;" id="yinn">
+			<div class="grid-content bg-purple">
+			<template id="a2">
+		<el-table :data="pageInfo.list" height="280" border style="width: 100%;"  header-row-class-name="tableHead">
+			<el-table-column fixed prop="departmentname" label="部门" width="120">
+			</el-table-column>
+			<el-table-column prop="empid" label="员工编号" width="100">
+			</el-table-column>
+			<el-table-column prop="postname" label="职位" width="100">
+			</el-table-column>
+			<el-table-column prop="empname" label="员工姓名" width="100">
+			</el-table-column>
+			<el-table-column prop="empsex" label="性别" width="100">
+			</el-table-column>
+			<el-table-column prop="empaddress" label="居住地址" width="100">
+			</el-table-column>
+			<el-table-column prop="emptelephone" label="电话号码" width="100">
+			</el-table-column>
+			<el-table-column prop="empemail" label="邮箱" width="100">
+			</el-table-column>
+			<el-table-column  prop="empentrytime" label="入职时间" width="160">
+			</el-table-column>
+		
+			<el-table-column fixed="right" label="操作" width="120">
+				<template slot-scope="temp">					
+					<el-button type="primary" icon="el-icon-edit" circle @click="cha(temp.row.empid)" ></el-button>
+					 <el-button type="danger" icon="el-icon-delete" circle @click="del(temp.row.empid)"></el-button>
+					
+				</template>
+			</el-table-column>
+		</el-table>
+	</template>
+	</div>
+	  
+	<div class="block" style="margin-top: 20px">		
+		<el-pagination v-if="pageInfo.total!=0"  @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[3, 6, 9]" :page-size="pageInfo.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.total">
+		</el-pagination>
+	</div>
+	</el-col>	
+	</el-row>
+   
+<!-- 添加的弹出框-->
+
+<el-dialog title="添加员工入职信息" :visible.sync="dialogVisible" width="72%" :before-close="handleClose" style="margin-top: -90px;">
+	<span >提示</span><span style="color: red;">&nbsp;&nbsp;:星星符号为必填项</span>
+<el-divider></el-divider>	
+		员工编号：
+		<el-input type="text" style="width: 200px;" placeholder=""  disabled="" maxlength="20" v-model="suiji" show-word-limit/>&nbsp;&nbsp;&nbsp;  
+		<span style="color: red;	">*</span>员工姓名：
+		<el-input type="text" style="width: 200px;" placeholder="" id="name" maxlength="20" v-model="emp.empname" show-word-limit/>&nbsp;&nbsp;&nbsp;
+		<span style="color: red;	">*</span>员工性别：
+		<template>
+  <el-radio v-model="radio" label="男">男</el-radio>
+  <el-radio v-model="radio" label="女">女</el-radio>
+</template>&nbsp;&nbsp;&nbsp; 
+		<br /><br />
+		<span style="color: red;	">*</span>员工账号：
+		<el-input type="text" style="width: 200px;" placeholder="" id="type" maxlength="20" v-model="emp.emptype" show-word-limit/>&nbsp;&nbsp;&nbsp; 
+		
+		<span style="color: red;	">*</span>员工部门：
+		<el-select v-model="emp.deid" filterable placeholder="请选择" style="width: 200px;" id="sel1">
+				<el-option v-for="item in bumen" :key="item.departmentid" :label="item.departmentname" :value="item.departmentid	">
+
+				</el-option>
+		</el-select>&nbsp;&nbsp;&nbsp; 
+		<span style="color: red;	">*</span>员工职位：
+		<el-select v-model="emp.poid" filterable placeholder="请选择" style="width: 200px;" id="sel2">
+				<el-option v-for="item in post" :key="item.postid" :label="item.postname" :value="item.postid	">
+
+				</el-option>
+		</el-select>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 
+		<br /><br />
+		员工状况：
+		<el-input type="text" style="width: 200px;" placeholder=""  maxlength="20" v-model="emp.empcondition" show-word-limit/>&nbsp;&nbsp;&nbsp; 
+		员工身高：
+		<el-input type="text" style="width: 200px;" placeholder=""  maxlength="20" v-model="emp.empheight" show-word-limit/>&nbsp;&nbsp;&nbsp; 
+		员工学历：
+		<el-input type="text" style="width: 200px;" placeholder=""  maxlength="20" v-model="emp.empeducation" show-word-limit/>&nbsp;&nbsp;&nbsp; 
+		<br /><br />
+		毕业学校：
+		<el-input type="text" style="width: 200px;" placeholder=""  maxlength="20" v-model="emp.empschool" show-word-limit/>&nbsp;&nbsp;&nbsp; 
+		员工专业：
+		<el-input type="text" style="width: 200px;" placeholder=""  maxlength="20" v-model="emp.empprofession" show-word-limit/>&nbsp;&nbsp;&nbsp; 
+		<span style="color: red;	">*</span>身份证号：
+		<el-input type="text" style="width: 200px;" placeholder="" id="card"  maxlength="20" v-model="emp.empcard" show-word-limit/>&nbsp;&nbsp;&nbsp;
+		<br /><br />
+		<span style="color: red;	">*</span>居住地址：
+		<el-input type="text" style="width: 200px;" placeholder="" id="address" maxlength="20" v-model="emp.empaddress" show-word-limit/>&nbsp;&nbsp;&nbsp; 
+		<span style="color: red;	">*</span>联系方式：
+		<el-input type="text" style="width: 200px;" placeholder="" id="phone" maxlength="20" v-model="emp.emptelephone" show-word-limit/>&nbsp;&nbsp;&nbsp; 
+		<span style="color: red;	">*</span>电子邮箱：
+		<el-input type="text" style="width: 200px;" placeholder="" id="email" maxlength="20" v-model="emp.empemail"  show-word-limit/>&nbsp;&nbsp;&nbsp;
+		<br /><br />
+		
+		<template >
+			<div class="block" style="margin-left: 0px;" >
+	<span class="demonstration"><span style="color: red;	">*</span>入职时间:&nbsp; </span>
+	<el-date-picker v-model="emp.empentrytime" type="date" placeholder="请选择入职日期" id="rtime">
+	</el-date-picker>
+</div>
+
+		</template>&nbsp;&nbsp;&nbsp; 
+		
+		<template>
+			<div class="block" style="margin-left: 300px;margin-top: -70px;">
+	<span class="demonstration"><span style="color: red;	">*</span>出生日期:&nbsp; </span>
+	<el-date-picker v-model="emp.empbirthtime" type="date" placeholder="请选择出生日期" id="ctime">
+	</el-date-picker>
+</div>
+
+		</template>&nbsp;&nbsp;&nbsp; 
+		<br />
+		<br />
+		<span style="color: red;	">*</span>员工门店：
+		<el-select v-model="emp.shid" filterable placeholder="请选择" style="width: 200px;" id="sel3">
+				<el-option v-for="item in shop" :key="item.shopid" :label="item.shopname" :value="item.shopid	">
+
+				</el-option>
+		</el-select>&nbsp;&nbsp;&nbsp; 
+		<span style="color: red;	">*</span>计薪方式：
+		<el-select v-model="emp.paid" filterable placeholder="请选择" style="width: 200px;" id="sel4">
+				<el-option v-for="item in payroll" :key="item.payrollid" :label="item.payrollname" :value="item.payrollid	">
+
+				</el-option>
+		</el-select>&nbsp;&nbsp;&nbsp;
+		推荐人：
+		<el-input type="text" style="width: 200px;" placeholder=""  maxlength="20" v-model="emp.empreferrer" show-word-limit/>&nbsp;&nbsp;&nbsp;
+		<br /><br />
+		<br />
+		<span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="add">确 定</el-button>
+  </span>
+</el-dialog>
+	<!-- 修改的模态框  -->
+	
+	<el-dialog title="提示" :visible.sync="dialogVisiblee" width="72%" :before-close="handleClose" style="margin-top: -90px;">
+	员工编号：
+		<el-input type="text" style="width: 200px;" placeholder=""  disabled="" maxlength="20"  v-if="empp[0]!=undefined" v-model="empp[0].empid"show-word-limit/>&nbsp;&nbsp;&nbsp;  
+		<span style="color: red;	">*</span>员工姓名：
+		<el-input type="text" style="width: 200px;" placeholder="" id="name" maxlength="20" v-if="empp[0]!=undefined" v-model="empp[0].empname" show-word-limit/>&nbsp;&nbsp;&nbsp;
+		<span style="color: red;	">*</span>员工性别：
+		<template>
+  <el-radio v-if="empp[0]!=undefined" v-model="empp[0].empsex" label="男" >男</el-radio>
+  <el-radio v-if="empp[0]!=undefined" v-model="empp[0].empsex" label="女">女</el-radio>
+</template>&nbsp;&nbsp;&nbsp; 
+		<br /><br />
+		<span style="color: red;	">*</span>员工账号：
+		<el-input type="text" style="width: 200px;" placeholder="" id="type" maxlength="20" v-if="empp[0]!=undefined" v-model="empp[0].emptype" show-word-limit/>&nbsp;&nbsp;&nbsp; 
+		
+		<span style="color: red;	">*</span>员工部门：
+		<el-select v-if="empp[0]!=undefined" v-model="empp[0].deid" filterable placeholder="请选择" style="width: 200px;" id="sel1">
+				<el-option v-for="item in bumen" :key="item.departmentid" :label="item.departmentname" :value="item.departmentid	">
+
+				</el-option>	
+		</el-select>&nbsp;&nbsp;&nbsp; 
+		<span style="color: red;	">*</span>员工职位：
+		<el-select v-if="empp[0]!=undefined" v-model="empp[0].poid" filterable placeholder="请选择" style="width: 200px;" id="sel2">
+				<el-option v-for="item in post" :key="item.postid" :label="item.postname" :value="item.postid	">
+
+				</el-option>
+		</el-select>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 
+		<br /><br />
+		员工状况：
+		<el-input type="text" style="width: 200px;" placeholder=""  maxlength="20" v-if="empp[0]!=undefined" v-model="empp[0].empcondition" show-word-limit/>&nbsp;&nbsp;&nbsp; 
+		员工身高：
+		<el-input type="text" style="width: 200px;" placeholder=""  maxlength="20" v-if="empp[0]!=undefined" v-model="empp[0].empheight" show-word-limit/>&nbsp;&nbsp;&nbsp; 
+		员工学历：
+		<el-input type="text" style="width: 200px;" placeholder=""  maxlength="20" v-if="empp[0]!=undefined" v-model="empp[0].empeducation" show-word-limit/>&nbsp;&nbsp;&nbsp; 
+		<br /><br />
+		毕业学校：
+		<el-input type="text" style="width: 200px;" placeholder=""  maxlength="20"v-if="empp[0]!=undefined" v-model="empp[0].empschool" show-word-limit/>&nbsp;&nbsp;&nbsp; 
+		员工专业：
+		<el-input type="text" style="width: 200px;" placeholder=""  maxlength="20" v-if="empp[0]!=undefined" v-model="empp[0].empprofession" show-word-limit/>&nbsp;&nbsp;&nbsp; 
+		<span style="color: red;	">*</span>身份证号：
+		<el-input type="text" style="width: 200px;" placeholder="" id="card"  maxlength="20" v-if="empp[0]!=undefined" v-model="empp[0].empcard" show-word-limit/>&nbsp;&nbsp;&nbsp;
+		<br /><br />
+		<span style="color: red;	">*</span>居住地址：
+		<el-input type="text" style="width: 200px;" placeholder="" id="address" maxlength="20" v-if="empp[0]!=undefined" v-model="empp[0].empaddress" show-word-limit/>&nbsp;&nbsp;&nbsp; 
+		<span style="color: red;	">*</span>联系方式：
+		<el-input type="text" style="width: 200px;" placeholder="" id="phone" maxlength="20" v-if="empp[0]!=undefined" v-model="empp[0].emptelephone" show-word-limit/>&nbsp;&nbsp;&nbsp; 
+		<span style="color: red;	">*</span>电子邮箱：
+		<el-input type="text" style="width: 200px;" placeholder="" id="email" maxlength="20" v-if="empp[0]!=undefined" v-model="empp[0].empemail"  show-word-limit/>&nbsp;&nbsp;&nbsp;
+		<br /><br />
+		
+		<template >
+			<div class="block" style="margin-left: 0px;" >
+	<span class="demonstration"><span style="color: red;	">*</span>入职时间:&nbsp; </span>
+	<el-date-picker v-if="empp[0]!=undefined" v-model="empp[0].empentrytime" type="date" placeholder="请选择入职日期" id="rtime">
+	</el-date-picker>
+</div>
+
+		</template>&nbsp;&nbsp;&nbsp; 
+		
+		<template>
+			<div class="block" style="margin-left: 300px;margin-top: -70px;">
+	<span class="demonstration"><span style="color: red;	">*</span>出生日期:&nbsp; </span>
+	<el-date-picker v-if="empp[0]!=undefined" v-model="empp[0].empbirthtime" type="date" placeholder="请选择出生日期" id="ctime">
+	</el-date-picker>
+</div>
+
+		</template>&nbsp;&nbsp;&nbsp; 
+		<br />
+		<br />
+		<span style="color: red;	">*</span>员工门店：
+		<el-select v-if="empp[0]!=undefined" v-model="empp[0].shid" filterable placeholder="请选择" style="width: 200px;" id="sel3">
+				<el-option v-for="item in shop" :key="item.shopid" :label="item.shopname" :value="item.shopid	">
+
+				</el-option>
+		</el-select>&nbsp;&nbsp;&nbsp; 
+		<span style="color: red;	">*</span>计薪方式：
+		<el-select v-if="empp[0]!=undefined" v-model="empp[0].paid" filterable placeholder="请选择" style="width: 200px;" id="sel4">
+				<el-option v-for="item in payroll" :key="item.payrollid" :label="item.payrollname" :value="item.payrollid	">
+
+				</el-option>
+		</el-select>&nbsp;&nbsp;&nbsp;
+		推荐人：
+		<el-input type="text" style="width: 200px;" placeholder=""  maxlength="20" v-if="empp[0]!=undefined" v-model="empp[0].empreferrer" show-word-limit/>&nbsp;&nbsp;&nbsp;
+		<br /><br />
+		<br />
+	<span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisiblee = false">取 消</el-button>
+    <el-button type="primary" @click="update">确 定</el-button>
+  </span>
+</el-dialog>
+
+</div>
+	</body>
+	<script>var app = new Vue({
+	el: "#app",
+	data: {
+		dialogVisible: false,
+		dialogVisiblee: false,
+		departmentid:"",
+		department: {},
+		pageInfo: [],
+		pageInfoo:[],
+		bumen:{},
+		post:{},
+		shop:{},
+		payroll:{},
+		empname: "",
+		currentPage: 1,
+		currentPagee: 1,
+		value: '',
+		value1:'',
+		value2:'',
+		value3:'',
+		emp:{},
+		empp:[],
+		suiji:'',
+		pickerOptions: {
+          disabledDate(time) {
+            return time.getTime() > Date.now();
+          },
+          shortcuts: [{
+            text: '今天',
+            onClick(picker) {
+              picker.$emit('pick', new Date());
+            }
+          }, {
+            text: '昨天',
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() - 3600 * 1000 * 24);
+              picker.$emit('pick', date);
+            }
+          }, {
+            text: '一周前',
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', date);
+            }
+          }]
+        },
+        value4: '',
+        value5: '',
+        radio: '男',
+	},
+	methods: {
+		handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
+        },
+		handleSizeChangee(sizee) {
+			let _this=this;
+			this.pageSize = sizee;
+
+			this.dj(this.currentPagee, this.pageSize,_this.departmentid);
+		},
+		handleCurrentChangee(currentPagee) {
+			let _this=this;
+			this.currentPagee = currentPagee;
+
+			this.dj(this.currentPagee, this.pageInfo.pageSize,_this.departmentid);
+		},
+		handleSizeChange(size) {
+			this.pageSize = size;
+
+			this.page(this.currentPage, this.pageSize);
+		},
+		handleCurrentChange(currentPage) {
+
+			this.currentPage = currentPage;
+
+			this.page(this.currentPage, this.pageInfo.pageSize);
+		},
+		show() {
+			let _this = this;
+
+			jQuery.getJSON(`http://127.0.0.1:8080/api/departments`, function(list) {
+
+				_this.department = list;
+			})
+
+		},
+		page(p,s) {
+
+			let _this = this;
+			 $("#yinn").show();
+			$("#yin").hide();
+			jQuery.getJSON(`http://127.0.0.1:8080/api/employees/employee/${p}/${s}/${_this.empname}`, function(list) {
+               
+				_this.pageInfo = list;
+			})
+
+		},dj(p,s,departmentid){
+			       let _this=this;
+			       _this.departmentid=departmentid;
+			        $("#yinn").hide();
+    		       $("#yin").show();
+    				jQuery.getJSON(`http://127.0.0.1:8080/api/employees/employeee/${p}/${s}/${departmentid}`,function(list){
+    					
+    					_this.pageInfoo=list;
+    					
+    					
+    				})
+			       
+		},addd(){
+			 let _this=this;
+			 _this.dialogVisible=true;
+			 
+			 _this.suiji=Math.round(Math.random()*100000); 
+			
+		},showdepartment(){
+					let _this=this;
+    		     	 
+    				jQuery.getJSON(`http://127.0.0.1:8080/api/employees/department`,function(list){
+    					//alert(JSON.stringify(list))
+    					_this.bumen=list;
+    				})
+					
+		},showpost(){
+					let _this=this;
+    		     	 
+    				jQuery.getJSON(`http://127.0.0.1:8080/api/employees/post`,function(list){
+    					
+    					_this.post=list;
+    				})
+					
+		},showshop(){
+					let _this=this;
+    		     	 
+    				jQuery.getJSON(`http://127.0.0.1:8080/api/employees/shop`,function(list){
+    					
+    					_this.shop=list;
+    				})
+					
+		},showpayroll(){
+					let _this=this;
+    		     	 
+    				jQuery.getJSON(`http://127.0.0.1:8080/api/employees/payroll`,function(list){
+    					
+    					_this.payroll=list;
+    				})
+					
+		},add(){
+					let _this=this;
+					_this.dialogVisible=false;
+					_this.emp.empid=_this.suiji;
+					_this.emp.empsex=_this.radio;
+					var name=$("#name").val();
+					var sex=$("#sex").val();
+					var type=$("#type").val();
+					var sel2=$("#sel2").val();
+					var sel1=$("#sel1").val();
+					var sel3=$("#sel3").val();
+					var sel4=$("#sel4").val();
+					var phone=$("#phone").val();
+					var email=$("#email").val();
+					var address=$("#address").val();
+					var card=$("#card").val();
+					var rtime=$("#rtime").val();
+					var ctime=$("#ctime").val();
+					if(name==""||type==""||sel1==""||sel2==""||sel3==""||sel4==""||phone==""||email==""||address==""||card==""||rtime==""||ctime==""){
+						alert("必填项不能为空!!!")
+						_this.dialogVisible=true;
+						return false;
+					}
+    				 jQuery.ajax(`http://127.0.0.1:8080/api/employees/emp`,{
+					  	type:'post',
+					  	dataType:'json',
+					  	contentType:'application/json',
+						data:JSON.stringify(_this.emp),
+						success(data){
+							if(data.code=="200"){
+								
+								_this.page(1,3);
+							}
+						}
+					  	
+					  })
+			
+					
+		},cha(empid){
+					let _this=this;
+					_this.dialogVisiblee=true;
+					jQuery.getJSON(`http://127.0.0.1:8080/api/employees/emp/${empid}`,function(list){
+    					
+    					
+    					_this.empp=list;
+    					
+    					
+    				})
+		},update(){
+			let _this=this;
+			_this.dialogVisiblee=false;
+			jQuery.ajax(`http://127.0.0.1:8080/api/employees/empp`,{
+						type:'put',
+						dataType:'json',
+						contentType:'application/json',
+						data:JSON.stringify(_this.empp[0]),
+						success(data){
+							if(data.code=="200"){
+							 
+								
+								_this.page(1,3);
+							}
+						}
+					});
+		},del(empid){
+				let _this=this;
+			
+			this.$confirm('此操作将删除此员工所有信息, 是否继续?', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(() => {
+				jQuery.ajax(`http://127.0.0.1:8080/api/employees/emp/${empid}`,{
+						type:'delete',
+						success(data){
+							if(data.code=="200"){
+								
+								_this.page(1,3);
+							}
+						}
+					})
+						
+				this.$message({
+					type: 'success',
+					message: '删除成功!'
+				});
+			}).catch(() => {
+				this.$message({
+					type: 'info',
+					message: '已取消删除'
+				});
+			});
+		
+		}
+	},
+	mounted() {
+
+		let _this = this;
+		
+		_this.show();
+		_this.page(1,3);
+		_this.showdepartment();
+		_this.showpost();
+		_this.showshop();
+		_this.showpayroll();
+		
+
+	}
+
+})
+
+$(function() {
+
+	$("#tt").click(function() {
+
+		$(".lii").toggle();
+
+	})
+
+})</script>
+<link rel="stylesheet" href="css/lr/theme.css" />
+
+</html>
