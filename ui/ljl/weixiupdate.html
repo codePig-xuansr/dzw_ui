@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			#weixiuadd {
+				padding-left: 5px;
+			}
+			
+			#tj {
+				text-align: center;
+				width: 100%;
+			}
+			
+			#oo {
+				text-align: center;
+				width: 100%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="weixiuadd">
+			<el-row>
+				<el-col :span="24">
+					<div id="tj">
+						<tr>
+							<td>项目编码：</td>
+							<td>
+								<el-input  v-if="maintaininfo[0]!=undefined" style="width:150px" placeholder="请输入内容" v-model="maintaininfo[0].coding"></el-input>
+							</td>
+							<td>项目名称：</td>
+							<el-input  v-if="maintaininfo[0]!=undefined" style="width:150px" placeholder="请输入内容" v-model="maintaininfo[0].itemname"></el-input>
+							<br /><br />&nbsp;&nbsp;
+							<td>售按价：</td>
+							<td>
+								<el-input v-if="maintaininfo[0]!=undefined" style="width:150px" placeholder="请输入内容" v-model="maintaininfo[0].pricetype"></el-input>
+							</td>
+						</tr>
+						<tr>
+							<td>项目类别：</td>
+							<td>
+								<template>
+									<el-select placeholder="请选择" v-if="maintaininfo[0]!=undefined"  v-model="maintaininfo[0].project">
+										<el-option label="中国一汽" :value="502" style="width:150px">
+										</el-option>
+										<el-option label="中度" value="311" style="width:150px">
+										</el-option>
+										<el-option label="西安康明斯" :value="14" style="width:150px">
+										</el-option>
+										<el-option label="轻度" value="310" style="width:150px">
+										</el-option>
+										<el-option label="重度" value="312" style="width:150px">
+										</el-option>
+										<el-option label="刹车片" :value="12" style="width:150px">
+										</el-option>
+										<el-option label="轮胎" :value="13" style="width:150px">
+										</el-option>
+									</el-select>
+								</template>
+							</td>
+							<br /><br />&nbsp;
+							<td>标准价：</td>
+							<td>
+								<el-input v-if="maintaininfo[0]!=undefined" style="width:150px" placeholder="请输入内容" v-model="maintaininfo[0].standard"></el-input>
+							</td>
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							<td>VIP价：</td>
+							<td>
+								<el-input v-if="maintaininfo[0]!=undefined" style="width:150px" placeholder="请输入内容" v-model="maintaininfo[0].vip"></el-input>
+							</td>
+						</tr>
+					</div>
+					<br />
+					<div id="oo">
+						<el-button style="width:150px" @click="save()">修改</el-button>
+						<el-button style="width:150px" @click='fh()'>返回</el-button>
+					</div>
+				</el-col>
+			</el-row>
+		</div>
+	</body>
+
+	<script>
+		var weixiuadd = new Vue({
+			el: '#weixiuadd',
+			data: {
+				maintaininfo:{
+					coding:'',
+					itemname:'',
+					pricetype:'',
+					standard:'',
+					vip:'',
+					project:'',
+				}
+			},
+			methods: {
+				fh() {
+					indexVm.To('html/bmx/weixiu.html');
+				},
+					save(){
+					let _this=this;
+					let coding=sessionStorage.getItem('xiu');
+					alert(coding);
+					$.ajax({
+						url:`http://localhost:8080/api/emps/update/${coding}`,
+						type:'post',
+						dataType:'json',
+						contentType:'application/json',
+						data:JSON.stringify(_this.maintaininfo[0]),
+						success(){
+							alert("修改成功！");
+//							history.go(-1);
+						},
+						error(){
+							alert("未知错误！");
+						}
+						
+					});
+				}
+			},
+			mounted(){
+				let _this=this;
+			
+			let coding=sessionStorage.getItem('xiu');
+			if(coding==null){
+				return;
+			}
+			$.getJSON(`http://localhost:8080/api/emps/xiugai/${coding}`,function(data){
+				_this.maintaininfo=data;
+				console.log(data);
+			});
+			}
+		})
+	</script>
+
+</html>
