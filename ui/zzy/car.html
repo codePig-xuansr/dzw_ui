@@ -32,8 +32,7 @@
 							</el-table-column>
 						</el-table>
 						<el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="carlist.total" :page-sizes="[1,2,3,4,5]" :page-size="carlist.pageSize">
-					</template>
-				
+					</template>			
 				</el-col>
 			</el-row>
 			<el-dialog title="新增等级" :visible.sync="add" width="30%" :before-close="handleClose">
