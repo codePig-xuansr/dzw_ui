@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="UTF-8">
-		<title></title>
+		<title>外勤车辆1</title>
 		<style>
 			/* 请为你的每个页面设置一个内边距 */
 			
@@ -20,19 +20,18 @@
 				<el-col :span="24">
 					<template>
 						<!--<el-button type="button" class="btn btn-success btn-block" id="generate-excel"><i class="fa fa-file-excel-o" aria-hidden="true"></i> 将表格转换为Excel</el-button>-->
-							<el-button type="success" @click="add = true">添加数据</el-button>
-							
-						<el-table :data="carlist.list" border style="width: 100%">
+							<el-button type="success" @click="add = true">添加数据</el-button>						
+						<el-table :data="vehicleInfo" border style="width: 100%">
 							<el-table-column v-for="(temp,index) in stsy" :label="temp.name" align="center" :resizable="false">
 								<template slot-scope="scope">
 									<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>
 									<el-button type="danger" v-if="temp.value==0" @click="delOne(scope.row.numbercar)">删除</el-button>
+									<el-button type="primary" v-if="temp.value==0" @click="selteam(scope.row.teamno)">修改</el-button>									
 								</template>
 							</el-table-column>
 						</el-table>
 						<el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="carlist.total" :page-sizes="[1,2,3,4,5]" :page-size="carlist.pageSize">
-					</template>
-				
+					</template>			
 				</el-col>
 			</el-row>
 			<el-dialog title="新增等级" :visible.sync="add" width="30%" :before-close="handleClose">
@@ -97,6 +96,21 @@
 				{
 					name: '操作',
 					value: '0'
+				}],
+				vehicleInfo:[{
+					numbercar:'1111',
+					brand:'222',
+					typecar:'333',
+					mileage:'444',
+					teamname:'2020-03-24',
+					comstatus:''
+				},{
+					numbercar:'1111',
+					brand:'222',
+					typecar:'333',
+					mileage:'444',
+					teamname:'2020-03-24',
+					comstatus:''
 				}],
 			},
 			methods: {

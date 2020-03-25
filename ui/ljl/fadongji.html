@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 
@@ -54,6 +55,133 @@
 					{
 						name: '发动机品牌名称',
 						value: 'coding'
+					}
+
+				],
+				projectChild: ''
+			},
+			methods: {
+				bmxl() {
+					indexVm.To('ui/ljl/weixiuadd.html');
+				},
+				bmxp(coding) {
+
+					sessionStorage.setItem('xiu', coding)
+					indexVm.To('ui/ljl/weixiupdate.html');
+
+				},
+				cx() {
+					let _this = this;
+					alert(this.projectChild)
+					$.getJSON(`http://localhost:8080/api/emps/han/${this.projectChild}`, function(data) {
+						_this.wx = data;
+
+					});
+
+				},
+				sc(coding) {
+					let _this = this;
+
+					$.post(`http://localhost:8080/api/emps/shan/${coding}`, function(data) {
+						alert("删除成功");
+						indexVm.To('ui/ljl/weixiu.html');
+
+					});
+
+				},
+
+				init() {
+					let _this = this;
+					$.getJSON("http://localhost:8080/api/emps", function(data) {
+						_this.wx = data;
+
+					});
+				}
+
+			},
+			mounted() {
+				this.init();
+			}
+
+		});
+	</script>
+
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			#weixiu {
+				padding-left: 5px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="weixiu">
+			<el-row>
+				<el-col :span="24">
+					<template>
+						<el-row>
+							<el><label>分类编号</label><input type="text" v-model="projectChild" placeholder="请输入内容" style=" height:30px;" /></el>
+							
+							<el><label>分类名称</label><input type="text" v-model="projectChild" placeholder="请输入内容" style=" height:30px;" /></el>
+							<el-button type="primary" plain @click="bmxl">增加</el-button>
+
+							<el-button type="primary" plain>掉价</el-button>
+							<el-button type="primary" plain>保存</el-button>
+							<el-button type="primary" plain>导出</el-button>
+						</el-row>
+						<el-row>
+							<el-table :data="wx" border style="width: 100%">
+								<el-table-column v-for="(temp,index) in stsy" :label="temp.name" align="center" :resizable="false">
+									<template slot-scope="scope">
+										<span v-if='temp.value!=0'>{{scope.row[temp.value]}}</span>
+										<el-button v-if='temp.value==0' @click="bmxp(scope.row.coding)">修改</el-button>
+										<el-button v-if='temp.value==0' @click="sc(scope.row.coding)">删除</el-button>
+									</template>
+								</el-table-column>
+							</el-table>
+						</el-row>
+					</template>
+				</el-col>
+			</el-row>
+		</div>
+	</body>
+	<script>
+		var weixiu = new Vue({
+			el: '#weixiu',
+			data: {
+				wx: [],
+				stsy: [{
+						name: '项目类别',
+						value: 'projectChild'
+					},
+					{
+						name: '项目编码',
+						value: 'coding'
+					},
+					{
+						name: '项目名称',
+						value: 'itemName'
+					},
+					{
+						name: '售按价',
+						value: 'priceType'
+					},
+					{
+						name: '标准价',
+						value: 'standard'
+					},
+					{
+						name: 'vip价',
+						value: 'vIP'
+					},
+					{
+						name: '操作',
+						value: '0'
 					}
 
 				],

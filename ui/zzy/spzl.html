@@ -3,10 +3,9 @@
 
 	<head>
 		<meta charset="UTF-8">
-		<title>班组技工</title>
+		<title>商品资料</title>
 		<style>
-			/* 请为你的每个页面设置一个内边距 */
-			
+			/* 请为你的每个页面设置一个内边距 */			
 			#fish {
 				padding-left: 5px;
 			}
@@ -21,58 +20,49 @@
 					<template>
 						<!--<el-button type="button" class="btn btn-success btn-block" id="generate-excel"><i class="fa fa-file-excel-o" aria-hidden="true"></i> 将表格转换为Excel</el-button>-->
 						<el-button type="success" @click="add = true">添加数据</el-button>
+
 						<el-table :data="vehicleInfo" border style="width: 100%">
 							<el-table-column v-for="(temp,index) in stsy" :label="temp.name" align="center" :resizable="false">
 								<template slot-scope="scope">
 									<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>
-									<el-button type="danger" v-if="temp.value==0" @click="delOne(scope.row.numbercar)">删除</el-button>
-									<el-button type="primary" v-if="temp.value==0" @click="selteam(scope.row.teamno)">修改</el-button>									
+									<el-button type="danger" v-if="temp.value==0" @click="delOne(scope.row.teamno)">删除</el-button><br/>
+									<el-button type="primary" v-if="temp.value==0" @click="selteam(scope.row.teamno)">修改</el-button>
 								</template>
 							</el-table-column>
 						</el-table>
 						<el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="carlist.total" :page-sizes="[1,2,3,4,5]" :page-size="carlist.pageSize">
 					</template>
-
 				</el-col>
 			</el-row>
 			<el-dialog title="新增班组技工" :visible.sync="add" width="30%" :before-close="handleClose">
 				<div>
 					<el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
-						<el-form-item label="班组编号">
+						<el-form-item label="登记门店">
 							<el-input v-model="formLabelAlign.teamno"></el-input>
 						</el-form-item>
-						<el-form-item label="班组名称">
+						<el-form-item label="商品编码">
 							<el-input v-model="formLabelAlign.teamname"></el-input>
 						</el-form-item>
-						<el-form-item label="技工编号">
+						<el-form-item label="商品名称">
 							<el-input v-model="formLabelAlign.number"></el-input>
 						</el-form-item>
-						<el-form-item label="技工姓名">
+						<el-form-item label="使用车型">
 							<el-input v-model="formLabelAlign.artname"></el-input>
 						</el-form-item>
-						<el-form-item label="性别">
+						<el-form-item label="商品品牌">
 							<el-input v-model="formLabelAlign.sex"></el-input>
 						</el-form-item>
-						<el-form-item label="电话">
+						<el-form-item label="数量单位">
 							<el-input v-model="formLabelAlign.phone"></el-input>
 						</el-form-item>
-						<el-form-item label="地址">
+						<el-form-item label="商品等级">
 							<el-input v-model="formLabelAlign.site"></el-input>
 						</el-form-item>
-						<el-form-item label="用户名">
+						<el-form-item label="厂商名称">
 							<el-input v-model="formLabelAlign.logname"></el-input>
 						</el-form-item>
-						<el-form-item label="身份证">
+						<el-form-item label="商品价格">
 							<el-input v-model="formLabelAlign.idcard"></el-input>
-						</el-form-item>
-						<el-form-item label="星级">
-							<el-input v-model="formLabelAlign.classno"></el-input>
-						</el-form-item>
-						<el-form-item label="类型">
-							<el-input v-model="formLabelAlign.typeg"></el-input>
-						</el-form-item>
-						<el-form-item label="品牌">
-							<el-input v-model="formLabelAlign.brands"></el-input>
 						</el-form-item>
 					</el-form>
 				</div>
@@ -85,41 +75,32 @@
 			<el-dialog title="修改" :visible.sync="addteam" width="30%" :before-close="handleClose">
 				<div>
 					<el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
-						<el-form-item label="班组编号">
+						<el-form-item label="登记门店">
 							<el-input v-if="teams[0]!=undefined" v-model="teams[0].teamno"></el-input>
 						</el-form-item>
-						<el-form-item label="班组名称">
+						<el-form-item label="商品编码">
 							<el-input v-if="teams[0]!=undefined" v-model="teams[0].teamname"></el-input>
 						</el-form-item>
-						<el-form-item label="技工编号">
+						<el-form-item label="商品名称">
 							<el-input v-if="teams[0]!=undefined" v-model="teams[0].number"></el-input>
 						</el-form-item>
-						<el-form-item label="技工姓名">
+						<el-form-item label="使用车型">
 							<el-input v-if="teams[0]!=undefined" v-model="teams[0].artname"></el-input>
 						</el-form-item>
-						<el-form-item label="性别">
+						<el-form-item label="商品品牌">
 							<el-input v-if="teams[0]!=undefined" v-model="teams[0].sex"></el-input>
 						</el-form-item>
-						<el-form-item label="电话">
+						<el-form-item label="数量单位">
 							<el-input v-if="teams[0]!=undefined" v-model="teams[0].phone"></el-input>
 						</el-form-item>
-						<el-form-item label="地址">
+						<el-form-item label="商品等级">
 							<el-input v-if="teams[0]!=undefined" v-model="teams[0].site"></el-input>
 						</el-form-item>
-						<el-form-item label="用户名">
+						<el-form-item label="厂商名称">
 							<el-input v-if="teams[0]!=undefined" v-model="teams[0].logname"></el-input>
 						</el-form-item>
-						<el-form-item label="身份证">
+						<el-form-item label="商品价格">
 							<el-input v-if="teams[0]!=undefined" v-model="teams[0].idcard"></el-input>
-						</el-form-item>
-						<el-form-item label="星级">
-							<el-input v-if="teams[0]!=undefined" v-model="teams[0].classno"></el-input>
-						</el-form-item>
-						<el-form-item label="类型">
-							<el-input v-if="teams[0]!=undefined" v-model="teams[0].typeg"></el-input>
-						</el-form-item>
-						<el-form-item label="品牌">
-							<el-input v-if="teams[0]!=undefined" v-model="teams[0].brands"></el-input>
 						</el-form-item>
 					</el-form>
 				</div>
@@ -135,18 +116,15 @@
 			el: '#fish',
 			data: {
 				formLabelAlign: {
-					teamno: '1',
-					teamname: '2',
-					number: '3',
-					artname: '4',
-					sex: '5',
-					phone: '6',
-					site: '7',
-					logname: '8',
-					idcard: '9',
-					classno: '10',
-					typeg: '11',
-					brands: '12',
+					teamno: '',
+					teamname: '',
+					number: '',
+					artname: '',
+					sex: '',
+					phone: '',
+					site: '',
+					logname: '',
+					idcard: '',
 				},
 				add: false,
 				addteam:false,
@@ -155,49 +133,37 @@
 				list: [],
 				teams:{},
 				stsy: [{
-						name: '班组编号',
+						name: '登记门店',
 						value: 'teamno'
 					}, {
-						name: '班组名称',
+						name: '商品编码',
 						value: 'teamname'
 					}, {
-						name: '技工编号',
+						name: '商品名称',
 						value: 'number'
 					}, {
-						name: '技工姓名',
+						name: '使用车型',
 						value: 'artname'
 					},
 					{
-						name: '性别',
+						name: '商品品牌',
 						value: 'sex'
 					},
 					{
-						name: '电话',
+						name: '数量单位',
 						value: 'phone'
 					},
 					{
-						name: '地址',
+						name: '商品等级',
 						value: 'site'
 					},
 					{
-						name: '用户名',
+						name: '厂商名称',
 						value: 'logname'
 					},
 					{
-						name: '身份证',
+						name: '商品价格',
 						value: 'idcard'
-					},
-					{
-						name: '星级',
-						value: 'classno'
-					},
-					{
-						name: '类型',
-						value: 'typeg'
-					},
-					{
-						name: '品牌',
-						value: 'brands'
 					},
 					{
 						name: '操作',
@@ -214,9 +180,6 @@
 					site:'1111',
 					logname:'222',
 					idcard:'333',
-					classno:'444',
-					typeg:'22',
-					brands:'111',
 					comstatus:''
 				},{
 					teamno:'1111',
@@ -228,9 +191,6 @@
 					site:'1111',
 					logname:'222',
 					idcard:'333',
-					classno:'444',
-					typeg:'22',
-					brands:'111',
 					comstatus:''
 				}],
 			},

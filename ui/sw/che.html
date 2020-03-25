@@ -55,26 +55,26 @@
 				<h></h>
 				<el-dialog title="修改客户" :visible.sync="isShow3">
 					<el-form :model="xgkh" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-						<el-form-item label="客户编码" prop="name">
+						<el-form-item label="客户编码" prop="clientid">
 							<el-input v-model="xgkh.clientid"></el-input>
 						</el-form-item>
-						<el-form-item label="电话" prop="name">
+						<el-form-item label="电话" prop="clientiphone">
 							<el-input v-model="xgkh.clientiphone"></el-input>
 						</el-form-item>
-						<el-form-item label="备注" prop="name">
+						<el-form-item label="备注" prop="clientbz">
 							<el-input v-model="xgkh.clientbz"></el-input>
 						</el-form-item>
-						<el-form-item label="客户名称" prop="name">
+						<el-form-item label="客户名称" prop="clientname">
 							<el-input v-model="xgkh.clientname"></el-input>
 						</el-form-item>
-						<el-form-item label="客户地址" prop="name">
+						<el-form-item label="客户地址" prop="clientaddress">
 							<el-input v-model="xgkh.clientaddress"></el-input>
 						</el-form-item>
 
-						<el-form-item label="是否会员" prop="region">
-							<el-select v-model="xgkh.clientlb" placeholder="请选择活动区域">
-								<el-option label="区域一" value="1"></el-option>
-								<el-option label="区域二" value="2"></el-option>
+						<el-form-item label="是否会员" prop="clientlb">
+							<el-select v-model="xgkh.clientlb" placeholder="是否为会员">
+								<el-option label="是" value="1"></el-option>
+								<el-option label="不是" value="2"></el-option>
 							</el-select>
 						</el-form-item>
 						<el-form-item label="客户生日" required>
@@ -87,36 +87,36 @@
 						</el-form-item>
 
 						<el-form-item>
-							<el-button type="primary" @click="xg1">立即创建</el-button>
+							<el-button type="primary" @click="update1">立即创建</el-button>
 							<el-button @click="resetForm('ruleForm')">重置</el-button>
 						</el-form-item>
 					</el-form>
 
 				</el-dialog>
-				<el-button type="primary" @click="addPerson" plain>新增</el-button>
+				<el-button type="primary" @click="addClient" plain>新增</el-button>
 
 				<el-dialog title="新增客户" :visible.sync="isShow1">
 					<el-form :model="xzkh" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-						<el-form-item label="客户编码" prop="name">
+						<el-form-item label="客户编码" prop="clientid">
 							<el-input v-model="xzkh.clientid"></el-input>
 						</el-form-item>
-						<el-form-item label="电话" prop="name">
+						<el-form-item label="电话" prop="clientiphone">
 							<el-input v-model="xzkh.clientiphone"></el-input>
 						</el-form-item>
-						<el-form-item label="备注" prop="name">
+						<el-form-item label="备注" prop="clientbz">
 							<el-input v-model="xzkh.clientbz"></el-input>
 						</el-form-item>
-						<el-form-item label="客户名称" prop="name">
+						<el-form-item label="客户名称" prop="clientname">
 							<el-input v-model="xzkh.clientname"></el-input>
 						</el-form-item>
-						<el-form-item label="客户地址" prop="name">
+						<el-form-item label="客户地址" prop="clientaddress">
 							<el-input v-model="xzkh.clientaddress"></el-input>
 						</el-form-item>
 
-						<el-form-item label="是否会员" prop="region">
-							<el-select v-model="xzkh.clientlb" placeholder="请选择活动区域">
-								<el-option label="区域一" value="1"></el-option>
-								<el-option label="区域二" value="2"></el-option>
+						<el-form-item label="是否会员" prop="clientaddress">
+							<el-select v-model="xzkh.clientaddress" placeholder="是否为会员">
+								<el-option label="是" value="1"></el-option>
+								<el-option label="不是" value="2"></el-option>
 							</el-select>
 						</el-form-item>
 						<el-form-item label="客户生日" required>
@@ -125,9 +125,7 @@
 									<el-date-picker type="date" placeholder="选择日期" v-model="xzkh.clientbirthday" style="width: 100%;"></el-date-picker>
 								</el-form-item>
 							</el-col>
-
 						</el-form-item>
-
 						<el-form-item>
 							<el-button type="primary" @click="add1">立即创建</el-button>
 							<el-button @click="resetForm('ruleForm')">重置</el-button>
@@ -135,7 +133,7 @@
 					</el-form>
 
 				</el-dialog>
-				<el-button type="primary" @click="addPerson1">客户类别</el-button>
+				<!--			<el-button type="primary" @click="addPerson1">客户类别</el-button>
 
 				<el-dialog title="收货地址" :visible.sync="isShow2">
 					<el-table :data="tableData">
@@ -143,87 +141,63 @@
 						<el-table-column property="name" label="姓名" width="200"></el-table-column>
 						<el-table-column property="address" label="地址"></el-table-column>
 					</el-table>
-				</el-dialog>
+				</el-dialog>-->
 				<el-row>
 					<el-col :span="24">
 						<div class="grid-content bg-purple-dark">
 							<template>
-								<el-table v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)" :data="kh.list" height="250" border style="width: 100%">
-
-									<el-table-column fixed prop="clientid" label="编号" width="150">
+								<el-table :data="client" height="250" border style="width: 100%">
+									<el-table-column fixed prop="clientid" label="编号">
 									</el-table-column>
-
-									<el-table-column prop="clientname" label="客户姓名" width="120">
+									<el-table-column prop="clientname" label="客户姓名">
 									</el-table-column>
-									<el-table-column prop="clientaddress" label="详细地址" width="120">
+									<el-table-column prop="clientaddress" label="详细地址">
 									</el-table-column>
-									<el-table-column prop="clientiphone" label="电话号码" width="120">
+									<el-table-column prop="clientiphone" label="电话号码">
 									</el-table-column>
-									<el-table-column prop="clientbirthday" label="出生日期" width="200">
+									<el-table-column prop="clientbirthday" label="出生日期">
 									</el-table-column>
-									<el-table-column prop="clientbz" label="备注" width="120">
+									<el-table-column prop="clientbz" label="备注">
 									</el-table-column>
-									<el-table-column prop="clientbz" label="邮编" width="120">
+									<el-table-column prop="clientlb" label="邮编">
 									</el-table-column>
-									<el-table-column prop="clientbz" label="邮编" width="120">
-									</el-table-column>
-									<el-table-column prop="clientbz" label="邮编" width="120">
-									</el-table-column>
-
-									<el-table-column fixed="right" label="操作" width="200">
-
+									<el-table-column label="操作">
 										<template slot-scope="scope">
-											<el-button type="text" @click="dj(scope.row.clientid)">查看</el-button>
-											<el-button type="text" size="small">新增</el-button>
-											<el-button type="text" size="small" @click="xg(scope.row.clientid)">编辑</el-button>
-
-											<el-button slot="reference" type="text" @click="sckh(scope.row.clientid)">删除</el-button>
-
+											<el-button type="text" @click="query(scope.row.clientid)">查看</el-button>
+											<el-button type="text" size="small" @click="update(scope.row.clientid)">编辑</el-button>
+											<el-button slot="reference" type="text" @click="del(scope.row.clientid)">删除</el-button>
 										</template>
-
 									</el-table-column>
 								</el-table>
 							</template>
 						</div>
 					</el-col>
 				</el-row>
-
 				<template>
-
-					<el-tabs v-model="activeName" @tab-click="handleClick">
-						<el-tab-pane type="primary" @click="openFullScreen1" v-loading.fullscreen.lock="fullscreenLoading" label="车辆信息" name="first">
+					<el-tabs>
+						<el-tab-pane type="primary" label="车辆信息" name="first">
 							<el-row>
 								<el-col :span="24">
 									<div class="grid-content bg-purple-dark">
 										<template>
 											<el-table :data="cl.list" border style="width: 100%" height="250">
-												<el-table-column fixed prop="vehiclecp" label="车牌" width="150">
+												<el-table-column fixed prop="vehiclecp" label="车牌">
 												</el-table-column>
-
-												<el-table-column prop="vehiclepp" label="车辆品牌" width="120">
+												<el-table-column prop="vehiclepp" label="车辆品牌">
 												</el-table-column>
-												<el-table-column prop="vehiclexh" label="车辆型号" width="120">
+												<el-table-column prop="vehiclexh" label="车辆型号">
 												</el-table-column>
-												<el-table-column prop="vehiclejsy" label="驾驶员" width="120">
+												<el-table-column prop="vehiclejsy" label="驾驶员">
 												</el-table-column>
-												<el-table-column prop="vehicledh" label="电话" width="280">
+												<el-table-column prop="vehicledh" label="电话">
 												</el-table-column>
-												<el-table-column prop="vehiclegs" label="归属" width="120">
+												<el-table-column prop="vehiclegs" label="归属">
 												</el-table-column>
-												<el-table-column prop="vehiclefname" label="客户名称" width="120">
+												<el-table-column prop="vehiclefname" label="客户名称">
 												</el-table-column>
-												<el-table-column prop="vehiclefdj" label="发动机" width="120">
+												<el-table-column prop="vehiclefdj" label="发动机">
 												</el-table-column>
-												<el-table-column prop="clientbz" label="邮编" width="120">
-												</el-table-column>
-												<el-table-column fixed="right" label="操作" width="150">
-													<template slot-scope="scope">
-														<el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-														<el-button type="text" size="small">编辑</el-button>
-														<el-button @click.native.prevent="deleteRow(scope.$index, tableData)" type="text" size="small">
-															移除
-														</el-button>
-													</template>
+												<el-table-column prop="clientbz" label="邮编">
 												</el-table-column>
 											</el-table>
 										</template>
@@ -231,39 +205,27 @@
 								</el-col>
 							</el-row>
 						</el-tab-pane>
-						<el-tab-pane type="primary" @click="openFullScreen1" v-loading.fullscreen.lock="fullscreenLoading" label="历史消费" name="second">
+						<el-tab-pane type="primary" label="历史消费" name="second">
 							<el-row>
 								<el-col :span="24">
 									<div class="grid-content bg-purple-dark">
 										<template>
-											<el-table :data="cl.list" border style="width: 100%">
-												<el-table-column fixed prop="clientid" label="编号" width="150">
+											<el-table :data="client" border style="width: 100%">
+												<el-table-column fixed prop="clientid" label="单据类型">
 												</el-table-column>
-
-												<el-table-column prop="clientname" label="客户姓名" width="120">
+												<el-table-column prop="clientname" label="销售单号">
 												</el-table-column>
-												<el-table-column prop="clientaddress" label="详细地址" width="120">
+												<el-table-column prop="clientaddress" label="车牌号">
 												</el-table-column>
-												<el-table-column prop="clientiphone" label="电话号码" width="120">
+												<el-table-column prop="clientiphone" label="维修业务">
 												</el-table-column>
-												<el-table-column prop="clientbirthday" label="出生日期" width="280">
+												<el-table-column prop="clientbirthday" label="进厂时间">
 												</el-table-column>
-												<el-table-column prop="clientbz" label="备注" width="120">
+												<el-table-column prop="clientbz" label="完工时间">
 												</el-table-column>
-												<el-table-column prop="clientbz" label="邮编" width="120">
+												<el-table-column prop="clientlb" label="结算时间">
 												</el-table-column>
-												<el-table-column prop="clientbz" label="邮编" width="120">
-												</el-table-column>
-												<el-table-column prop="clientbz" label="邮编" width="120">
-												</el-table-column>
-												<el-table-column fixed="right" label="操作" width="150">
-													<template slot-scope="scope">
-														<el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-														<el-button type="text" size="small">编辑</el-button>
-														<el-button @click.native.prevent="deleteRow(scope.$index, tableData)" type="text" size="small">
-															移除
-														</el-button>
-													</template>
+												<el-table-column prop="clientlb" label="消费金额">
 												</el-table-column>
 											</el-table>
 										</template>
@@ -271,17 +233,22 @@
 								</el-col>
 							</el-row>
 						</el-tab-pane>
-
 				</template>
-
 		</div>
 	</body>
-
 	<script>
 		var cheVm = new Vue({
 			el: '#cheVm',
 			data: {
-				kh: {},
+				client: [{
+					clientid: "1",
+					clientname: "朱小鹏",
+					clientiphone: "132131",
+					clientbirthday: "1900-12-12",
+					clientbz: "企鹅",
+					clientlb: "我去饿我去",
+					clientaddress: "恶气恶气"
+				}],
 				lb: {},
 				cl: {},
 				xzkh: {
@@ -302,10 +269,7 @@
 					clientbz: "",
 					clientlb: "",
 					clientaddress: ""
-
 				},
-				loading: true,
-
 				visible: false,
 				isShow1: false,
 				isShow2: false,
@@ -370,205 +334,18 @@
 				}
 			},
 			methods: {
-				open() {
-
-					this.$alert('这是一段内容', '标题名称', {
-						confirmButtonText: '确定',
-						callback: action => {
-							this.$message({
-								type: 'info',
-								message: `action: ${ action }`
-
-							});
-							this.$notify({
-								title: '成功',
-								message: '这是一条成功的提示消息',
-								type: 'success'
-							});
-						}
-					});
-
-				},
-				add1() {
-					let _this = this;
-					jQuery.ajax(`http://127.0.0.1:8080/api/client/clients`, {
-						type: 'post',
-						contentType: 'application/json',
-						data: JSON.stringify(_this.xzkh),
-						success(data) {
-							_this.$message({
-								message: '恭喜你，这是一条成功消息',
-								type: 'success'
-							});
-							_this.cx(1, 1)
-							_this.cx1(1)
-						}
-					});
-				},
-				dj(id) {
-
-					let _this = this
-					let pageNum = 1
-					let name = id
-					$.getJSON(`http://127.0.0.1:8080/api/ve/ves/${pageNum}/${name}`, function(data) {
-
-						_this.cl = data
-
-					})
-
-				},
-				cx(pageNum, pageNum1) {
-					let _this = this
-					$.getJSON(`http://127.0.0.1:8080/api/client/${pageNum}`, function(data) {
-
-						_this.kh = data
-
-					})
-					$.getJSON(`http://127.0.0.1:8080/api/vip/${pageNum1}`, function(data) {
-
-						_this.lb = data
-
-					})
-				},
-				cx1(pageNum) {
-					let _this = this
-					$.getJSON(`http://127.0.0.1:8080/api/ve/${pageNum}`, function(data) {
-
-						_this.cl = data
-
-					})
-				},
-				handleClose(done) {
-					this.$confirm('确认关闭？')
-						.then(_ => {
-							done();
-						})
-						.catch(_ => {});
-				},
-				submitForm(formName) {
-					this.$refs[formName].validate((valid) => {
-						if(valid) {
-							alert('submit!');
-						} else {
-							console.log('error submit!!');
-							return false;
-						}
-					});
+				addClient() {
+					this.isShow1 = true;
 				},
 				resetForm(formName) {
 					this.$refs[formName].resetFields();
 				},
-				addPerson() {
-
-					const loading = this.$loading({
-						lock: true,
-						text: '努力更新中....',
-						spinner: 'el-icon-loading',
-						background: 'rgba(0, 0, 0, 0.5)'
-					});
-					//延迟2秒，模拟网络延迟
-					setTimeout(() => {
-						this.isShow1 = true
-						loading.close(); //关闭加载块【非常重要】
-
-					}, 2000);
-
+				query(id) {},
+				update(id) {
+					this.isShow3 = true;
 				},
-				xg(id) {
-
-					const loading = this.$loading({
-						lock: true,
-						text: '努力更新中....',
-						spinner: 'el-icon-loading',
-						background: 'rgba(0, 0, 0, 0.5)'
-					});
-					//延迟2秒，模拟网络延迟
-					setTimeout(() => {
-						this.isShow3 = true
-						loading.close(); //关闭加载块【非常重要】
-						let _this = this;
-
-						$.getJSON(`http://127.0.0.1:8080/api/client/clients/${id}`, function(data) {
-
-							_this.xgkh = data
-							_this.cx(1, 1)
-							_this.cx1(1)
-
-						})
-
-					}, 2000);
-
-				},
-				xg1() {
-					let _this = this;
-					jQuery.ajax(`http://127.0.0.1:8080/api/client/clients`, {
-						type: 'put',
-						contentType: 'application/json',
-						data: JSON.stringify(_this.xgkh),
-						success(data) {
-							_this.$message({
-								message: '恭喜你，修改成功',
-								type: 'success'
-							});
-							_this.cx(1, 1)
-							_this.cx1(1)
-						}
-					});
-
-				},
-				sckh(id) {
-					this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-						confirmButtonText: '确定',
-						cancelButtonText: '取消',
-						type: 'warning'
-					}).then(() => {
-						this.$message({
-
-							type: 'success',
-							message: '删除成功!'
-						});
-						var _this = this
-						jQuery.ajax(`http://127.0.0.1:8080/api/client/clients/${id}`, {
-							type: 'delete',
-							success(data) {
-								_this.cx(1, 1)
-								_this.cx1(1)
-							}
-						});
-					}).catch(() => {
-						this.$message({
-							type: 'info',
-							message: '已取消删除'
-						});
-					});
-
-				},
-				addPerson1() {
-
-					const loading = this.$loading({
-						lock: true,
-						text: '努力更新中....',
-						spinner: 'el-icon-loading',
-						background: 'rgba(0, 0, 0, 0.5)'
-					});
-					//延迟2秒，模拟网络延迟
-					setTimeout(() => {
-						this.isShow2 = true
-						loading.close(); //关闭加载块【非常重要】
-
-					}, 2000);
-
-				}
-			},
-			mounted() {
-
-				this.loading = true;
-				setTimeout(() => {
-					this.loading = false;
-					this.cx(1, 1)
-					this.cx1(1)
-				}, 2000);
-
+				add1() {},
+				update1() {}
 			}
 		});
 	</script>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+
+	<body>
+		<div id='vip'>
+			<el-row>
+				<el-col :span="8" style="margin-left: 500px;">
+					<h1> 会员管理</h1>
+				</el-col>
+				<el-col :span="8">
+					<el-button type="primary" @click="add" plain>新增</el-button>
+				</el-col>
+				<el-dialog title="新增会员" :visible.sync="isShow1">
+					<el-form :model="vip1" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+						<el-form-item label="会员账号" prop="clientid">
+							<el-input v-model="vip1.card"></el-input>
+						</el-form-item>
+						<el-form-item label="账号密码" prop="clientiphone">
+							<el-input v-model="vip1.pwd"></el-input>
+						</el-form-item>
+						<el-form-item>
+							<el-button type="primary" @click="add1">立即创建</el-button>
+							<el-button @click="resetForm('ruleForm')">重置</el-button>
+						</el-form-item>
+					</el-form>
+				</el-dialog>
+			</el-row>
+			<template>
+				<el-table :data="vip" border style="width: 100%" height="250">
+					<el-table-column fixed prop="vipid" label="会员编号">
+					</el-table-column>
+					<el-table-column prop="jifen" label="当前积分">
+					</el-table-column>
+					<el-table-column prop="time" label="加入时间">
+					</el-table-column>
+					<el-table-column prop="sunjifen" label="总积分">
+					</el-table-column>
+					<el-table-column label="操作" width="150">
+						<template slot-scope="scope">
+							<el-button @click="del(scope.row.vehiclecp)" type="text" size="small">
+								移除
+							</el-button>
+						</template>
+					</el-table-column>
+					</el-table-column>
+				</el-table>
+			</template>
+
+		</div>
+	</body>
+	<script>
+		var vip = new Vue({
+			el: "#vip",
+			data: {
+				isShow1: false,
+				vip: [{
+					vipid: "1",
+					jifen: "2",
+					time: "2012-12-12",
+					sunjifen: "3"
+				}, {
+					vipid: "2",
+					jifen: "56",
+					time: "2012-12-12",
+					sunjifen: "343"
+				}],
+				vip1: {
+					card: "",
+					pwd: ""
+				}
+			},
+			methods: {
+				add() {
+					this.isShow1 = true;
+				},
+				add1() {}
+			}
+		});
+	</script>
+
+</html>
