@@ -20,8 +20,7 @@
 				<el-col :span="24">
 					<template>
 						<!--<el-button type="button" class="btn btn-success btn-block" id="generate-excel"><i class="fa fa-file-excel-o" aria-hidden="true"></i> 将表格转换为Excel</el-button>-->
-							<el-button type="success" @click="add = true">添加数据</el-button>
-							
+							<el-button type="success" @click="add = true">添加数据</el-button>						
 						<el-table :data="vehicleInfo" border style="width: 100%">
 							<el-table-column v-for="(temp,index) in stsy" :label="temp.name" align="center" :resizable="false">
 								<template slot-scope="scope">
