@@ -17,9 +17,9 @@
 				<el-col :span="24">
 					<template>
 						<el-row>
-							<el><label>分类编号</label><input type="text" v-model="projectChild" placeholder="请输入内容" style=" height:30px;" /></el>
+							<el><label>分类编号</label><input type="text" v-model="projectChild" style=" height:30px;" /></el>
 							
-							<el><label>分类名称</label><input type="text" v-model="projectChild" placeholder="请输入内容" style=" height:30px;" /></el>
+							<el><label>分类名称</label><input type="text" v-model="projectChild" style=" height:30px;" /></el>
 							<el-button type="primary" plain @click="bmxl">增加</el-button>
 
 							<el-button type="primary" plain>掉价</el-button>
@@ -48,32 +48,12 @@
 			data: {
 				wx: [],
 				stsy: [{
-						name: '项目类别',
+						name: '发动机品牌编号',
 						value: 'projectChild'
 					},
 					{
-						name: '项目编码',
+						name: '发动机品牌名称',
 						value: 'coding'
-					},
-					{
-						name: '项目名称',
-						value: 'itemName'
-					},
-					{
-						name: '售按价',
-						value: 'priceType'
-					},
-					{
-						name: '标准价',
-						value: 'standard'
-					},
-					{
-						name: 'vip价',
-						value: 'vIP'
-					},
-					{
-						name: '操作',
-						value: '0'
 					}
 
 				],
