@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>班组技工</title>
+		<style>
+			/* 请为你的每个页面设置一个内边距 */
+			
+			#fish {
+				padding-left: 5px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!--绑定vue引擎，命名：页面名字+Vm-->
+		<div id="fish">
+			<el-row>
+				<el-col :span="24">
+					<template>
+						<!--<el-button type="button" class="btn btn-success btn-block" id="generate-excel"><i class="fa fa-file-excel-o" aria-hidden="true"></i> 将表格转换为Excel</el-button>-->
+						<el-button type="success" @click="add = true">添加数据</el-button>
+						<el-table :data="vehicleInfo" border style="width: 100%">
+							<el-table-column v-for="(temp,index) in stsy" :label="temp.name" align="center" :resizable="false">
+								<template slot-scope="scope">
+									<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>
+									<el-button type="danger" v-if="temp.value==0" @click="delOne(scope.row.numbercar)">删除</el-button>
+									<el-button type="primary" v-if="temp.value==0" @click="selteam(scope.row.teamno)">修改</el-button>									
+								</template>
+							</el-table-column>
+						</el-table>
+						<el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="carlist.total" :page-sizes="[1,2,3,4,5]" :page-size="carlist.pageSize">
+					</template>
+
+				</el-col>
+			</el-row>
+			<el-dialog title="新增班组技工" :visible.sync="add" width="30%" :before-close="handleClose">
+				<div>
+					<el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
+						<el-form-item label="班组编号">
+							<el-input v-model="formLabelAlign.teamno"></el-input>
+						</el-form-item>
+						<el-form-item label="班组名称">
+							<el-input v-model="formLabelAlign.teamname"></el-input>
+						</el-form-item>
+						<el-form-item label="技工编号">
+							<el-input v-model="formLabelAlign.number"></el-input>
+						</el-form-item>
+						<el-form-item label="技工姓名">
+							<el-input v-model="formLabelAlign.artname"></el-input>
+						</el-form-item>
+						<el-form-item label="性别">
+							<el-input v-model="formLabelAlign.sex"></el-input>
+						</el-form-item>
+						<el-form-item label="电话">
+							<el-input v-model="formLabelAlign.phone"></el-input>
+						</el-form-item>
+						<el-form-item label="地址">
+							<el-input v-model="formLabelAlign.site"></el-input>
+						</el-form-item>
+						<el-form-item label="用户名">
+							<el-input v-model="formLabelAlign.logname"></el-input>
+						</el-form-item>
+						<el-form-item label="身份证">
+							<el-input v-model="formLabelAlign.idcard"></el-input>
+						</el-form-item>
+						<el-form-item label="星级">
+							<el-input v-model="formLabelAlign.classno"></el-input>
+						</el-form-item>
+						<el-form-item label="类型">
+							<el-input v-model="formLabelAlign.typeg"></el-input>
+						</el-form-item>
+						<el-form-item label="品牌">
+							<el-input v-model="formLabelAlign.brands"></el-input>
+						</el-form-item>
+					</el-form>
+				</div>
+				<span slot="footer" class="dialog-footer">
+   				 <el-button @click="addteam = false">取 消</el-button>
+   				 <el-button type="primary" @click="addall">保存</el-button>
+  				</span>
+			</el-dialog>
+
+			<el-dialog title="修改" :visible.sync="addteam" width="30%" :before-close="handleClose">
+				<div>
+					<el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
+						<el-form-item label="班组编号">
+							<el-input v-if="teams[0]!=undefined" v-model="teams[0].teamno"></el-input>
+						</el-form-item>
+						<el-form-item label="班组名称">
+							<el-input v-if="teams[0]!=undefined" v-model="teams[0].teamname"></el-input>
+						</el-form-item>
+						<el-form-item label="技工编号">
+							<el-input v-if="teams[0]!=undefined" v-model="teams[0].number"></el-input>
+						</el-form-item>
+						<el-form-item label="技工姓名">
+							<el-input v-if="teams[0]!=undefined" v-model="teams[0].artname"></el-input>
+						</el-form-item>
+						<el-form-item label="性别">
+							<el-input v-if="teams[0]!=undefined" v-model="teams[0].sex"></el-input>
+						</el-form-item>
+						<el-form-item label="电话">
+							<el-input v-if="teams[0]!=undefined" v-model="teams[0].phone"></el-input>
+						</el-form-item>
+						<el-form-item label="地址">
+							<el-input v-if="teams[0]!=undefined" v-model="teams[0].site"></el-input>
+						</el-form-item>
+						<el-form-item label="用户名">
+							<el-input v-if="teams[0]!=undefined" v-model="teams[0].logname"></el-input>
+						</el-form-item>
+						<el-form-item label="身份证">
+							<el-input v-if="teams[0]!=undefined" v-model="teams[0].idcard"></el-input>
+						</el-form-item>
+						<el-form-item label="星级">
+							<el-input v-if="teams[0]!=undefined" v-model="teams[0].classno"></el-input>
+						</el-form-item>
+						<el-form-item label="类型">
+							<el-input v-if="teams[0]!=undefined" v-model="teams[0].typeg"></el-input>
+						</el-form-item>
+						<el-form-item label="品牌">
+							<el-input v-if="teams[0]!=undefined" v-model="teams[0].brands"></el-input>
+						</el-form-item>
+					</el-form>
+				</div>
+				<span slot="footer" class="dialog-footer">
+   				 <el-button @click="addteam = false">取 消</el-button>
+   				 <el-button type="primary" @click="updteam">保存</el-button>
+  				</span>
+			</el-dialog>
+		</div>
+	</body>
+	<script>
+		var fish = new Vue({
+			el: '#fish',
+			data: {
+				formLabelAlign: {
+					teamno: '1',
+					teamname: '2',
+					number: '3',
+					artname: '4',
+					sex: '5',
+					phone: '6',
+					site: '7',
+					logname: '8',
+					idcard: '9',
+					classno: '10',
+					typeg: '11',
+					brands: '12',
+				},
+				add: false,
+				addteam:false,
+				piges: {},
+				carlist: [],
+				list: [],
+				teams:{},
+				stsy: [{
+						name: '班组编号',
+						value: 'teamno'
+					}, {
+						name: '班组名称',
+						value: 'teamname'
+					}, {
+						name: '技工编号',
+						value: 'number'
+					}, {
+						name: '技工姓名',
+						value: 'artname'
+					},
+					{
+						name: '性别',
+						value: 'sex'
+					},
+					{
+						name: '电话',
+						value: 'phone'
+					},
+					{
+						name: '地址',
+						value: 'site'
+					},
+					{
+						name: '用户名',
+						value: 'logname'
+					},
+					{
+						name: '身份证',
+						value: 'idcard'
+					},
+					{
+						name: '星级',
+						value: 'classno'
+					},
+					{
+						name: '类型',
+						value: 'typeg'
+					},
+					{
+						name: '品牌',
+						value: 'brands'
+					},
+					{
+						name: '操作',
+						value: '0'
+					}
+				],
+				vehicleInfo:[{
+					teamno:'1111',
+					teamname:'222',
+					number:'333',
+					artname:'444',
+					sex:'男',
+					phone:'1111',
+					site:'1111',
+					logname:'222',
+					idcard:'333',
+					classno:'444',
+					typeg:'22',
+					brands:'111',
+					comstatus:''
+				},{
+					teamno:'1111',
+					teamname:'222',
+					number:'333',
+					artname:'444',
+					sex:'男',
+					phone:'1111',
+					site:'1111',
+					logname:'222',
+					idcard:'333',
+					classno:'444',
+					typeg:'22',
+					brands:'111',
+					comstatus:''
+				}],
+			},
+			methods: {
+				delOne(teamno) {
+					let _this = this;
+					if(confirm("确认删除？")) {
+						jQuery.post("http://127.0.0.1:8080/api/team/del", {
+							teamno: `${teamno}`
+						}, function(data) {
+							alert("删除成功！");
+							location.reload();
+						});
+					}
+				},
+				page(num, size) {
+					let _this = this;
+					jQuery.getJSON(`http://127.0.0.1:8080/api/team/page/${num}/${size}`, {}, function(pg) {
+						_this.carlist = pg;
+						_this.list = pg.list;
+					});
+				},
+				//页数改变事件
+
+				change(num) {
+					let _this = this;
+					this.page(num, _this.carlist.pageSize);
+				},
+				//pageSize选择事件
+				sizec(size) {
+					this.page(1, size);
+				},
+				//添加数据
+				addall() {
+					let _this = this;
+					jQuery.ajax("http://127.0.0.1:8080/api/team/add", {
+						type: 'post',
+						data: JSON.stringify(_this.formLabelAlign),
+						contentType: 'application/json; charset=UTF-8',
+						success(data) {
+							if(data == "ok") {
+								alert("新增成功！");
+								this.add = false;
+								location.reload();
+							} else {
+								alert("新增失败！");
+							}
+						}
+					});
+				},
+				//修改时渲染数据到页面上
+				selteam(teamno){
+					alert(teamno);
+					let _this = this;
+					_this.s2 = true;
+					jQuery.getJSON("http://127.0.0.1:8080/api/team/pages", {
+						teamno: `${teamno}`
+					}, function(data) {
+						_this.teams = data;
+						_this.addteam=true;
+					});
+				},
+				
+				updteam(){
+					console.log(this.teams);
+					let _this = this;
+					jQuery.ajax("http://127.0.0.1:8080/api/team/upd", {
+						type: 'post',
+						data: JSON.stringify(_this.teams[0]),
+						contentType: 'application/json;charset=UTF-8',
+						success(data) {
+							if(data == "ok") {
+								alert("修改成功！");
+								location.reload();
+							} else {
+								alert("修改失败!");
+							}
+						}
+					});
+				}
+			},
+			mounted() {
+				let _this = this;
+				_this.page(1, 5);
+			}
+		});
+	</script>
+
+</html>

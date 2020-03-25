@@ -1,0 +1,27 @@
+html{background:none repeat scroll 0 0 #FFFFFF;  overflow-y:scroll}
+body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, dl, dt, dd, ul, ol, li, pre, fieldset, lengend, button, input, textarea, form, th, td{margin:0; padding:0}
+body, button, input, select, textarea{font:14px/1.8 "Microsoft Yahei", verdana}
+.ie10 body,.ie11 body{font:14px/1.8 "Microsoft Yahei", verdana}
+h1, h2, h3, h4, h5, h6{font-size:100%; font-weight:normal}
+button, input, select, textarea{font-size:100%}
+hr{border:0; height:1px; *color:#fff}
+address, cite, dfn, em, var{font-style:normal}
+small{font-size:12px}
+.fl-clear{clear:both}
+.fl-clr{zoom:1}
+.fl-clr:after{display:block; clear:both; height:0; content:"\0020"}
+table{border-collapse:collapse; border-spacing:0}
+ul, ol{list-style:none outside none}
+a{text-decoration:none; color:#696969}
+a:hover{text-decoration:none; color:#ff6637}
+img{border:0}
+
+
+.nav_title{text-align:center; padding:50px 0; font-size:16px;}
+.nav_title a{margin:0 20px; display:inline-block; border:1px solid #ccc; height:40px; line-height:40px; padding:0 20px;border-radius:5px;-moz-border-radius:5px;-webkit-border-radius:5px; overflow:hidden}
+.nav_title .a{color:#fff; background:#ff6637;border:1px solid #ff6637;}
+.content_left{width:240px; margin:50px auto}
+.content_left .title{height:45px; background:#ff6637; color:#fff; padding:0 20px; line-height:45px; font-size:16px}
+.content_left .title span{background:url(../img/ioc.png) no-repeat 0 center; padding-left:22px;}
+
+.explain_txt{width:860px; margin:0 auto; line-height:40px; padding:0 0 200px 0; font-size:16px}

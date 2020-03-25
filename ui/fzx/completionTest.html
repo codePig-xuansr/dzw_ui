@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			#comVm{
+				padding: 5px 0 0 5px;
+				
+			}
+			.el-tabs__nav-wrap::after{
+				content: none !important;
+			}
+			.el-tabs__header {
+				margin: 0 !important;
+				height: 10px !important;
+			}
+			.el-radio{
+				margin-right: 0 !important;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="comVm">
+			<el-card>
+				<el-row>
+				  <el-col :span="24">
+					  <el-form :model="cominfo" inline="true">
+						<el-form-item label="开单日期：">
+							<template>
+								<el-date-picker style="width: 170px;" :editable="false" placeholder="请选择日期" v-model="cominfo.date" format="yyyy年MM月dd日" value-format="yyyy-MM-dd"></el-date-picker>
+							</template>
+						</el-form-item>
+						<el-form-item label="单据状态：">
+							<template>
+								<el-select v-model="cominfo.status" style="width: 150px;" clearable >
+								  <el-option label="未竣工" :value="0"></el-option>
+								  <el-option label="已竣工" :value="1"></el-option>
+								</el-select>
+							</template>
+						</el-form-item>
+						<el-form-item label="维修单号：">
+							<el-input v-model="cominfo.eno" placeholder="支持模糊搜索"></el-input>
+						</el-form-item>
+						<el-form-item>
+							<el-button type="success" @click="ck">查询</el-button>
+							<el-button type="primary" @click="reset">清空</el-button>
+						</el-form-item>
+					  </el-form>
+				  </el-col>
+				</el-row>
+				<el-row>
+				  <el-col :span="24">
+					  <template>
+						  <el-table :data="vehicleInfo" border >
+							<el-table-column v-for="(temp,index) in ms" :label="temp.name" align="center">
+								<template slot-scope="scope">
+									<span v-if="temp.values!='comstatus'">{{scope.row[temp.values]}}</span>
+									<span v-if="temp.values=='comstatus'">
+										<el-button v-if="scope.row.comstatus" type="success" disabled>已竣工</el-button>
+										<el-button v-if="!scope.row.comstatus" type="info" @click="jg(scope.row.rorder,scope.row.expectedCompletion)">未竣工</el-button>
+									</span>
+								</template>
+							</el-table-column>
+						  </el-table>
+					  </template>
+				  </el-col>
+				</el-row>
+				<el-row>
+					<br>
+				  <el-col :span="24" offset=6>
+					  <template>
+						<el-pagination  prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,prev, pager, next, jumper" :total="pages.total"  :page-size="pages.pageSize">
+					  </el-pagination>
+					  </template>
+				  </el-col>
+				</el-row>
+			</el-card>
+			<el-dialog title="竣工检验" :visible.sync="cs">
+				<div>
+					<el-row>
+					  <el-col :span="24">
+						<template>
+							<el-radio-group v-model="hg"  @change="tabs">
+							  <el-radio label="1" border >合格</el-radio>
+							  <el-radio label="2" border >不合格</el-radio>
+							</el-radio-group>
+							<hr>
+							  <el-tabs v-model="hg">
+								<el-tab-pane name="1">
+									<!-- 合格 -->
+									<el-form :model="completion" inline="true" :rules="ruls4" ref="completion">
+									  <el-form-item label="预计完工">
+										<a style="color: hotpink;font-size: 16px;">{{edate}}</a>
+									  </el-form-item>
+									  <el-form-item label="实际完工">
+										<a style="color:chocolate;font-size: 16px;">{{today}}</a>
+									</el-form-item>
+									<br>
+									<a v-if="wg" style="color: red;font-size: 14px;">已超过预计完工时间，请填写误工原因和处罚金额</a>
+									<div style="margin-top: 15px;" v-if="wg">
+										<el-form-item label="误工原因" prop="delays">
+											<el-input v-model="completion.delays" style="width: 200px;" type="textarea"></el-input>
+										</el-form-item>
+										<br>
+										<el-form-item label="处罚金额" prop="penatly">
+											<el-input v-model="completion.penatly" oninput="this.value=this.value.replace(/[^\d]/g,'')" style="width: 200px;"></el-input>
+										</el-form-item>
+									</div>
+									<el-form-item label="质检员：" prop="zjperson">
+										<el-input v-model="completion.zjperson"></el-input>
+									</el-form-item>
+									</el-form>
+								</el-tab-pane>
+								<el-tab-pane name="2">
+									<!-- 不合格 -->
+									<el-form :model="completion" inline="true">
+										<el-form-item label="已返工：">
+											<a style="color: red;">{{fgct}}</a><span style="margin-left: 5px;">次</span>
+										</el-form-item>
+										<br>
+										<div>
+									  <el-form-item label="返工原因：">
+										<el-input v-model="completion.delays" style="width: 200px;" type="textarea"></el-input>
+									  </el-form-item>
+									  <br>
+									  <el-form-item label="责任人：">
+										<el-input v-model="completion.zjperson"></el-input>
+									  </el-form-item>
+									  <br>
+									  <el-form-item label="处罚金额：">
+										<el-input v-model="completion.penatly" oninput="this.value=this.value.replace(/[^\d]/g,'')" style="width: 200px;"></el-input>
+									  </el-form-item>
+									</div>
+									</el-form>
+								</el-tab-pane>
+							  </el-tabs>
+						</template>
+						
+					  </el-col>
+					</el-row>
+				</div>
+				<span slot="footer" class="dialog-footer">
+					<el-button @click="cs = false">取 消</el-button>
+					<el-button type="primary" @click="comjg">确 定</el-button>
+				</span>
+			</el-dialog>
+		</div>
+	</body>
+	<script>
+		var comVm=new Vue({
+			el:'#comVm',
+			data:{
+				cs:false,
+				cominfo:{
+					date:null,
+					status:'',
+					eno:'',
+				},
+				completion:{
+					eno:'',
+					//合格状态
+					qualified:'',
+					//误工原因
+					delays:'',
+					//处罚金额，
+					penatly:'',
+					//质检员
+					zjperson:''
+				},
+				hg:'1',
+				//显示行
+				ms:[{name:'维修单号',values:'rorder'},{name:'车牌号',values:'carHno'},{name:'业务类型',values:'btype'},{name:'单据类型',values:'orderType'},{name:'开单时间',values:'orderTime'},{name:'预计完工',values:'expectedCompletion'},{name:'竣工状态',values:'comstatus'}],
+				vehicleInfo:[{
+					rorder:'1111',
+					carHno:'222',
+					btype:'333',
+					orderType:'444',
+					orderTime:'2020-03-24',
+					expectedCompletion:'2020-03-25',
+					comstatus:''
+				},{
+					rorder:'666',
+					carHno:'666',
+					btype:'666',
+					orderType:'666',
+					orderTime:'2020-03-24',
+					expectedCompletion:'2020-03-25',
+					comstatus:''
+				}],
+				pages:{},
+				edate:'',
+				today:'',
+				wg:true,
+				fgct:"",
+				ruls4:{
+					delays:[{required: true, message:'请填写误工原因', trigger: 'blur'}],
+					penatly:[{required: true, message:'请填写处罚金额', trigger: 'blur'}],
+					zjperson:[{required: true, message:'请填写质检人员姓名', trigger: 'blur'}]
+				}
+			},
+			methods:{
+				//竣工模态框调用....
+				jg(eno,edate){
+					//移除校验结果
+					if(this.$refs['completion']!=undefined){
+						this.$refs['completion'].resetFields();
+					}
+					
+					this.completion.eno=eno;
+					this.edate=edate;
+					this.today = new Date().toLocaleString('chinese',{hour12:false});
+					var date1Str = new Date(Date.parse(edate));
+					var date2Str = new Date(Date.parse(this.today));
+					//当前时间>预计完工，true:超过
+					this.wg=date2Str>date1Str;
+					this.cs=true;
+					
+				},
+				tabs(i){
+					let _this=this;
+					if(i==2){
+						if(this.$refs['completion']!=undefined){
+							this.$refs['completion'].resetFields();
+						}
+						//查询返工次数
+						jQuery.getJSON(`http://localhost:8080/api/cars/rwk/${this.completion.eno}`,function(data){
+							if(data!='0'){
+								_this.fgct=data;
+							}else{
+								_this.fgct="0";
+							};
+						});
+					}
+
+				},
+				//竣工检查
+				comjg(){
+					let _this=this;
+					this.$refs['completion'].validate((valid)=>{
+						if(valid){
+							this.$confirm('确认竣工？', '警告', {
+								confirmButtonText: '确定',
+								cancelButtonText: '取消',
+								type: 'warning',
+							}).then(()=>{
+								if(this.hg=='1'){
+									//未返工
+									if(_this.fgct=='0'){
+										this.completion.qualified='0';
+										jQuery.ajax({
+											url: `http://localhost:8080/api/cars/comp`,
+											type: 'post',
+											dataType: 'json',
+											contentType: 'application/json',
+											data: JSON.stringify(_this.completion),
+											success(data) {
+												_this.$message({
+													type: 'success',
+													message: '竣工完成！'
+												});
+												_this.cs=false;
+												indexVm.To('ui/fzx/completionTest.html');
+											},
+											error() {			
+															
+											}
+										})
+									}else{
+										//返工后合格竣工
+										jQuery.post(`http://localhost:8080/api/cars/hgqud/${_this.completion.eno}`,function(data){
+											_this.$message({
+											type: 'success',
+											message: '竣工成功！'
+										});
+											_this.cs=false;
+											indexVm.To('ui/fzx/completionTest.html');
+										});
+
+									}
+								}else{
+									let _this=this;
+									//未返工新增，
+									if(this.fgct=='0'){
+										_this.completion.qualified='1';
+											jQuery.ajax({
+											url: `http://localhost:8080/api/cars/comp`,
+											type: 'post',
+											dataType: 'json',
+											contentType: 'application/json',
+											data: JSON.stringify(_this.completion),
+											success(data) {
+												_this.$message({
+													type: 'success',
+													message: '返工完成！'
+												});
+												_this.cs=false;
+												indexVm.To('ui/fzx/completionTest.html');
+											},
+											error() {			
+															
+											}
+										})
+									}else{
+										//返工修改+1
+										jQuery.post(`http://localhost:8080/api/cars/upqd/${_this.completion.eno}`,function(data){
+											_this.$message({
+												type: 'success',
+												message: '返工成功!'
+											});
+											_this.cs=false;
+											indexVm.To('html/lt/completionTest.html');
+										});
+									}
+								}
+
+							});
+						}else{
+							return false;
+						}
+					});
+				},
+				ck(){
+					this.page(1,this.pages.pageSize);
+				},
+				reset(){
+					this.cominfo.date=null;
+					this.cominfo.status='';
+					this.cominfo.eno='';
+				},
+				page(num,size){
+					let _this=this;
+					jQuery.ajax({
+						url: `http://localhost:8080/api/cars/allm/${num}/${size}`,
+						type: 'post',
+						dataType: 'json',
+						contentType: 'application/json',
+						data: JSON.stringify(_this.cominfo),
+						success(data) {
+							_this.pages=data;
+							_this.vehicleInfo=data.list;	
+						},
+						error() {			
+										
+						}
+					})
+				},
+				change(num){
+					this.page(num,this.pages.pageSize);
+				},
+				sizec(size){
+					this.page(1,size);
+				}
+			},
+			mounted(){
+				let _this=this;
+				_this.page(1,4);
+			}
+		});
+	</script>
+</html>
