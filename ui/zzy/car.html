@@ -26,8 +26,7 @@
 								<template slot-scope="scope">
 									<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>
 									<el-button type="danger" v-if="temp.value==0" @click="delOne(scope.row.numbercar)">删除</el-button>
-									<el-button type="primary" v-if="temp.value==0" @click="selteam(scope.row.teamno)">修改</el-button>
-									
+									<el-button type="primary" v-if="temp.value==0" @click="selteam(scope.row.teamno)">修改</el-button>									
 								</template>
 							</el-table-column>
 						</el-table>
