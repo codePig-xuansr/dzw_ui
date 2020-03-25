@@ -57,7 +57,7 @@
 								<el-table-column prop="brandname" label="品牌名称" width="120">
 								</el-table-column>
 
-								<el-table-column fixed="right" label="操作" width="100">
+								<el-table-column label="操作" width="100">
 									<template slot-scope="scope">
 										<el-button @click="xzpp(scope.row.brandid,scope.row.brandname)" type="text" size="small">选择</el-button>
 
@@ -75,11 +75,9 @@
 								</el-table-column>
 								<el-table-column prop="motorcyclecxmc" label="车型名称" width="120">
 								</el-table-column>
-
-								<el-table-column fixed="right" label="操作" width="100">
+								<el-table-column label="操作" width="100">
 									<template slot-scope="scope">
 										<el-button @click="xzcx(scope.row.motorcycleid,scope.row.motorcyclecxmc)" type="text" size="small">选择</el-button>
-
 									</template>
 								</el-table-column>
 							</el-table>
@@ -95,10 +93,9 @@
 								<el-table-column prop="clientname" label="客户名称" width="120">
 								</el-table-column>
 
-								<el-table-column fixed="right" label="操作" width="100">
+								<el-table-column label="操作" width="100">
 									<template slot-scope="scope">
 										<el-button @click="xzkh(scope.row.clientid,scope.row.clientname)" type="text" size="small">选择</el-button>
-
 									</template>
 								</el-table-column>
 							</el-table>
@@ -110,38 +107,49 @@
 				</el-col>
 				<el-button type="primary" @click="add" plain>新增</el-button>
 
-				<el-dialog title="提示" :visible.sync="isShow1" width="40%" :before-close="handleClose">
-					<el-form :model="xzcl" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
+				<el-dialog title="提示" :visible.sync="isShow1" width="40%">
+					<el-form :model="xzcl" ref="ruleForm" label-width="120px" class="demo-ruleForm">
 						<el-form-item label="车牌" prop="name">
 							<el-input v-model="xzcl.vehiclecp"></el-input>
 						</el-form-item>
-
-						<el-button type="text" @click="isShow2 = true">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;车辆品牌&nbsp;&nbsp;&nbsp;&nbsp;
-							<el-input v-model="xzcl.vehiclepp"></el-input>
-						</el-button>
-						<el-button type="text" @click="isShow3 = true">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;车辆型号&nbsp;&nbsp;&nbsp;&nbsp;
-							<el-input v-model="xzcl.vehiclexh"></el-input>
-						</el-button>
-
+						<el-row>
+							<el-col :span="10" style="margin-left: 40px;">
+								<el-button type="text" @click="isShow2 = true">车辆品牌
+									<el-input v-model="xzcl.vehiclepp"></el-input>
+								</el-button>
+							</el-col>
+							<el-col :span="10" style="margin-left: 40px;">
+								<el-button type="text" @click="isShow3 = true">车辆型号
+									<el-input v-model="xzcl.vehiclexh"></el-input>
+								</el-button>
+							</el-col>
+						</el-row>
 						<el-form-item label="驾驶员" prop="name">
 							<el-input v-model="xzcl.vehiclejsy"></el-input>
 						</el-form-item>
 						<el-form-item label="驾驶员电话" prop="name">
 							<el-input v-model="xzcl.vehicledh"></el-input>
 						</el-form-item>
-						<el-form-item label="车辆归属" prop="region">
-							<el-select v-model="xzcl.vehiclegs" placeholder="请选择活动区域">
-								<el-option label="私家车" value="001"></el-option>
-								<el-option label="公用车" value="002"></el-option>
-							</el-select>
-						</el-form-item>
+						<el-row>
+							<el-col :span="10">
+								<el-form-item label="车辆归属" prop="region">
+									<el-select v-model="xzcl.vehiclegs" placeholder="请选择活动区域">
+										<el-option label="私家车" value="001"></el-option>
+										<el-option label="公用车" value="002"></el-option>
+									</el-select>
+								</el-form-item>
+							</el-col>
+						</el-row>
 						<el-form-item label="发动机" prop="name">
 							<el-input v-model="xzcl.vehiclefdj"></el-input>
 						</el-form-item>
-						<el-button type="text" @click="isShow4 = true">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;客户名称&nbsp;&nbsp;&nbsp;&nbsp;
-							<el-input v-model="xzcl.vehiclefname"></el-input>
-						</el-button>
-
+						<el-row>
+							<el-col :span="10" style="margin-left: 40px;">
+								<el-button type="text" @click="isShow4 = true">客户名称
+									<el-input v-model="xzcl.vehiclefname"></el-input>
+								</el-button>
+							</el-col>
+						</el-row>
 						<el-form-item label="驾驶证到期日期" required>
 							<el-col :span="11">
 								<el-form-item prop="date1">
@@ -166,97 +174,106 @@
 						</el-form-item>
 					</el-form>
 					<span slot="footer" class="dialog-footer">
-    <el-button>取 消</el-button>
-    <el-button type="primary" @click="qd">确 定</el-button>
-  </span>
+                         <el-button>取 消</el-button>
+                          <el-button type="primary" @click="qd">确 定</el-button>
+                    </span>
 				</el-dialog>
 
-				<el-dialog title="提示" :visible.sync="isShow5" width="40%" :before-close="handleClose">
-					<el-form :model="xzcl1" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
+				<el-dialog title="提示" :visible.sync="isShow5" width="40%">
+					<el-form :model="xzcl" ref="ruleForm" label-width="120px" class="demo-ruleForm">
 						<el-form-item label="车牌" prop="name">
-							<el-input v-model="xzcl1.vehiclecp"></el-input>
+							<el-input v-model="xzcl.vehiclecp"></el-input>
 						</el-form-item>
-
-						<el-button type="text" @click="isShow2 = true">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;车辆品牌&nbsp;&nbsp;&nbsp;&nbsp;
-							<el-input v-model="xzcl1.vehiclepp"></el-input>
-						</el-button>
-						<el-button type="text" @click="isShow3 = true">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;车辆型号&nbsp;&nbsp;&nbsp;&nbsp;
-							<el-input v-model="xzcl1.vehiclexh"></el-input>
-						</el-button>
-
+						<el-row>
+							<el-col :span="10" style="margin-left: 40px;">
+								<el-button type="text" @click="isShow2 = true">车辆品牌
+									<el-input v-model="xzcl.vehiclepp"></el-input>
+								</el-button>
+							</el-col>
+							<el-col :span="10" style="margin-left: 40px;">
+								<el-button type="text" @click="isShow3 = true">车辆型号
+									<el-input v-model="xzcl.vehiclexh"></el-input>
+								</el-button>
+							</el-col>
+						</el-row>
 						<el-form-item label="驾驶员" prop="name">
-							<el-input v-model="xzcl1.vehiclejsy"></el-input>
+							<el-input v-model="xzcl.vehiclejsy"></el-input>
 						</el-form-item>
 						<el-form-item label="驾驶员电话" prop="name">
-							<el-input v-model="xzcl1.vehicledh"></el-input>
+							<el-input v-model="xzcl.vehicledh"></el-input>
 						</el-form-item>
-						<el-form-item label="车辆归属" prop="region">
-							<el-select v-model="xzcl1.vehiclegs" placeholder="请选择活动区域">
-								<el-option label="私家车" value="001"></el-option>
-								<el-option label="公用车" value="002"></el-option>
-							</el-select>
-						</el-form-item>
+						<el-row>
+							<el-col :span="10">
+								<el-form-item label="车辆归属" prop="region">
+									<el-select v-model="xzcl.vehiclegs" placeholder="请选择活动区域">
+										<el-option label="私家车" value="001"></el-option>
+										<el-option label="公用车" value="002"></el-option>
+									</el-select>
+								</el-form-item>
+							</el-col>
+						</el-row>
 						<el-form-item label="发动机" prop="name">
-							<el-input v-model="xzcl1.vehiclefdj"></el-input>
+							<el-input v-model="xzcl.vehiclefdj"></el-input>
 						</el-form-item>
-						<el-button type="text" @click="isShow4 = true">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;客户名称&nbsp;&nbsp;&nbsp;&nbsp;
-							<el-input v-model="xzcl1.vehiclefname"></el-input>
-						</el-button>
-
+						<el-row>
+							<el-col :span="10" style="margin-left: 40px;">
+								<el-button type="text" @click="isShow4 = true">客户名称
+									<el-input v-model="xzcl.vehiclefname"></el-input>
+								</el-button>
+							</el-col>
+						</el-row>
 						<el-form-item label="驾驶证到期日期" required>
 							<el-col :span="11">
 								<el-form-item prop="date1">
-									<el-date-picker type="date" placeholder="选择日期" v-model="xzcl1.vehiclefdq" style="width: 100%;"></el-date-picker>
+									<el-date-picker type="date" placeholder="选择日期" v-model="xzcl.vehiclefdq" style="width: 100%;"></el-date-picker>
 								</el-form-item>
 							</el-col>
 						</el-form-item>
 						<el-form-item label="车架号" prop="name">
-							<el-input v-model="xzcl1.vehiclefcjh"></el-input>
+							<el-input v-model="xzcl.vehiclefcjh"></el-input>
 						</el-form-item>
 						<el-form-item label="发动机号" prop="name">
-							<el-input v-model="xzcl1.vehicleffdjh"></el-input>
+							<el-input v-model="xzcl.vehicleffdjh"></el-input>
 						</el-form-item>
 						<el-form-item label="载重" prop="name">
-							<el-input v-model="xzcl1.vehiclefzz"></el-input>
+							<el-input v-model="xzcl.vehiclefzz"></el-input>
 						</el-form-item>
 						<el-form-item label="燃油类别" prop="name">
-							<el-input v-model="xzcl1.vehiclefrylb"></el-input>
+							<el-input v-model="xzcl.vehiclefrylb"></el-input>
 						</el-form-item>
 						<el-form-item label="车系" prop="name">
-							<el-input v-model="xzcl1.vehiclefcx"></el-input>
+							<el-input v-model="xzcl.vehiclefcx"></el-input>
 						</el-form-item>
 					</el-form>
 					<span slot="footer" class="dialog-footer">
-    <el-button>取 消</el-button>
-    <el-button type="primary" @click="qd1">确 定</el-button>
-  </span>
+                         <el-button>取 消</el-button>
+                          <el-button type="primary" @click="qd">确 定</el-button>
+                    </span>
 				</el-dialog>
 				<template>
-					<el-table :data="cl.list" border style="width: 100%" height="250">
-						<el-table-column fixed prop="vehiclecp" label="车牌" width="150">
+					<el-table :data="car" border style="width: 100%" height="250">
+						<el-table-column fixed prop="vehiclecp" label="车牌">
 						</el-table-column>
-
-						<el-table-column prop="vehiclepp" label="车辆品牌" width="120">
+						<el-table-column prop="vehiclepp" label="车辆品牌">
 						</el-table-column>
-						<el-table-column prop="vehiclexh" label="车辆型号" width="120">
+						<el-table-column prop="vehiclexh" label="车辆型号">
 						</el-table-column>
-						<el-table-column prop="vehiclejsy" label="驾驶员" width="120">
+						<el-table-column prop="vehiclejsy" label="驾驶员">
 						</el-table-column>
-						<el-table-column prop="vehicledh" label="电话" width="280">
+						<el-table-column prop="vehicledh" label="电话">
 						</el-table-column>
-						<el-table-column prop="vehiclegs" label="归属" width="120">
+						<el-table-column prop="vehiclegs" label="归属">
 						</el-table-column>
-						<el-table-column prop="vehiclefname" label="客户名称" width="120">
+						<el-table-column prop="vehiclefname" label="客户名称">
 						</el-table-column>
-						<el-table-column prop="vehiclefdj" label="发动机" width="120">
+						<el-table-column prop="vehiclefdj" label="发动机">
 						</el-table-column>
-						<el-table-column prop="clientbz" label="邮编" width="120">
+						<el-table-column prop="clientbz" label="邮编">
 						</el-table-column>
-						<el-table-column fixed="right" label="操作" width="150">
+						<el-table-column label="操作" width="150">
 							<template slot-scope="scope">
-
-								<el-button type="text" size="small" @click="xgcl(scope.row.vehiclecp)">编辑</el-button>
-								<el-button @click="yc(scope.row.vehiclecp)" type="text" size="small">
+								<el-button type="text" size="small" @click="update(scope.row.vehiclecp)">编辑</el-button>
+								<el-button @click="del(scope.row.vehiclecp)" type="text" size="small">
 									移除
 								</el-button>
 							</template>
@@ -272,10 +289,44 @@
 		var che1Vm = new Vue({
 			el: '#che1Vm',
 			data: {
-				cl: {},
-				cx1: {},
-				pp: {},
-				kh: {},
+				car: [{
+					vehiclecp: "qewq",
+					vehiclepp: "企鹅舞",
+					vehiclexh: "否都",
+					vehiclejsy: "的说法是",
+					vehicledh: "的说法是",
+					vehiclegs: "撒发生",
+					vehiclefdj: "001",
+					vehiclefname: "撒发达",
+					vehiclefdq: "分的高分",
+					vehiclefcjh: "特工",
+					vehicleffdjh: "符合规定",
+					vehiclefzz: "恢复供电",
+					vehiclefrylb: "的方式",
+					vehiclefcx: "的符合规范",
+					clientbz: "企鹅"
+				}],
+				cx1: [{
+					motorcycleid: "1",
+					motorcyclecxmc: "卡车"
+				}, {
+					motorcycleid: "2",
+					motorcyclecxmc: "轿车"
+				}],
+				pp: [{
+					brandid: "1",
+					brandname: "烂破基尼"
+				}, {
+					brandid: "2",
+					brandname: "爆屎结"
+				}],
+				kh: [{
+					clientid: "1",
+					clientname: "朱小鹏"
+				}, {
+					clientid: "2",
+					clientname: "朱小月月鸟"
+				}],
 				ppid: "",
 				cxid: "",
 				khid: "",
@@ -293,8 +344,7 @@
 					vehicleffdjh: "",
 					vehiclefzz: "",
 					vehiclefrylb: "",
-					vehiclefcx: "",
-
+					vehiclefcx: ""
 				},
 				xzcl1: {
 					vehiclecp: "",
@@ -310,7 +360,7 @@
 					vehicleffdjh: "",
 					vehiclefzz: "",
 					vehiclefrylb: "",
-					vehiclefcx: "",
+					vehiclefcx: ""
 				},
 				isShow1: false,
 				isShow2: false,
@@ -319,159 +369,24 @@
 				isShow5: false
 			},
 			methods: {
-				handleClose(done) {
-					this.$confirm('确认关闭？')
-						.then(_ => {
-							done();
-						})
-						.catch(_ => {});
-				},
-
-				add() {
-					this.isShow1 = true
-				},
-				xgcl(cp) {
-					let _this = this;
-
-					$.getJSON(`http://127.0.0.1:8080/api/ve/vehicles/${cp}`, function(data) {
-						_this.isShow5 = true
-						alert(data)
-						_this.xzcl1 = data
-
-						_this.xzcl1.vehiclefdj = "001"
-					})
+				del(id) {},
+				update(id) {
+					this.isShow5 = true;
 				},
 				xzpp(id, name) {
-					this.isShow2 = false
-					this.xzcl.vehiclepp = name;
-					this.ppid = id
-
-					let _this = this
-					$.getJSON(`http://127.0.0.1:8080/api/client/cx/${id}`, function(data) {
-
-						_this.cx1 = data
-
-					})
-
+					this.isShow2 = false;
+					
 				},
 				xzcx(id, name) {
-
-					this.isShow3 = false
-					this.xzcl.vehiclexh = name
-					this.cxid = id
-					alert(this.cxid)
+					this.isShow3 = false;
 				},
 				xzkh(id, name) {
-
-					this.isShow4 = false
-					this.xzcl.vehiclefname = name
-					this.khid = id
+					this.isShow4 = false;
 				},
-				qd() {
-					let _this = this;
-
-					_this.xzcl.vehiclepp = _this.ppid
-					_this.xzcl.vehiclexh = _this.cxid
-					_this.xzcl.vehiclefname = _this.khid
-					jQuery.ajax(`http://127.0.0.1:8080/api/ve/vehicles`, {
-						type: 'post',
-						contentType: 'application/json',
-						data: JSON.stringify(_this.xzcl),
-						success(data) {
-							_this.isShow1 = false
-							$.getJSON(`http://127.0.0.1:8080/api/ve/1`, function(data) {
-
-								_this.cl = data
-
-							})
-							$.getJSON(`http://127.0.0.1:8080/api/client/pp`, function(data) {
-
-								_this.pp = data
-
-							})
-							$.getJSON(`http://127.0.0.1:8080/api/client/kh`, function(data) {
-
-								_this.kh = data
-
-							})
-						}
-					});
+				add() {
+					this.isShow1 = true;
 				},
-				qd1() {
-					let _this = this;
-					this.xzcl1.vehiclepp = this.ppid
-					this.xzcl1.vehiclexh = this.cxid
-					this.xzcl1.vehiclefname = this.khid
-					alert(this.ppid)
-					jQuery.ajax(`http://127.0.0.1:8080/api/ve/vehicles`, {
-						type: 'put',
-						contentType: 'application/json',
-						data: JSON.stringify(_this.xzcl1),
-						success(data) {
-							_this.isShow5 = false
-							$.getJSON(`http://127.0.0.1:8080/api/ve/1`, function(data) {
-
-								_this.cl = data
-
-							})
-							$.getJSON(`http://127.0.0.1:8080/api/client/pp`, function(data) {
-
-								_this.pp = data
-
-							})
-							$.getJSON(`http://127.0.0.1:8080/api/client/kh`, function(data) {
-
-								_this.kh = data
-
-							})
-						}
-					});
-				},
-				yc(id) {
-					let _this = this
-
-					jQuery.ajax(`http://127.0.0.1:8080/api/ve/vehicles/${id}`, {
-						type: 'delete',
-						success(data) {
-							$.getJSON(`http://127.0.0.1:8080/api/ve/1`, function(data) {
-
-								_this.cl = data
-
-							})
-							$.getJSON(`http://127.0.0.1:8080/api/client/pp`, function(data) {
-
-								_this.pp = data
-
-							})
-							$.getJSON(`http://127.0.0.1:8080/api/client/kh`, function(data) {
-
-								_this.kh = data
-
-							})
-						}
-					});
-				}
-
-			},
-
-			mounted() {
-				let _this = this
-				$.getJSON(`http://127.0.0.1:8080/api/ve/1`, function(data) {
-
-					_this.cl = data
-
-				})
-				$.getJSON(`http://127.0.0.1:8080/api/client/pp`, function(data) {
-
-					_this.pp = data
-
-				})
-				$.getJSON(`http://127.0.0.1:8080/api/client/kh`, function(data) {
-
-					_this.kh = data
-
-				})
-
+				qd() {}
 			}
 		});
 	</script>
