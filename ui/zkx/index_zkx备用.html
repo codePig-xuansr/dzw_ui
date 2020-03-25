@@ -48,6 +48,21 @@
 			.el-menu--horizontal>.el-menu-item.is-active {
 				border-bottom: none !important;
 			}
+			
+			.demo-table-expand {
+				font-size: 0;
+			}
+			
+			.demo-table-expand label {
+				width: 90px;
+				color: #99a9bf;
+			}
+			
+			.demo-table-expand .el-form-item {
+				margin-right: 0;
+				margin-bottom: 0;
+				width: 50%;
+			}
 		</style>
 	</head>
 
@@ -65,51 +80,26 @@
 								<i class="el-icon-s-home"></i><span>主页</span>
 							</div>
 						</el-menu-item>
-						<el-submenu index="7" class="1">
+						<el-submenu index="7">
 							<template slot="title">
 								<i class="el-icon-s-custom" style="color: white;"></i>
 								<span>前台</span>
 							</template>
 							<!--子项-->
-							<el-menu-item index="7-1" @click="To('../sw/js.html')">结算中心</el-menu-item>
+							<el-menu-item index="7-1" @click="To('/dzw_ui/ui/sw/js.html')">结算中心</el-menu-item>
 							<el-menu-item index="7-2" @click="To('/dzw_ui/ui/sw/vip.html')">会员充值卡管理</el-menu-item>
 
 						</el-submenu>
-						<el-submenu index="8" class="8">
+						<el-submenu index="8">
 							<template slot="title">
 								<i class="el-icon-s-custom" style="color: white;"></i>
 								<span>系统管理</span>
 							</template>
 
-							<el-menu-item index="4-1" @click="dialogVisible = true">角色权限管理</el-menu-item>
-							<el-menu-item index="4-2" @click="dialogVisible2 = true">员工管理</el-menu-item>
+							<el-menu-item index="8-2" @click="To('/dzw_ui/ui/zkx/roleFun.html')">角色权限管理</el-menu-item>
 
 						</el-submenu>
-						<el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
-							<template>
-								<el-radio v-model="radio" label="p001">大客户专员</el-radio>
-								<el-radio v-model="radio" label="p003">服务经理</el-radio>
-								<el-radio v-model="radio" label="p004">服务顾问</el-radio>
-							</template>
-							<span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible1 = true">取 消</el-button>
-    <el-button type="primary" @click="qx()">确 定</el-button>
-  </span>
-						</el-dialog>
-						<el-dialog title="提示" :visible.sync="dialogVisible1" width="30%" :before-close="handleClose">
-							<template>
-								<!-- `checked` 为 true 或 false -->
-								<el-checkbox v-model="checked">备选项</el-checkbox>
-								<el-checkbox v-model="checked1">备选项</el-checkbox>
-								<el-checkbox v-model="checked2">备选项</el-checkbox>
-								<el-checkbox v-model="checked3">备选项</el-checkbox>
-							</template>
-							<span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible1 = false">取 消</el-button>
-    <el-button type="primary" @click="qx11()">确 定</el-button>
-  </span>
-						</el-dialog>
-						<el-submenu index="2" class="2">
+						<el-submenu index="2">
 							<template slot="title">
 								<i class="el-icon-s-operation" style="color: white;"></i>
 								<span>汽车维修</span>
@@ -119,7 +109,7 @@
 							<el-menu-item index="2-1" @click="To('../fzx/maintenanceCar.html')">维修接车</el-menu-item>
 							<el-menu-item index="2-2" @click="To('../fzx/completionTest.html')">竣工检验</el-menu-item>
 						</el-submenu>
-						<el-submenu index="3" class="3">
+						<el-submenu index="3">
 							<template slot="title">
 								<i class="el-icon-s-data" style="color: white;"></i>
 								<span>主数据</span>
@@ -130,7 +120,7 @@
 							<el-menu-item index="3-3" @click="To('/dzw_ui/ui/zzy/spzl.html')">商品资料</el-menu-item>
 							<el-menu-item index="3-4" @click="To('')">供货单位</el-menu-item>
 						</el-submenu>
-						<el-submenu index="4" class="4">
+						<el-submenu index="4">
 							<template slot="title">
 								<i class="el-icon-s-custom" style="color: white;"></i>
 								<span>客户档案</span>
@@ -139,7 +129,7 @@
 							<el-menu-item index="4-1" @click="To('../sw/che.html')">客户资料</el-menu-item>
 							<el-menu-item index="4-2" @click="To('../sw/che1.html')">车辆资料</el-menu-item>
 						</el-submenu>
-						<el-submenu index="5" class="5">
+						<el-submenu index="5">
 							<template slot="title">
 								<i class="el-icon-s-help" style="color: white;"></i>
 								<span>技工管理</span>
@@ -157,7 +147,7 @@
 							<el-menu-item index="5-2" @click="To('../zzy/class.html')">技工星级</el-menu-item>
 							<el-menu-item index="5-3" @click="To('../zzy/car.html')">外勤车辆</el-menu-item>
 						</el-submenu>
-						<el-submenu index="6" class="6">
+						<el-submenu index="6">
 							<template slot="title">
 								<i class="el-icon-user-solid" style="color: white;"></i>
 								<span>人事</span>
@@ -226,53 +216,6 @@
 				qx1: {}
 			},
 			methods: {
-				qx() {
-					var _this = this
-					alert(this.radio)
-					var postid = this.radio
-					$.getJSON(`http://127.0.0.1:8080/api/client/qxs/${postid}`, function(data) {
-						_this.qx1 = data
-						if((_this.qx1[0].css1).indexOf(".1") >= 0) {
-							_this.checked = true
-						}
-						if((_this.qx1[0].css1).indexOf(".2") >= 0) {
-							_this.checked1 = true
-						}
-						if((_this.qx1[0].css1).indexOf(".4") >= 0) {
-							_this.checked2 = true
-						}
-						if((_this.qx1[0].css1).indexOf(".6") >= 0) {
-							_this.checked3 = true
-						}
-						_this.dialogVisible1 = true
-					})
-
-				},
-				qx11() {
-					var css1 = ""
-					if(this.checked == true) {
-						css1 += ".1,"
-					}
-					if(this.checked1 == true) {
-						css1 += ".2,"
-					}
-					if(this.checked2 == true) {
-						css1 += ".4,"
-					}
-					if(this.checked3 == true) {
-						css1 += ".6"
-					}
-					alert(css1)
-					var _this = this
-					var postid = this.radio
-					$.getJSON(`http://127.0.0.1:8080/api/client/qxs1/${css1}/${postid}`, function(data) {
-						_this.$notify({
-							title: '成功',
-							message: '这是一条成功的提示消息',
-							type: 'success'
-						});
-					})
-				},
 				To(url) {
 					$("#cnt").load(url);
 				},
@@ -285,75 +228,6 @@
 				}
 			},
 			mounted() {
-
-				$(".6").hide()
-				$(".3").hide()
-				$(".5").hide()
-				$(".1").hide()
-				$(".2").hide()
-				$(".4").hide()
-				var name = sessionStorage.getItem("name");
-				var id = sessionStorage.getItem("id");
-				var pname = sessionStorage.getItem("pname");
-				var css1 = sessionStorage.getItem("css1");
-				var s = css1.split(','); //注split可以用字符或字符串分割
-
-				this.sz = s
-				alert(this.sz)
-				var ti = "欢迎" + name + "使用德召文汽修系统"
-				$("#cnt").load('Main.html');
-				//友好提示
-				this.$notify({
-					title: ti,
-					type: 'success',
-					position: 'top-left',
-					duration: '3000',
-				});
-
-				if(id == "p001") {
-
-					for(var i = 0; i < this.sz.length; i++) {
-
-						$("" + this.sz[i] + "").show()
-					}
-					$(".3").show()
-					$(".5").show()
-
-				} else if(id == "p002") {
-
-					$(".6").show()
-					$(".3").show()
-					$(".5").show()
-					$(".1").show()
-					$(".2").show()
-					$(".4").show()
-				} else if(id == "p003") {
-
-					for(var i = 0; i < this.sz.length; i++) {
-
-						$("" + this.sz[i] + "").show()
-					}
-					$(".3").show()
-					$(".5").show()
-
-				} else if(id == "p004") {
-
-					for(var i = 0; i < this.sz.length; i++) {
-
-						$("" + this.sz[i] + "").show()
-					}
-					$(".3").show()
-					$(".5").show()
-
-				} else {
-
-					$(".6").hide()
-					$(".3").hide()
-					$(".5").hide()
-					$(".1").hide()
-					$(".2").hide()
-					$(".4").hide()
-				}
 
 			}
 		});

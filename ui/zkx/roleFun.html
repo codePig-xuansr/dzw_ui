@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+
+	<body>
+		<div id="roleFunApp">
+
+				<el-table :data="role" style="width: 100%">
+						<el-table-column type="expand">
+							<template slot-scope="props">
+								<div>
+									<template v-for="(temp,i) in props.row.flist">
+										<template v-for="(temp2,index) in temp.child">
+											<el-checkbox :label="temp2.fname" border></el-checkbox>
+										</template>
+									</template>
+								</div>
+							</template>
+						</el-table-column>
+						<el-table-column label="员工姓名" prop="username">
+						</el-table-column>
+						<el-table-column label="入职日期" prop="comedate">
+						</el-table-column>
+						<el-table-column label="居住地址" prop="address">
+						</el-table-column>
+						<el-table-column label="联系电话" prop="phone">
+						</el-table-column>
+						<el-table-column label="性别" prop="sex">
+						</el-table-column>
+						<el-table-column label="邮箱" prop="email">
+						</el-table-column>
+				</el-table>
+				<span slot="footer" class="dialog-footer">
+						    <el-button @click="dialogVisible = false">取 消</el-button>
+						    <el-button type="primary" @click="qx()">确 定</el-button>
+						 	 </span>
+			
+		</div>
+	</body>
+	<script>
+		var roleFunApp = new Vue({
+			el: "#roleFunApp",
+			data: {
+				role: [{
+						uid: "1",
+						user: "sa",
+						pwd: "sa",
+						username: "张三",
+						comedate: "2019-01-01",
+						address: "北京市朝阳区来广营西路8号国创产业园6号楼东一区02号",
+						phone: "888888",
+						sex: "男",
+						email: "1@163.com",
+						depid: "6",
+						rid: "1",
+						flist: [{
+							fid: "1",
+							fcode: "qt",
+							fname: "前台",
+							fpid: "0",
+							child: [{
+									fid: "2",
+									fcode: "qt001",
+									fname: "结算中心",
+									fpid: "1"
+								},
+								{
+									fid: "3",
+									fcode: "qt002",
+									fname: "会员充值卡管理",
+									fpid: "1"
+								}
+							]
+						}]
+					},
+					{
+						uid: "2",
+						user: "admin",
+						pwd: "admin",
+						username: "赵公子",
+						comedate: "2020-03-24",
+						address: "北京市朝阳区来广营西路8号国创产业园6号楼东一区03号",
+						phone: "666666",
+						sex: "男",
+						email: "22@163.com",
+						depid: "6",
+						rid: "9",
+						flist: [{
+							fid: "1",
+							fcode: "qt",
+							fname: "前台",
+							fpid: "0",
+							child: [{
+									fid: "2",
+									fcode: "qt001",
+									fname: "结算中心",
+									fpid: "1"
+								},
+								{
+									fid: "3",
+									fcode: "qt002",
+									fname: "会员充值卡管理",
+									fpid: "1"
+								}
+							]
+						}]
+					}
+				]
+			},
+			methods: {
+
+			},
+			mounted() {
+
+			}
+		})
+	</script>
+
+</html>
