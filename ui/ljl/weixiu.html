@@ -26,15 +26,30 @@
 							<el-button type="primary" plain>导出</el-button>
 						</el-row>
 						<el-row>
-							<el-table :data="wx" border style="width: 100%">
-								<el-table-column v-for="(temp,index) in stsy" :label="temp.name" align="center" :resizable="false">
-									<template slot-scope="scope">
-										<span v-if='temp.value!=0'>{{scope.row[temp.value]}}</span>
-										<el-button v-if='temp.value==0' @click="bmxp(scope.row.coding)">修改</el-button>
-										<el-button v-if='temp.value==0' @click="sc(scope.row.coding)">删除</el-button>
-									</template>
-								</el-table-column>
-							</el-table>
+							<el-col :span="6">
+								<el-table :data="wx" style="width: 100%">
+									<el-table-column prop="a" label="项目类别">
+									</el-table-column>
+								</el-table>
+							</el-col>
+							<el-col :span="18">
+
+								<el-table :data="wx" border style="width: 100%">
+									<el-table-column v-for="(temp,index) in stsy" :label="temp.name" align="center" :resizable="false">
+										<template slot-scope="scope">
+											<span v-if='temp.value!=0'>{{scope.row[temp.value]}}</span>
+										</template>
+									</el-table-column>
+									<el-table-column fixed="right" label="操作" width="200px">
+										<template slot-scope="scope">
+											<el-button size="small">编辑</el-button>
+											<el-button size="small">删除</el-button>
+										</template>
+									</el-table-column>
+								</el-table>
+								<el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="wx.total" :page-sizes="[1,2,3,4,5]" :page-size="wx.pageSize">
+
+							</el-col>
 						</el-row>
 					</template>
 				</el-col>
@@ -63,16 +78,8 @@
 						value: 'priceType'
 					},
 					{
-						name: '标准价',
-						value: 'standard'
-					},
-					{
 						name: 'vip价',
 						value: 'vIP'
-					},
-					{
-						name: '操作',
-						value: '0'
 					}
 
 				],

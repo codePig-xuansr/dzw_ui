@@ -13,19 +13,19 @@
 
 				<el-col :span="6">
 
-					<el-row>
+					<!--<el-row>
 						<el-button type="primary" plain>增加品牌</el-button>
 						<el><input type="text" v-model="projectChild" placeholder="请输入内容" style=" height:30px;" /></el>
 						<el-button type="primary" plain @click="cx()">查询</el-button>
 					</el-row>
 					<div class="grid-content bg-purple">
 						<template>
-							<el-table :data="tableData" style="width: 100%">
-								<el-table-column prop="name" label="编码" >
+							<el-table :data="pingpai" style="width: 100%">
+								<el-table-column prop="pid" label="编码" >
 								</el-table-column>
-								<el-table-column prop="name" label="品牌名称" >
+								<el-table-column prop="pname" label="品牌名称" >
 								</el-table-column>
-								<el-table-column prop="name" label="首字母" >
+								<el-table-column prop="pz" label="首字母" >
 								</el-table-column>
 								<el-table-column fixed="right" label="操作" width="100">
 									<template slot-scope="scope">
@@ -36,7 +36,7 @@
 							</el-table>
 						</template>
 
-					</div>
+					</div>-->
 				</el-col>
 				<el-col :span="18">
 
@@ -83,7 +83,19 @@
 		var chexingapp = new Vue({
 			el: '#chexingapp',
 			data: {
-				tableData: [{
+				/*pingpai:[{
+					pid:'1',
+					pname:'品牌A',
+					pz:'p'
+				},{
+					pid:'2',
+					pname:'品牌B',
+					pz:'p'
+				}],*/
+				chexing: [{
+					app: '2016-05-02',
+					date: '2016-05-02',
+					date: '2016-05-02',
 					date: '2016-05-02',
 					name: '王小虎',
 					address: '上海市普陀区金沙江路 1518 弄'

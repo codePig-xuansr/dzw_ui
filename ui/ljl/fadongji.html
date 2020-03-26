@@ -129,7 +129,7 @@
 							<el><label>分类名称</label><input type="text" v-model="projectChild" placeholder="请输入内容" style=" height:30px;" /></el>
 							<el-button type="primary" plain @click="bmxl">增加</el-button>
 
-							<el-button type="primary" plain>删除</el-button>
+							<!--<el-button type="primary" plain>删除</el-button>-->
 							<el-button type="primary" plain>保存</el-button>
 							<el-button type="primary" plain>导出</el-button>
 						</el-row>
@@ -138,11 +138,16 @@
 								<el-table-column v-for="(temp,index) in stsy" :label="temp.name" align="center" :resizable="false">
 									<template slot-scope="scope">
 										<span v-if='temp.value!=0'>{{scope.row[temp.value]}}</span>
-										<el-button v-if='temp.value==0' @click="bmxp(scope.row.coding)">修改</el-button>
-										<el-button v-if='temp.value==0' @click="sc(scope.row.coding)">删除</el-button>
+									</template>
+								</el-table-column>
+								<el-table-column fixed="right" label="操作" width="200px">
+									<template slot-scope="scope">
+										<!--<el-button size="small">编辑</el-button>-->
+										<el-button size="small">删除</el-button>
 									</template>
 								</el-table-column>
 							</el-table>
+							<el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="fadongjilist.total" :page-sizes="[1,2,3,4,5]" :page-size="fadongjilist.pageSize">
 						</el-row>
 					</template>
 				</el-col>
@@ -153,6 +158,7 @@
 		var weixiu = new Vue({
 			el: '#weixiu',
 			data: {
+				fadongjilist: [],
 				wx: [
 				{
 						projectChild: 'projectChild',
