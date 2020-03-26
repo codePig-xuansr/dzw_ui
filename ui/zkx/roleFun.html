@@ -9,41 +9,46 @@
 	<body>
 		<div id="roleFunApp">
 
-			<el-table :data="role" style="width: 100%">
-				<el-table-column type="expand">
-					<template slot-scope="props">
-						<div>
-							<template v-for="(temp,i) in props.row.flist">
-								<template v-for="(temp2,index) in temp.child">
-									<el-checkbox v-model="checked" :label="temp2.fname" border></el-checkbox>
-								</template>
-							</template>
-						</div>
-					</template>
-				</el-table-column>
-				<el-table-column label="员工姓名" prop="username">
-				</el-table-column>
-				<el-table-column label="入职日期" prop="comedate">
-				</el-table-column>
-				<el-table-column label="居住地址" prop="address">
-				</el-table-column>
-				<el-table-column label="联系电话" prop="phone">
-				</el-table-column>
-				<el-table-column label="性别" prop="sex">
-				</el-table-column>
-				<el-table-column label="邮箱" prop="email">
-				</el-table-column>
-			</el-table>
-			<span slot="footer" class="dialog-footer">
-						    <el-button type="primary">确 定</el-button>
-						 	 </span>
+			<template>
+				<el-table :data="role" style="width: 100%" max-height="250">
+					<el-table-column fixed prop="username" label="员工姓名" width="150">
+					</el-table-column>
+					<el-table-column prop="comedate" label="入职日期" width="200">
+					</el-table-column>
+					<el-table-column prop="address" label="居住地址" width="400">
+					</el-table-column>
+					<el-table-column prop="phone" label="联系电话" width="200">
+					</el-table-column>
+					<el-table-column prop="sex" label="性别" width="120">
+					</el-table-column>
+					<el-table-column prop="email" label="邮箱" width="120">
+					</el-table-column>
+					<el-table-column fixed="right" label="操作" width="120">
+						<template slot-scope="scope">
+							<el-button @click="addqx" type="text" size="small">
+								权限管理
+							</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
+			</template>
+			<el-dialog title="权限管理" width="850px" :visible.sync="dialogVisible666" :before-close="handleClose">
+				<div id="cnt2">
+					<div>
+						<span class="el-icon-loading"></span>正在初始化......
+					</div>
 
+				</div>
+			</el-dialog>
 		</div>
 	</body>
 	<script>
 		var roleFunApp = new Vue({
 			el: "#roleFunApp",
 			data: {
+				dialogVisible666: false,
+				checkArr: [],
+				showAllFun: false,
 				allFun: [{
 						fid: "1",
 						fcode: "qt",
@@ -194,15 +199,15 @@
 						fname: "系统管理",
 						fpid: "0",
 						child: [{
-								fid: "25",
-								fcode: "xtgl001",
-								fname: "员工权限管理",
-								fpid: "24"
-							}
-						]
+							fid: "25",
+							fcode: "xtgl001",
+							fname: "员工权限管理",
+							fpid: "24"
+						}]
 					}
 				],
 				checked: true,
+				checked2: false,
 				role: [{
 						uid: "1",
 						user: "sa",
@@ -248,21 +253,21 @@
 						depid: "6",
 						rid: "9",
 						flist: [{
-							fid: "1",
-							fcode: "qt",
-							fname: "前台",
+							fid: "12",
+							fcode: "khda",
+							fname: "客户档案",
 							fpid: "0",
 							child: [{
-									fid: "2",
-									fcode: "qt001",
-									fname: "结算中心",
-									fpid: "1"
+									fid: "13",
+									fcode: "khda001",
+									fname: "客户资料",
+									fpid: "12"
 								},
 								{
-									fid: "3",
-									fcode: "qt002",
-									fname: "会员充值卡管理",
-									fpid: "1"
+									fid: "14",
+									fcode: "khda002",
+									fname: "车俩资料",
+									fpid: "12"
 								}
 							]
 						}]
@@ -270,10 +275,19 @@
 				]
 			},
 			methods: {
+				addqx() {
+					this.dialogVisible666 = true;
+					setTimeout(
+						function() {
+							$("#cnt2").load("ui/zkx/qxchange.html");
+						}, 2000);
+				},
+				handleClose() {
 
+				}
 			},
 			mounted() {
-				
+				let _this = this;
 			}
 		})
 	</script>
