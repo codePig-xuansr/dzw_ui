@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+
+	<body>
+		<div id="app">
+		<template>
+		  <el-transfer
+		    v-model="value"
+		    :props="{
+		      key: 'value',
+		      label: 'desc'
+		    }"
+		    :data="data">
+		  </el-transfer>
+		</template>
+		</div>
+	</body>
+	<script>
+		var Main = {
+    data() {
+      const generateData = _ => {
+        const data = [];
+        for (let i = 1; i <= 15; i++) {
+          data.push({
+            value: i,
+            desc: `备选项 ${ i }`
+          });
+        }
+        return data;
+      };
+      return {
+        data: generateData(),
+        value: []
+      };
+    }
+  };
+var Ctor = Vue.extend(Main)
+new Ctor().$mount('#app')
+	</script>
+
+</html>

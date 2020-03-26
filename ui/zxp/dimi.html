@@ -14,39 +14,46 @@
 	<body>
 <div id="app">
 	<template>
-		<el-input type="text" style="width: 200px;" placeholder="按姓名模糊查询" v-model="empname" maxlength="10" show-word-limit>
+		<el-input type="text" style="width: 300px;" placeholder="根据姓名模糊查询" v-model="empname" maxlength="10" show-word-limit>
 
 	</template>
-	<el-button type="danger" @click="page(1,3)">查询</el-button>
-	<el-button type="warning" @click="tianjializhi">添加离职</el-button>
+	<el-button icon="el-icon-search" circle @click="page(1,3)"></el-button>
+	 <el-button type="primary" round @click="tianjializhi">添加离职</el-button>
 	<br />
 	<br />
 	<template id="a2">
-		<el-table :data="pageInfo.list" height="300" border style="width: 100%">
+		<el-table :data="vehicleInfo" height="300" border style="width: 100%;margin-left: 200px;">
 			<el-table-column prop="departmentname" label="部门" width="100">
+				<el-input v-model="vehicleInfo.departmentname"></el-input>
 			</el-table-column>
 			<el-table-column prop="empid" label="员工编号" width="100">
+				<el-input v-model="vehicleInfo.empid"></el-input>
 			</el-table-column>
 
 			<el-table-column prop="empname" label="员工姓名" width="100">
+				<el-input v-model="vehicleInfo.empname"></el-input>
 			</el-table-column>
 			<el-table-column prop="empsex" label="性别" width="100">
+				<el-input v-model="vehicleInfo.empsex"></el-input>
 			</el-table-column>
 			<el-table-column prop="postname" label="员工职位" width="100">
+				<el-input v-model="vehicleInfo.postname"></el-input>
 			</el-table-column>
 			<el-table-column prop="dimissiontime" label="离职日期" width="100">
+				<el-input v-model="vehicleInfo.dimissiontime"></el-input>
 			</el-table-column>
 			<el-table-column prop="dimissioncause" label="离职原因" width="100">
+				<el-input v-model="vehicleInfo.dimissioncause"></el-input>
 			</el-table-column>
 
 			<el-table-column label="操作" width="300">
 				<template slot-scope="temp">
-					<el-popover placement="top-start" title="标题：回滚" width="200" trigger="hover" content="恢复此员工的职位！" style="color: red;">
+					<!--<el-popover placement="top-start" title="标题：回滚" width="200" trigger="hover" content="恢复此员工的职位！" style="color: red;">
 						<el-button slot="reference" style="background-color: cyan;" @click="open(temp.row.empid)">回滚</el-button>
-					</el-popover>
+					</el-popover>-->
 
 					<el-popover placement="top-start" title="标题：打开" width="200" trigger="hover" content="查看此员工所有信息！">
-						<el-button slot="reference" style="background-color: lightcoral;" @click="chaxun(temp.row.empid)">打开</el-button>
+						<el-button slot="reference" style="background-color: lightcoral;" @click="chaxun(temp.row.empid)">查看</el-button>
 					</el-popover>
 
 					<el-popover placement="top-start" title="标题：删除" width="200" trigger="hover" content="删除此员工在公司所有资料！">
@@ -215,6 +222,23 @@
 		value1: '',
 		value2: '',
 		value3: '',
+		vehicleInfo:[{
+					departmentname:'财务部',
+					empid:'1',
+					postname:'经理',
+					empname:'张三',
+					empsex:'男',
+					dimissiontime:'2020年3月9日',
+					dimissioncause:'另谋他就'
+				},{
+				departmentname:'财务部',
+					empid:'1',
+					postname:'员工',
+					empname:'李四',
+					empsex:'男',
+						dimissiontime:'2020年3月9日',
+					dimissioncause:'工资太低'
+				}],
 
 	},
 	methods: {
