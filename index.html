@@ -84,30 +84,7 @@
 							<el-menu-item index="8-1" @click="To('/dzw_ui/ui/zkx/roleFun.html')">角色权限管理</el-menu-item>
 
 						</el-submenu>
-						<el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
-							<template>
-								<el-radio v-model="radio" label="p001">大客户专员</el-radio>
-								<el-radio v-model="radio" label="p003">服务经理</el-radio>
-								<el-radio v-model="radio" label="p004">服务顾问</el-radio>
-							</template>
-							<span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible1 = true">取 消</el-button>
-    <el-button type="primary" @click="qx()">确 定</el-button>
-  </span>
-						</el-dialog>
-						<el-dialog title="提示" :visible.sync="dialogVisible1" width="30%" :before-close="handleClose">
-							<template>
-								<!-- `checked` 为 true 或 false -->
-								<el-checkbox v-model="checked">备选项</el-checkbox>
-								<el-checkbox v-model="checked1">备选项</el-checkbox>
-								<el-checkbox v-model="checked2">备选项</el-checkbox>
-								<el-checkbox v-model="checked3">备选项</el-checkbox>
-							</template>
-							<span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible1 = false">取 消</el-button>
-    <el-button type="primary" @click="qx11()">确 定</el-button>
-  </span>
-						</el-dialog>
+						
 						<el-submenu index="2" class="2">
 							<template slot="title">
 								<i class="el-icon-s-operation" style="color: white;"></i>
