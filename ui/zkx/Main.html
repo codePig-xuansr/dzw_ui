@@ -207,7 +207,6 @@
 			//调用
 			mounted() {
 				let _this=this;
-				this.loginUser=JSON.parse(sessionStorage.getItem("user"));
 				if(this.loginUser.rid!=1 && this.loginUser.rid!=9){
 					_this.show=false;
 					_this.titleshow=true;
