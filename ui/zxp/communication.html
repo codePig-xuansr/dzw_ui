@@ -6,41 +6,43 @@
 		<style type="text/css">
 			#app{
 				
-				padding-left: 5px;
-				padding-top: 20px;
+				/*padding-left: 5px;
+				padding-top: 20px;*/
 			}
 		</style>
 	</head>
 	<body>
-<div id="app">
-	<template>
-		 <el-input type="text" style="width: 200px;" placeholder="按姓名模糊查询" v-model="empname" maxlength="10" show-word-limit>
-	
+		<br />
+<div id="app" style="margin-left: 300px;">
+		<template>
+		 <el-input type="text" style="width: 300px;margin-left: -400px;" placeholder="根据姓名模糊查询" v-model="empname" maxlength="10" show-word-limit>
 	</template>
 	&nbsp;&nbsp;&nbsp;
-        <el-button icon="el-icon-search" circle  @click="page(1,3)">查询</el-button>
-        
+	 <el-button icon="el-icon-search" circle @click="page(1,3)"></el-button>
         <br />
         <br />
 	<template id="a2">
-		<el-table :data="pageInfo.list" height="280" border style="width: 60%">
-			<el-table-column prop="departmentname" label="部门" width="120">
+		<el-table :data="vehicleInfo" height="280" border style="width: 60%">
+			<el-table-column prop="bm" label="部门" width="120">
+					<el-input v-model="vehicleInfo.bm"></el-input>
 			</el-table-column> 
-			<el-table-column prop="empid" label="员工编号" width="120">
+			<el-table-column prop="bh" label="员工编号" width="120">
+				<el-input v-model="vehicleInfo.bh"></el-input>
 			</el-table-column>
 			
-			<el-table-column prop="empname" label="员工姓名" width="120">
+			<el-table-column prop="xm" label="员工姓名" width="120">
+				<el-input v-model="vehicleInfo.xm"></el-input>
 			</el-table-column>
-			<el-table-column prop="emptelephone" label="电话号码" width="120">
+			<el-table-column prop="dh" label="电话号码" width="120">
+				<el-input v-model="vehicleInfo.dh"></el-input>
 			</el-table-column>
-			<el-table-column prop="empemail" label="邮箱" width="120">
+			<el-table-column prop="yx" label="邮箱" width="120">
+				<el-input v-model="vehicleInfo.yx"></el-input>
 			</el-table-column>
 		
 			<el-table-column label="操作" width="90">
 				<template slot-scope="temp">					
 					<el-button type="primary" icon="el-icon-edit" circle @click="cha(temp.row.empid)" ></el-button>
-					 
-					
 				</template>
 			</el-table-column>
 		</el-table>
@@ -65,8 +67,7 @@
 	
 	
 	<template>
-
-	<div class="block" style="margin-top: 20px;">		
+	<div class="block" style="margin-top: 20px;margin-left: -400px;">		
 		<el-pagination v-if="pageInfo.total!=0"  @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[3, 6, 9]" :page-size="pageInfo.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.total">
 		</el-pagination>
 	</div>
@@ -82,13 +83,24 @@
 		currentPage: 1,
 		 dialogVisible: false,
 		emp:{
-			departmentname:"",
+			departmentname:"1",
 			empid:"",
 			empname:"",
 			emptelephone:"",
 			empemail:"",
-		},
-
+		},vehicleInfo:[{
+					bm:'财务部',
+					bh:'1',
+					xm:'张三',
+					dh:'10086',
+					yx:'111'
+				},{
+				bm:'财务部',
+					bh:'2',
+					xm:'李四',
+					dh:'1008611',
+					yx:'222'
+				}],
 	},
 	methods: {
 		handleClose(done) {

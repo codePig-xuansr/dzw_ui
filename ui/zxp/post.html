@@ -21,19 +21,19 @@
 			</el-input>
 			岗位名称：<el-input type="text" style="width: 200px;" placeholder="请输入岗位名称" v-model="record.postname" maxlength="10" show-word-limit class="pname">
 			</el-input>
-			<el-button type="danger" @click="add">添加</el-button>
-			 <el-button type="warning" @click="xiu">保存</el-button>
+			<el-button type="primary" @click="add">添加</el-button>
+			 <el-button type="primary"  @click="xiu">保存</el-button>
   
 			<br />
 			<br />
 			<template id="a1">
-				<el-table  :data="post" style="width: 35%" max-height="500" align="center" :resizable="false">
+				<el-table  :data="vehicleInfo" style="border: lightgray solid 1px;position: relative;left:400px;width: 35%" max-height="500" align="center" :resizable="false">
 					
 					<el-table-column prop="postid"   label="岗位编码" width="120">
-						 
+						 <el-input v-model="vehicleInfo.postid"></el-input>
 					</el-table-column>
 					<el-table-column prop="postname"   label="岗位名称" width="120">
-						 
+						 <el-input v-model="vehicleInfo.postname"></el-input>
 					</el-table-column>
 					
 					
@@ -64,6 +64,13 @@
 			postname: "",
 		},
 		edit: false,
+		vehicleInfo:[{
+					postid:'1',
+					postname:'维修汽车'
+				},{
+					postid:'2',
+					postname:'打蜡'
+				}],
 
 	},
 	methods: {
