@@ -4,6 +4,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<title></title>
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
 		<link rel="stylesheet" href="css/global.css" />
 		<link rel="stylesheet" href="css/index.css" />
 		<link href="css/common.css" rel="stylesheet" type="text/css" />
@@ -80,7 +81,7 @@
 								<span>权限管理</span>
 							</template>
 
-							<el-menu-item index="4-1" @click="dialogVisible = true">权限</el-menu-item>
+							<el-menu-item index="8-1" @click="To('/dzw_ui/ui/zkx/roleFun.html')">角色权限管理</el-menu-item>
 
 						</el-submenu>
 						<el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
@@ -232,53 +233,6 @@
 				qx1: {}
 			},
 			methods: {
-				qx() {
-					var _this = this
-					alert(this.radio)
-					var postid = this.radio
-					$.getJSON(`http://127.0.0.1:8080/api/client/qxs/${postid}`, function(data) {
-						_this.qx1 = data
-						if((_this.qx1[0].css1).indexOf(".1") >= 0) {
-							_this.checked = true
-						}
-						if((_this.qx1[0].css1).indexOf(".2") >= 0) {
-							_this.checked1 = true
-						}
-						if((_this.qx1[0].css1).indexOf(".4") >= 0) {
-							_this.checked2 = true
-						}
-						if((_this.qx1[0].css1).indexOf(".6") >= 0) {
-							_this.checked3 = true
-						}
-						_this.dialogVisible1 = true
-					})
-
-				},
-				qx11() {
-					var css1 = ""
-					if(this.checked == true) {
-						css1 += ".1,"
-					}
-					if(this.checked1 == true) {
-						css1 += ".2,"
-					}
-					if(this.checked2 == true) {
-						css1 += ".4,"
-					}
-					if(this.checked3 == true) {
-						css1 += ".6"
-					}
-					alert(css1)
-					var _this = this
-					var postid = this.radio
-					$.getJSON(`http://127.0.0.1:8080/api/client/qxs1/${css1}/${postid}`, function(data) {
-						_this.$notify({
-							title: '成功',
-							message: '这是一条成功的提示消息',
-							type: 'success'
-						});
-					})
-				},
 				To(url) {
 					$("#cnt").load(url);
 				},
@@ -291,75 +245,6 @@
 				}
 			},
 			mounted() {
-
-				$(".6").hide()
-				$(".3").hide()
-				$(".5").hide()
-				$(".1").hide()
-				$(".2").hide()
-				$(".4").hide()
-				var name = sessionStorage.getItem("name");
-				var id = sessionStorage.getItem("id");
-				var pname = sessionStorage.getItem("pname");
-				var css1 = sessionStorage.getItem("css1");
-				var s = css1.split(','); //注split可以用字符或字符串分割
-
-				this.sz = s
-				alert(this.sz)
-				var ti = "欢迎" + name + "使用德召文汽修系统"
-				$("#cnt").load('Main.html');
-				//友好提示
-				this.$notify({
-					title: ti,
-					type: 'success',
-					position: 'top-left',
-					duration: '3000',
-				});
-
-				if(id == "p001") {
-
-					for(var i = 0; i < this.sz.length; i++) {
-
-						$("" + this.sz[i] + "").show()
-					}
-					$(".3").show()
-					$(".5").show()
-
-				} else if(id == "p002") {
-
-					$(".6").show()
-					$(".3").show()
-					$(".5").show()
-					$(".1").show()
-					$(".2").show()
-					$(".4").show()
-				} else if(id == "p003") {
-
-					for(var i = 0; i < this.sz.length; i++) {
-
-						$("" + this.sz[i] + "").show()
-					}
-					$(".3").show()
-					$(".5").show()
-
-				} else if(id == "p004") {
-
-					for(var i = 0; i < this.sz.length; i++) {
-
-						$("" + this.sz[i] + "").show()
-					}
-					$(".3").show()
-					$(".5").show()
-
-				} else {
-
-					$(".6").hide()
-					$(".3").hide()
-					$(".5").hide()
-					$(".1").hide()
-					$(".2").hide()
-					$(".4").hide()
-				}
 
 			}
 		});
