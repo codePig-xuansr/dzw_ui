@@ -52,13 +52,13 @@
 				<el-row>
 				  <el-col :span="24">
 					  <template>
-						  <el-table :data="vehicleInfo" border >
+						  <el-table :data="weixiurecord" border >
 							<el-table-column v-for="(temp,index) in ms" :label="temp.name" align="center">
 								<template slot-scope="scope">
-									<span v-if="temp.values!='comstatus'">{{scope.row[temp.values]}}</span>
-									<span v-if="temp.values=='comstatus'">
-										<el-button v-if="scope.row.comstatus" type="success" disabled>已竣工</el-button>
-										<el-button v-if="!scope.row.comstatus" type="info" @click="jg(scope.row.rorder,scope.row.expectedCompletion)">未竣工</el-button>
+									<span v-if="temp.values!='status'">{{scope.row[temp.values]}}</span>
+									<span v-if="temp.values=='status'">
+										<el-button v-if="scope.row.status" type="success" disabled>已竣工</el-button>
+										<el-button v-if="!scope.row.status" type="info" @click="jg(scope.row.recordid,scope.row.yujidate)">未竣工</el-button>
 									</span>
 								</template>
 							</el-table-column>
@@ -170,23 +170,23 @@
 				},
 				hg:'1',
 				//显示行
-				ms:[{name:'维修单号',values:'rorder'},{name:'车牌号',values:'carHno'},{name:'业务类型',values:'btype'},{name:'单据类型',values:'orderType'},{name:'开单时间',values:'orderTime'},{name:'预计完工',values:'expectedCompletion'},{name:'竣工状态',values:'comstatus'}],
-				vehicleInfo:[{
-					rorder:'1111',
-					carHno:'222',
-					btype:'333',
-					orderType:'444',
-					orderTime:'2020-03-24',
-					expectedCompletion:'2020-03-25',
-					comstatus:''
+				ms:[{name:'维修单号',values:'recordid'},{name:'车牌号',values:'carno'},{name:'业务类型',values:'yewutype'},{name:'单据类型',values:'danjutype'},{name:'开单时间',values:'recorddate'},{name:'预计完工',values:'yujidate'},{name:'竣工状态',values:'status'}],
+				weixiurecord:[{
+					recordid:'1111',
+					carno:'222',
+					yewutype:'333',
+					danjutype:'444',
+					recorddate:'2020-03-24',
+					yujidate:'2020-03-25',
+					status:''
 				},{
-					rorder:'666',
-					carHno:'666',
-					btype:'666',
-					orderType:'666',
-					orderTime:'2020-03-24',
-					expectedCompletion:'2020-03-25',
-					comstatus:''
+					recordid:'666',
+					carno:'666',
+					yewutype:'666',
+					danjutype:'666',
+					recorddate:'2020-03-24',
+					yujidate:'2020-03-25',
+					status:''
 				}],
 				pages:{},
 				edate:'',
@@ -338,7 +338,7 @@
 						data: JSON.stringify(_this.cominfo),
 						success(data) {
 							_this.pages=data;
-							_this.vehicleInfo=data.list;	
+							_this.weixiurecord=data.list;	
 						},
 						error() {			
 										
