@@ -1,9 +1,110 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="UTF-8">
 		<title>车型档案</title>
 	</head>
+
 	<body>
+		<div id="chexingapp" style="width: 100%;">
+
+			<el-row>
+
+				<el-col :span="6">
+
+					<el-row>
+						<el-button type="primary" plain>增加品牌</el-button>
+						<el><input type="text" v-model="projectChild" placeholder="请输入内容" style=" height:30px;" /></el>
+						<el-button type="primary" plain @click="cx()">查询</el-button>
+					</el-row>
+					<div class="grid-content bg-purple">
+						<template>
+							<el-table :data="tableData" style="width: 100%">
+								<el-table-column prop="name" label="编码" >
+								</el-table-column>
+								<el-table-column prop="name" label="品牌名称" >
+								</el-table-column>
+								<el-table-column prop="name" label="首字母" >
+								</el-table-column>
+								<el-table-column fixed="right" label="操作" width="100">
+									<template slot-scope="scope">
+										<el-button @click="handleClick(scope.row)" type="text" size="small">编辑</el-button>
+										<el-button type="text" size="small">删除</el-button>
+									</template>
+								</el-table-column>
+							</el-table>
+						</template>
+
+					</div>
+				</el-col>
+				<el-col :span="18">
+
+					<el-row>
+						<el-button type="primary" plain>增加车型</el-button>
+							<el-button type="primary" plain>照片</el-button>
+							<el><input type="text" v-model="projectChild" placeholder="请输入内容" style=" height:30px;" /></el>
+							<el-button type="primary" plain @click="cx()">查询</el-button>
+					</el-row>
+					<div class="grid-content bg-purple-light">
+						<template>
+							<el-table :data="tableData" style="width: 100%">
+								<el-table-column prop="date" label="APP展示" >
+								</el-table-column>
+								<el-table-column prop="name" label="车型ID" >
+								</el-table-column>
+								<el-table-column prop="name" label="车型名称" >
+								</el-table-column>
+								<el-table-column prop="name" label="发动机品牌" >
+								</el-table-column>
+								<el-table-column prop="name" label="参考价格" >
+								</el-table-column>
+								<el-table-column prop="name" label="车辆年款" >
+								</el-table-column>
+								<el-table-column prop="name" label="功率" >
+								</el-table-column>
+								<el-table-column prop="name" label="进口国产" >
+								</el-table-column>
+								<el-table-column fixed="right" label="操作" width="100">
+									<template slot-scope="scope">
+										<el-button @click="handleClick(scope.row)" type="text" size="small">编辑</el-button>
+										<el-button type="text" size="small">删除</el-button>
+									</template>
+								</el-table-column>
+							</el-table>
+						</template>
+					</div>
+				</el-col>
+			</el-row>
+
+		</div>
 	</body>
+	<script>
+		var chexingapp = new Vue({
+			el: '#chexingapp',
+			data: {
+				tableData: [{
+					date: '2016-05-02',
+					name: '王小虎',
+					address: '上海市普陀区金沙江路 1518 弄'
+				}, {
+					date: '2016-05-04',
+					name: '王小虎',
+					address: '上海市普陀区金沙江路 1517 弄'
+				}, {
+					date: '2016-05-01',
+					name: '王小虎',
+					address: '上海市普陀区金沙江路 1519 弄'
+				}, {
+					date: '2016-05-03',
+					name: '王小虎',
+					address: '上海市普陀区金沙江路 1516 弄'
+				}]
+			},
+			methods: {
+
+			}
+		});
+	</script>
+
 </html>
