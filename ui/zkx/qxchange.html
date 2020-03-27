@@ -8,39 +8,343 @@
 
 	<body>
 		<div id="app">
-		<template>
-		  <el-transfer
-		    v-model="value"
-		    :props="{
-		      key: 'value',
-		      label: 'desc'
-		    }"
-		    :data="data" :titles="['全部权限','已有权限']">
-		  </el-transfer>
-		</template>
+			<template>
+				<el-tree :data="parent" show-checkbox  node-key="id" ref="tree" highlight-current :props="defaultProps">
+				</el-tree>
+			</template>
+			<div class="buttons">
+				<el-button @click="getFunData">获取权限</el-button>
+				<el-button @click="setCheckedNodes">通过 node 设置</el-button>
+				<el-button @click="resetChecked">清空</el-button>
+			</div>
 		</div>
 	</body>
 	<script>
-		var Main = {
-    data() {
-      const generateData = _ => {
-        const data = [];
-        for (let i = 1; i <= 15; i++) {
-          data.push({
-            value: i,
-            desc: `备选项 ${ i }`
-          });
-        }
-        return data;
-      };
-      return {
-        data: generateData(),
-        value: []
-      };
-    }
-  };
-var Ctor = Vue.extend(Main)
-new Ctor().$mount('#app')
+		var Main = new Vue({
+			el: "#app",
+			data: {
+				role:{},
+				parent: [],
+				datas: [{
+					fid: "1",
+					fcode: "qt",
+					fname: "前台",
+					fpid: "0"
+				}, {
+					fid: "2",
+					fcode: "qt001",
+					fname: "结算中心",
+					fpid: "1"
+				}, {
+					fid: "4",
+					fcode: "qcwx",
+					fname: "汽车维修",
+					fpid: "0"
+				}, {
+					fid: "5",
+					fcode: "qcwx001",
+					fname: "维修接车",
+					fpid: "4"
+				}, {
+					fid: "6",
+					fcode: "qcwx002",
+					fname: "竣工检验",
+					fpid: "4"
+				}, {
+					fid: "12",
+					fcode: "khda",
+					fname: "客户档案",
+					fpid: "0"
+				}, {
+					fid: "13",
+					fcode: "khda001",
+					fname: "客户资料",
+					fpid: "12"
+				}, {
+					fid: "14",
+					fcode: "khda002",
+					fname: "车辆资料",
+					fpid: "12"
+				},{
+								fid: "3",
+								fcode: "qt002",
+								fname: "会员充值卡管理",
+								fpid: "1"
+							},{
+						fid: "7",
+						fcode: "zsj",
+						fname: "主数据",
+						fpid: "0"},{
+								fid: "8",
+								fcode: "zsj001",
+								fname: "车型档案",
+								fpid: "7"
+							},
+							{
+								fid: "9",
+								fcode: "zsj002",
+								fname: "维修项目",
+								fpid: "7"
+							},
+							{
+								fid: "10",
+								fcode: "zsj003",
+								fname: "商品资料",
+								fpid: "7"
+							},
+							{
+								fid: "11",
+								fcode: "zsj004",
+								fname: "供货单位",
+								fpid: "7"
+							},{
+						fid: "15",
+						fcode: "jggl",
+						fname: "技工管理",
+						fpid: "0"},{
+								fid: "16",
+								fcode: "jggl001",
+								fname: "班组技工",
+								fpid: "15"
+							},
+							{
+								fid: "17",
+								fcode: "jggl002",
+								fname: "技工星级",
+								fpid: "15"
+							},
+							{
+								fid: "18",
+								fcode: "jggl003",
+								fname: "外勤车俩",
+								fpid: "15"
+							},{
+						fid: "19",
+						fcode: "rs",
+						fname: "人事",
+						fpid: "0"},{
+								fid: "20",
+								fcode: "rs001",
+								fname: "组织机构",
+								fpid: "19"
+							},
+							{
+								fid: "21",
+								fcode: "rs002",
+								fname: "岗位定义",
+								fpid: "19"
+							},
+							{
+								fid: "22",
+								fcode: "rs003",
+								fname: "离职登记",
+								fpid: "19"
+							},
+							{
+								fid: "23",
+								fcode: "rs004",
+								fname: "通讯名录",
+								fpid: "19"
+							},{
+						fid: "24",
+						fcode: "xtgl",
+						fname: "系统管理",
+						fpid: "0"},{
+							fid: "25",
+							fcode: "xtgl001",
+							fname: "员工权限管理",
+							fpid: "24"
+						}],
+				defaultProps: {
+					children: 'children',
+					label: 'label'
+				}
+			},
+			methods: {
+				getCheckedNodes() {
+					console.log(this.$refs.tree.getCheckedNodes());
+				},
+				getCheckedKeys() {
+					console.log(this.$refs.tree.getCheckedKeys());
+				},
+				setCheckedNodes() {
+					this.$refs.tree.setCheckedNodes([{
+						id: 5
+					}, {
+						id: 9
+					}]);
+				},
+				setCheckedKeys() {
+					this.$refs.tree.setCheckedKeys([3]);
+				},
+				resetChecked() {
+					this.$refs.tree.setCheckedKeys([]);
+				},
+				getFunData() {
+					let _this = this;
+					let arry = this.$refs.tree.getCheckedNodes(false, true);
+					$.each(arry, function(j, obj1) {
+						$.each(_this.parent, function(i, obj) {
+							if(obj.id == obj1.id) {
+								arry = arry.filter(row => {
+									return row != obj1
+								})
+							}
+						})
+					});
+					console.log(JSON.stringify(arry));
+				}
+
+			},
+			mounted() {
+				this.role=JSON.parse(localStorage.getItem("urole"));
+				this.parent = window.toTreeData(this.datas, "fid", "fpid", "fname");
+				
+				console.info(JSON.stringify(this.parent));
+			}
+		})
+
+		/*var Main = {
+				methods: {
+					getCheckedNodes() {
+						console.log(this.$refs.tree.getCheckedNodes());
+					},
+					getCheckedKeys() {
+						console.log(this.$refs.tree.getCheckedKeys());
+					},
+					setCheckedNodes() {
+						this.$refs.tree.setCheckedNodes([{
+							id: 5,
+							fname: '二级 2-1'
+						}, {
+							id: 9,
+							fname: '三级 1-1-1'
+						}]);
+					},
+					setCheckedKeys() {
+						this.$refs.tree.setCheckedKeys([3]);
+					},
+					resetChecked() {
+						this.$refs.tree.setCheckedKeys([]);
+					},
+					getFunData() {
+						let _this = this;
+						let arry = this.$refs.tree.getCheckedNodes(false, true);
+						$.each(arry, function(j, obj1) {
+							$.each(_this.data, function(i, obj) {
+								if(obj.id == obj1.id) {
+									arry = arry.filter(row => {
+										return row != obj1
+									})
+								}
+							})
+						});
+						console.log(JSON.stringify(arry));
+					},
+					toTreeData(data, id, pid, name) {
+						// 建立个树形结构,需要定义个最顶层的父节点，pId是1
+						this.parent = [];
+						let _this = this;
+						for(let i = 0; i < data.length; i++) {
+
+							if(data[i][pid] !== "1") {} else {
+								let obj = {
+									label: data[i][name],
+									id: data[i][id],
+									children: []
+								};
+								_this.parent.push(obj); //数组加数组值
+							}
+							// console.log(obj);
+							//  console.log(parent,"bnm");
+						}
+					},
+					children(parent) {
+						console.log(parent)
+						if(data.length !== 0) {
+							for(let i = 0; i < parent.length; i++) {
+								for(let j = 0; j < data.length; j++) {
+									if(parent[i].id == data[j][pid]) {
+										let obj = {
+											label: data[j][name],
+											id: data[j][id],
+											children: []
+										};
+										parent[i].children.push(obj);
+									}
+								}
+								children(parent[i].children);
+							}
+						}
+					}
+				}
+
+			},
+
+			data:{
+				parent: [],
+				data: [{
+					id: 1,
+					fid: "1",
+					fcode: "qt",
+					fname: "前台",
+					fpid: "0",
+					children: [{
+						id: 4,
+						fid: "2",
+						fcode: "qt001",
+						fname: "结算中心",
+						fpid: "1"
+					}]
+				}, {
+					id: 2,
+					fid: "4",
+					fcode: "qcwx",
+					fname: "汽车维修",
+					fpid: "0",
+					children: [{
+						id: 5,
+						fid: "5",
+						fcode: "qcwx001",
+						fname: "维修接车",
+						fpid: "4"
+					}, {
+						id: 6,
+						fid: "6",
+						fcode: "qcwx002",
+						fname: "竣工检验",
+						fpid: "4"
+					}]
+				}, {
+					id: 3,
+					fid: "12",
+					fcode: "khda",
+					fname: "客户档案",
+					fpid: "0",
+					children: [{
+						id: 7,
+						fid: "13",
+						fcode: "khda001",
+						fname: "客户资料",
+						fpid: "12"
+					}, {
+						id: 8,
+						fid: "14",
+						fcode: "khda002",
+						fname: "车辆资料",
+						fpid: "12"
+					}]
+				}],
+				defaultProps: {
+					children: 'children',
+					label: 'fname'
+				}
+			},
+			monted(){
+				this.toTreeData(this.data,"id","fid","fname");//这样调用就好使了
+				console.info(JSON.stringify(this.parent));
+			}
+		};*/
 	</script>
 
 </html>

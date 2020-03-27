@@ -132,7 +132,7 @@
 							{
 								fid: "14",
 								fcode: "khda002",
-								fname: "客户资料",
+								fname: "车辆资料",
 								fpid: "12"
 							}
 						]
@@ -276,9 +276,11 @@
 			},
 			methods: {
 				addqx() {
+					let _this=this;
 					this.dialogVisible666 = true;
 					setTimeout(
 						function() {
+							localStorage.setItem("urole",JSON.stringify(_this.role));
 							$("#cnt2").load("ui/zkx/qxchange.html");
 						}, 2000);
 				},
