@@ -303,6 +303,7 @@
 								});
 							return;
 						}
+						indexVm.To('ui/fzx/maintenanceOrder.html');
 						//判断是否有接车中车辆
 						jQuery.getJSON(`http://localhost:8080/api/cars/pcar/${carno}`,(data)=>{
 							if(data=="false"){
