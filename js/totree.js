@@ -20,7 +20,7 @@ function toTreeData(data, id, pid, name) {
 
 	// 调用子节点方法,参数为父节点的数组
 	function children(parent) {
-		console.log(parent)
+		//console.log(parent)
 		if(data.length !== 0) {
 			for(let i = 0; i < parent.length; i++) {
 				for(let j = 0; j < data.length; j++) {
