@@ -53,7 +53,7 @@
 				</el-col>
 				<p></p>
 				<h></h>
-				<el-dialog title="修改客户" :visible.sync="isShow3">
+				<el-dialog title="修改客户" :visible.sync="isShow3" width="40%">
 					<el-form :model="xgkh" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 						<el-form-item label="客户编码" prop="clientid">
 							<el-input v-model="xgkh.clientid"></el-input>
@@ -70,20 +70,21 @@
 						<el-form-item label="客户地址" prop="clientaddress">
 							<el-input v-model="xgkh.clientaddress"></el-input>
 						</el-form-item>
-
 						<el-form-item label="是否会员" prop="clientlb">
-							<el-select v-model="xgkh.clientlb" placeholder="是否为会员">
-								<el-option label="是" value="1"></el-option>
-								<el-option label="不是" value="2"></el-option>
-							</el-select>
+							<el-col :span="8">
+								<el-select v-model="xzkh.clientaddress" placeholder="是否为会员">
+									<el-option label="是" value="1"></el-option>
+									<el-option label="不是" value="2"></el-option>
+								</el-select>
+							</el-col>
 						</el-form-item>
+
 						<el-form-item label="客户生日" required>
 							<el-col :span="11">
 								<el-form-item prop="clientbirthday">
 									<el-date-picker type="date" placeholder="选择日期" v-model="xgkh.clientbirthday" style="width: 100%;"></el-date-picker>
 								</el-form-item>
 							</el-col>
-
 						</el-form-item>
 
 						<el-form-item>
@@ -91,11 +92,10 @@
 							<el-button @click="resetForm('ruleForm')">重置</el-button>
 						</el-form-item>
 					</el-form>
-
 				</el-dialog>
 				<el-button type="primary" @click="addClient" plain>新增</el-button>
-
-				<el-dialog title="新增客户" :visible.sync="isShow1">
+				<el-button type="primary" @click="add" plain>新增客户和车辆</el-button>
+				<el-dialog title="新增客户" :visible.sync="isShow1" width="40%">
 					<el-form :model="xzkh" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 						<el-form-item label="客户编码" prop="clientid">
 							<el-input v-model="xzkh.clientid"></el-input>
@@ -114,10 +114,12 @@
 						</el-form-item>
 
 						<el-form-item label="是否会员" prop="clientaddress">
-							<el-select v-model="xzkh.clientaddress" placeholder="是否为会员">
-								<el-option label="是" value="1"></el-option>
-								<el-option label="不是" value="2"></el-option>
-							</el-select>
+							<el-col :span="8">
+								<el-select v-model="xzkh.clientaddress" placeholder="是否为会员">
+									<el-option label="是" value="1"></el-option>
+									<el-option label="不是" value="2"></el-option>
+								</el-select>
+							</el-col>
 						</el-form-item>
 						<el-form-item label="客户生日" required>
 							<el-col :span="11">
@@ -126,6 +128,104 @@
 								</el-form-item>
 							</el-col>
 						</el-form-item>
+						<el-form-item>
+							<el-button type="primary" @click="add1">立即创建</el-button>
+							<el-button @click="resetForm('ruleForm')">重置</el-button>
+						</el-form-item>
+					</el-form>
+
+				</el-dialog>
+				<el-dialog title="新增客户和车辆" :visible.sync="isShow4" width="40%">
+					<el-form :model="xzkh" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+						<el-form-item label="客户编码" prop="clientid">
+							<el-input v-model="xzkh.clientid"></el-input>
+						</el-form-item>
+						<el-form-item label="电话" prop="clientiphone">
+							<el-input v-model="xzkh.clientiphone"></el-input>
+						</el-form-item>
+						<el-form-item label="备注" prop="clientbz">
+							<el-input v-model="xzkh.clientbz"></el-input>
+						</el-form-item>
+						<el-form-item label="客户名称" prop="clientname">
+							<el-input v-model="xzkh.clientname"></el-input>
+						</el-form-item>
+						<el-form-item label="客户地址" prop="clientaddress">
+							<el-input v-model="xzkh.clientaddress"></el-input>
+						</el-form-item>
+						<el-form-item label="是否会员" prop="clientaddress">
+							<el-col :span="8">
+								<el-select v-model="xzkh.clientaddress" placeholder="是否为会员">
+									<el-option label="是" value="1"></el-option>
+									<el-option label="不是" value="2"></el-option>
+								</el-select>
+							</el-col>
+						</el-form-item>
+						<el-form-item label="客户生日">
+							<el-col :span="11">
+								<el-form-item prop="clientbirthday">
+									<el-date-picker type="date" placeholder="选择日期" v-model="xzkh.clientbirthday" style="width: 100%;"></el-date-picker>
+								</el-form-item>
+							</el-col>
+						</el-form-item>
+					</el-form>
+					<el-form :model="xzcl" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+						<el-form-item label="车牌" prop="name">
+							<el-input v-model="xzcl.vehiclecp"></el-input>
+						</el-form-item>
+						<el-row>
+							<el-col :span="10" style="margin-left: 40px;">
+								<el-button type="text" @click="isShow2 = true">车辆品牌
+									<el-input v-model="xzcl.vehiclepp"></el-input>
+								</el-button>
+							</el-col>
+							<el-col :span="10" style="margin-left: 40px;">
+								<el-button type="text" @click="isShow3 = true">车辆型号
+									<el-input v-model="xzcl.vehiclexh"></el-input>
+								</el-button>
+							</el-col>
+						</el-row>
+						<el-form-item label="驾驶员" prop="name">
+							<el-input v-model="xzcl.vehiclejsy"></el-input>
+						</el-form-item>
+						<el-form-item label="驾驶员电话" prop="name">
+							<el-input v-model="xzcl.vehicledh"></el-input>
+						</el-form-item>
+						<el-row>
+							<el-col :span="10">
+								<el-form-item label="车辆归属" prop="region">
+									<el-select v-model="xzcl.vehiclegs" placeholder="请选择活动区域">
+										<el-option label="私家车" value="001"></el-option>
+										<el-option label="公用车" value="002"></el-option>
+									</el-select>
+								</el-form-item>
+							</el-col>
+						</el-row>
+						<el-form-item label="发动机" prop="name">
+							<el-input v-model="xzcl.vehiclefdj"></el-input>
+						</el-form-item>
+						<el-form-item label="驾驶证到期日期" required>
+							<el-col :span="11">
+								<el-form-item prop="date1">
+									<el-date-picker type="date" placeholder="选择日期" v-model="xzcl.vehiclefdq" style="width: 100%;"></el-date-picker>
+								</el-form-item>
+							</el-col>
+						</el-form-item>
+						<el-form-item label="车架号" prop="name">
+							<el-input v-model="xzcl.vehiclefcjh"></el-input>
+						</el-form-item>
+						<el-form-item label="发动机号" prop="name">
+							<el-input v-model="xzcl.vehicleffdjh"></el-input>
+						</el-form-item>
+						<el-form-item label="载重" prop="name">
+							<el-input v-model="xzcl.vehiclefzz"></el-input>
+						</el-form-item>
+						<el-form-item label="燃油类别" prop="name">
+							<el-input v-model="xzcl.vehiclefrylb"></el-input>
+						</el-form-item>
+						<el-form-item label="车系" prop="name">
+							<el-input v-model="xzcl.vehiclefcx"></el-input>
+						</el-form-item>
+
 						<el-form-item>
 							<el-button type="primary" @click="add1">立即创建</el-button>
 							<el-button @click="resetForm('ruleForm')">重置</el-button>
@@ -261,6 +361,22 @@
 					clientaddress: ""
 
 				},
+				xzcl: {
+					vehiclecp: "",
+					vehiclepp: "",
+					vehiclexh: "",
+					vehiclejsy: "",
+					vehicledh: "",
+					vehiclegs: "",
+					vehiclefdj: "001",
+					vehiclefname: "",
+					vehiclefdq: "",
+					vehiclefcjh: "",
+					vehicleffdjh: "",
+					vehiclefzz: "",
+					vehiclefrylb: "",
+					vehiclefcx: ""
+				},
 				xgkh: {
 					clientid: "",
 					clientname: "",
@@ -274,6 +390,7 @@
 				isShow1: false,
 				isShow2: false,
 				isShow3: false,
+				isShow4: false,
 				ruleForm: {
 					name: '',
 					region: '',
@@ -345,7 +462,10 @@
 					this.isShow3 = true;
 				},
 				add1() {},
-				update1() {}
+				update1() {},
+				add() {
+					this.isShow4 = true;
+				}
 			}
 		});
 	</script>
