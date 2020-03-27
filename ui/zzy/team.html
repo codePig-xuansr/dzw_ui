@@ -28,7 +28,7 @@
 									<el-button type="danger" v-if="temp.value==0" @click="delOne(scope.row.numbercar)">删除</el-button>
 									<br />
 									<br />
-									<el-button type="primary" v-if="temp.value==0" @click="selteam(scope.row.teamno)">修改</el-button>									
+									<el-button type="primary" v-if="temp.value==0" @click="addteam = true">修改</el-button>									
 								</template>
 							</el-table-column>
 						</el-table>
@@ -37,9 +37,12 @@
 
 				</el-col>
 			</el-row>
-			<el-dialog title="新增班组技工" :visible.sync="add" width="30%" :before-close="handleClose">
+			
+			
+			
+			<el-dialog title="新增班组技工" :visible.sync="add" width="60%" :before-close="handleClose">
 				<div>
-					<el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
+					<el-form :label-position="labelPosition" :inline="true" label-width="80px" :model="formLabelAlign">
 						<el-form-item label="班组编号">
 							<el-input v-model="formLabelAlign.teamno"></el-input>
 						</el-form-item>
@@ -84,52 +87,53 @@
   				</span>
 			</el-dialog>
 
-			<el-dialog title="修改" :visible.sync="addteam" width="30%" :before-close="handleClose">
+			<el-dialog title="新增班组技工" :visible.sync="addteam" width="60%" :before-close="handleClose">
 				<div>
-					<el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
+					<el-form :label-position="labelPosition" :inline="true" label-width="80px" :model="formLabelAlign">
 						<el-form-item label="班组编号">
-							<el-input v-if="teams[0]!=undefined" v-model="teams[0].teamno"></el-input>
+							<el-input v-model="formLabelAlign.teamno"></el-input>
 						</el-form-item>
 						<el-form-item label="班组名称">
-							<el-input v-if="teams[0]!=undefined" v-model="teams[0].teamname"></el-input>
+							<el-input v-model="formLabelAlign.teamname"></el-input>
 						</el-form-item>
 						<el-form-item label="技工编号">
-							<el-input v-if="teams[0]!=undefined" v-model="teams[0].number"></el-input>
+							<el-input v-model="formLabelAlign.number"></el-input>
 						</el-form-item>
 						<el-form-item label="技工姓名">
-							<el-input v-if="teams[0]!=undefined" v-model="teams[0].artname"></el-input>
+							<el-input v-model="formLabelAlign.artname"></el-input>
 						</el-form-item>
 						<el-form-item label="性别">
-							<el-input v-if="teams[0]!=undefined" v-model="teams[0].sex"></el-input>
+							<el-input v-model="formLabelAlign.sex"></el-input>
 						</el-form-item>
 						<el-form-item label="电话">
-							<el-input v-if="teams[0]!=undefined" v-model="teams[0].phone"></el-input>
+							<el-input v-model="formLabelAlign.phone"></el-input>
 						</el-form-item>
 						<el-form-item label="地址">
-							<el-input v-if="teams[0]!=undefined" v-model="teams[0].site"></el-input>
+							<el-input v-model="formLabelAlign.site"></el-input>
 						</el-form-item>
 						<el-form-item label="用户名">
-							<el-input v-if="teams[0]!=undefined" v-model="teams[0].logname"></el-input>
+							<el-input v-model="formLabelAlign.logname"></el-input>
 						</el-form-item>
 						<el-form-item label="身份证">
-							<el-input v-if="teams[0]!=undefined" v-model="teams[0].idcard"></el-input>
+							<el-input v-model="formLabelAlign.idcard"></el-input>
 						</el-form-item>
 						<el-form-item label="星级">
-							<el-input v-if="teams[0]!=undefined" v-model="teams[0].classno"></el-input>
+							<el-input v-model="formLabelAlign.classno"></el-input>
 						</el-form-item>
 						<el-form-item label="类型">
-							<el-input v-if="teams[0]!=undefined" v-model="teams[0].typeg"></el-input>
+							<el-input v-model="formLabelAlign.typeg"></el-input>
 						</el-form-item>
 						<el-form-item label="品牌">
-							<el-input v-if="teams[0]!=undefined" v-model="teams[0].brands"></el-input>
+							<el-input v-model="formLabelAlign.brands"></el-input>
 						</el-form-item>
 					</el-form>
 				</div>
 				<span slot="footer" class="dialog-footer">
    				 <el-button @click="addteam = false">取 消</el-button>
-   				 <el-button type="primary" @click="updteam">保存</el-button>
+   				 <el-button type="primary" @click="addall">保存</el-button>
   				</span>
 			</el-dialog>
+
 		</div>
 	</body>
 	<script>

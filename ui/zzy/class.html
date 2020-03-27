@@ -27,7 +27,7 @@
 								<template slot-scope="scope">
 									<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>
 									<el-button type="danger" v-if="temp.value==0" @click="delOne(scope.row.classno)">删除</el-button>
-									<el-button type="primary" v-if="temp.value==0" @click="selteam(scope.row.teamno)">修改</el-button>							
+									<el-button type="primary" v-if="temp.value==0" @click="modify = true">修改</el-button>							
 								</template>
 							</el-table-column>
 						</el-table>
@@ -58,6 +58,30 @@
    				 <el-button type="primary" @click="addall">保存</el-button>
   				</span>
 			</el-dialog>
+			
+			<el-dialog title="修改等级" :visible.sync="modify" width="30%" :before-close="handleClose">
+				<div>
+					<el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
+						<el-form-item label="等级编码">
+							<el-input v-model="formLabelAlign.classno"></el-input>
+						</el-form-item>
+						<el-form-item label="等级名称">
+							<el-input v-model="formLabelAlign.classname"></el-input>
+						</el-form-item>
+						<el-form-item label="提成权重">
+							<el-input v-model="formLabelAlign.weight"></el-input>
+						</el-form-item>
+						<el-form-item label="时长">
+							<el-input v-model="formLabelAlign.manHour"></el-input>
+						</el-form-item>
+					</el-form>
+				</div>
+				<span slot="footer" class="dialog-footer">
+   				 <el-button @click="modify = false">取 消</el-button>
+   				 <el-button type="primary" @click="addall">保存</el-button>
+  				</span>
+			</el-dialog>
+			
 		</div>
 	</body>
 	<script>
@@ -71,6 +95,7 @@
 					manHour:'',
 				},
 				add: false,
+				modify:false,
 				piges: {},
 				carlist: [],
 				list: [],
