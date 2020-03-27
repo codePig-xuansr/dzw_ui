@@ -23,7 +23,7 @@
 					<div class="grid-content bg-purple">
 
 						<template>
-							<el-table :data="tableData" style="width: 100%">
+							<el-table :data="gonghuodanwei" style="width: 100%">
 								<el-table-column prop="name" label="供货单位" width="180">
 								</el-table-column>
 								<el-table-column fixed="right" label="操作" width="100">
@@ -41,20 +41,20 @@
 					<div class="grid-content bg-purple-light">
 
 						<template>
-							<el-table :data="tableData" style="width: 100%">
-								<el-table-column prop="date" label="厂商代码" width="180">
+							<el-table :data="changshang" style="width: 100%">
+								<el-table-column prop="id" label="厂商代码" width="180">
 								</el-table-column>
 								<el-table-column prop="name" label="厂商名称" width="180">
 								</el-table-column>
 								<el-table-column prop="address" label="地址">
 								</el-table-column>
-								<el-table-column prop="address" label="经营情况">
+								<el-table-column prop="qk" label="经营情况">
 								</el-table-column>
-								<el-table-column prop="address" label="网址">
+								<el-table-column prop="wangzhi" label="网址">
 								</el-table-column>
-								<el-table-column prop="address" label="开户行">
+								<el-table-column prop="kaihuhang" label="开户行">
 								</el-table-column>
-								<el-table-column prop="address" label="银行账号">
+								<el-table-column prop="zhanghao" label="银行账号">
 								</el-table-column>
 								<el-table-column fixed="right" label="操作" width="100">
 									<template slot-scope="scope">
@@ -67,16 +67,14 @@
 						
 						<template>
 							<label>联系人</label>
-							<el-table :data="tableData" style="width: 100%">
-								<el-table-column prop="date" label="联系人" width="180">
+							<el-table :data="lianxiren" style="width: 100%">
+								<el-table-column prop="name" label="联系人" width="180">
 								</el-table-column>
-								<el-table-column prop="name" label="职位" width="180">
+								<el-table-column prop="zhiwei" label="职位" width="180">
 								</el-table-column>
-								<el-table-column prop="address" label="手机">
+								<el-table-column prop="dianhua" label="电话">
 								</el-table-column>
-								<el-table-column prop="address" label="电话">
-								</el-table-column>
-								<el-table-column prop="address" label="Email">
+								<el-table-column prop="email" label="Email">
 								</el-table-column>
 							</el-table>
 						</template>
@@ -134,7 +132,44 @@
 			data: {
 				addfl:false,
 				addcs:false,
-				tableData: []
+				tableData: [],
+				gonghuodanwei:[{
+					id:'1',
+					name:'单位1'
+				},{
+					id:'1',
+					name:'单位1'
+				}],
+				changshang:[{
+					id:'001',
+					name:'厂商1',
+					address:'北京',
+					qk:'',
+					wangzhi:'',
+					kaihuhang:'',
+					zhanghao:''
+				},{
+					id:'002',
+					name:'厂商2',
+					address:'北京',
+					qk:'',
+					wangzhi:'',
+					kaihuhang:'',
+					zhanghao:''
+				}],
+				lianxiren:[{
+					id:'1',
+					name:'张三',
+					zhiwei:'技工2',
+					dianhua:'1300000000',
+					email:'zhangsan.@163.com'
+				},{
+					id:'2',
+					name:'李四',
+					zhiwei:'技工1',
+					dianhua:'1300000000',
+					email:'lisi.@163.com'
+				}]
 			},
 			methods: {
 
