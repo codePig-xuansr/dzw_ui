@@ -180,6 +180,8 @@
 				resetChecked() {
 					this.$refs.tree.setCheckedKeys([]);
 				},
+				
+				//获取选中的子权限集合
 				getFunData() {
 					let _this = this;
 					let arry = this.$refs.tree.getCheckedNodes(false, true);
