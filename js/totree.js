@@ -1,4 +1,11 @@
 // 循环出父节点
+/**
+ * 将后台传来的list对象集合转换成树控件规定的数据格式
+ * @param {Object} data 需要转换的对象集合
+ * @param {Object} id 主键id
+ * @param {Object} pid 父级id
+ * @param {Object} name 需要显示的节点名称
+ */
 function toTreeData(data, id, pid, name) {
 	// 建立个树形结构,需要定义个最顶层的父节点，pId是1
 	let parent = [];
