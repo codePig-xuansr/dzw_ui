@@ -23,7 +23,7 @@
 
 	<body>
 		<div id="weixiuadd">
-			<el-row>
+			<!--<el-row>
 				<el-col :span="24">
 					<div id="tj">
 						<tr>
@@ -77,6 +77,69 @@
 					<div id="oo">
 						<el-button style="width:150px" @click="save()">修改</el-button>
 						<el-button style="width:150px" @click='fh()'>返回</el-button>
+					</div>
+				</el-col>
+			</el-row>-->
+			<el-row>
+				<el-col :span="24">
+					<div id="tj">
+						<tr>
+							<td>项目编码：</td>
+							<td>
+								<el-input style="width:150px" placeholder="请输入内容" v-model="maintaininfo.coding"></el-input>
+							</td>
+							<br>
+							<br>
+							<td>项目名称：</td>
+							<el-input style="width:150px" placeholder="请输入内容" v-model="maintaininfo.itemName"></el-input>
+							<br /><br />&nbsp;&nbsp;
+							<td>售按价：</td>
+							<td>
+								<el-input style="width:150px" placeholder="请输入内容" v-model="maintaininfo.priceType"></el-input>
+							</td>
+						</tr>
+							<br>
+							<br>
+						<tr>
+							<td>项目类别：</td>
+							<td>
+								<template>
+									<el-select placeholder="请选择" v-model="maintaininfo.project">
+										<el-option label="中国一汽" :value="502" style="width:150px">
+										</el-option>
+										<el-option label="中度" value="311" style="width:150px">
+										</el-option>
+										<el-option label="西安康明斯" :value="14" style="width:150px">
+										</el-option>
+										<el-option label="轻度" value="310" style="width:150px">
+										</el-option>
+										<el-option label="重度" value="312" style="width:150px">
+										</el-option>
+										<el-option label="刹车片" :value="12" style="width:150px">
+										</el-option>
+										<el-option label="轮胎" :value="13" style="width:150px">
+										</el-option>
+									</el-select>
+								</template>
+							</td>
+							<br /><br />&nbsp;
+							<td>标准价：</td>
+							<td>
+								<el-input style="width:150px" placeholder="请输入内容" v-model="maintaininfo.standard"></el-input>
+							</td>
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							<br>
+							<br>
+							<td>VIP价：</td>
+							<td>
+								<el-input style="width:150px" placeholder="请输入内容" v-model="maintaininfo.VIP"></el-input>
+							</td>
+						</tr>
+					</div>
+					<br />
+					<div id="oo">
+						<el-button style="width:150px" @click="save">保存</el-button>
+						<el-button style="width:150px" @click='fh'>返回</el-button>
 					</div>
 				</el-col>
 			</el-row>

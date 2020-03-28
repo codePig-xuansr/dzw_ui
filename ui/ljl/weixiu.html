@@ -19,7 +19,11 @@
 						<el-row>
 							<el><input type="text" v-model="projectChild" placeholder="请输入内容" style=" height:30px;" /></el>
 							<el-button type="primary" plain @click="cx()">查询</el-button>
-							<el-button type="primary" plain @click="bmxl">增加</el-button>
+							<el-button type="primary" plain @click="addwx">项目类别增加</el-button>
+							<el-button type="primary" plain @click="addwx">项目类别子级增加</el-button>
+							<el-button type="primary" plain @click="addwx">维修项目增加</el-button>
+							<el-button type="primary" plain>维修类别删除</el-button>
+							<!--<el-button type="primary" plain @click="bmxl">增加</el-button>-->
 
 							<el-button type="primary" plain>掉价</el-button>
 							<el-button type="primary" plain>保存</el-button>
@@ -27,10 +31,11 @@
 						</el-row>
 						<el-row>
 							<el-col :span="6">
-								<el-table :data="weixiu" style="width: 100%">
-									<el-table-column prop="projectChild" label="项目类别">
-									</el-table-column>
-								</el-table>
+								<label>维修项目类别</label>
+								<template>
+									<el-tree :data="datas" show-checkbox node-key="id" ref="tree" highlight-current :props="defaultProps">
+									</el-tree>
+								</template>
 							</el-col>
 							<el-col :span="18">
 
@@ -42,7 +47,8 @@
 									</el-table-column>
 									<el-table-column fixed="right" label="操作" width="200px">
 										<template slot-scope="scope">
-											<el-button size="small" @click="bmxp">编辑</el-button>
+											<!--<el-button size="small" @click="bmxp">编辑</el-button>-->
+											<el-button size="small" @click="updatewx">编辑</el-button>
 											<el-button size="small">删除</el-button>
 										</template>
 									</el-table-column>
@@ -54,6 +60,16 @@
 					</template>
 				</el-col>
 			</el-row>
+			<el-dialog title="新增维修项目" width="850px" :visible.sync="xinzengweixiu" :before-close="handleClose">
+				<div id="cnt2">
+
+				</div>
+			</el-dialog>
+			<el-dialog title="修改维修项目" width="850px" :visible.sync="xiugaiweixiu" :before-close="handleClose">
+				<div id="cnt2">
+
+				</div>
+			</el-dialog>
 		</div>
 	</body>
 	<script>
@@ -61,18 +77,31 @@
 			el: '#weixiu',
 			data: {
 				wx: [],
+				datas: [],
+				xinzengweixiu: false,
+				xiugaiweixiu:false,
+				defaultProps: {
+					children: 'children',
+					label: 'label'
+				},
 				weixiu: [{
 					projectChild: '222',
-					coding: '222',
+					coding: '0',
 					itemName: '222',
 					priceType: '222',
 					vIP: '222',
 				}, {
 					projectChild: '111',
-					coding: '111',
+					coding: '0',
 					itemName: '111',
 					priceType: '111',
 					vIP: '111',
+				}, {
+					projectChild: '333',
+					coding: '111',
+					itemName: '333',
+					priceType: '333',
+					vIP: '333',
 				}],
 				stsy: [{
 						name: '项目类别',
@@ -128,17 +157,46 @@
 
 				},
 
+				addwx() {
+					let _this = this;
+					this.xinzengweixiu = true;
+					setTimeout(
+						function() {
+							$("#cnt2").load("ui/ljl/weixiuadd.html");
+						});
+				},
+				
+				updatewx() {
+					let _this = this;
+					this.xiugaiweixiu = true;
+					setTimeout(
+						function() {
+							$("#cnt2").load("ui/ljl/weixiupdate.html");
+						});
+				},
+
 				init() {
 					let _this = this;
 					$.getJSON("http://localhost:8080/api/emps", function(data) {
 						_this.wx = data;
 
 					});
+				},
+
+				handleClose(done) {
+					this.$confirm('是否关闭?')
+						.then(_ => {
+							done();
+						})
+						.catch(_ => {});
 				}
 
 			},
 			mounted() {
-				this.init();
+				//this.init();
+				this.datas = window.toTreeData(this.weixiu, "projectChild", "coding", "itemName");
+				console.info(JSON.stringify(this.datas));
+				//alert(this.datas)
 			}
 
 		});
