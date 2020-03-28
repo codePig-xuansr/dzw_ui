@@ -40,7 +40,7 @@
 				<el-col :span="18">
 					<div class="grid-content bg-purple-light">
 
-						<template>
+						<!--<template>
 							<el-table :data="changshang" style="width: 100%">
 								<el-table-column prop="id" label="厂商代码" width="180">
 								</el-table-column>
@@ -62,10 +62,30 @@
 										<el-button type="text" size="small">删除</el-button>
 									</template>
 								</el-table-column>
+
+							</el-table>
+						</template>-->
+
+						<template>
+							<el-table :data="tableData2" style="width: 100%;margin-bottom: 20px;" row-key="id" border default-expand-all :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
+								<el-table-column prop="id" label="厂商代码" width="180">
+								</el-table-column>
+								<el-table-column prop="name" label="厂商名称" width="180">
+								</el-table-column>
+								<el-table-column prop="address" label="地址">
+								</el-table-column>
+								<el-table-column prop="qk" label="经营情况">
+								</el-table-column>
+								<el-table-column prop="wangzhi" label="网址">
+								</el-table-column>
+								<el-table-column prop="kaihuhang" label="开户行">
+								</el-table-column>
+								<el-table-column prop="zhanghao" label="银行账号">
+								</el-table-column>
 							</el-table>
 						</template>
-						
-						<template>
+
+						<!--<template>
 							<label>联系人</label>
 							<el-table :data="lianxiren" style="width: 100%">
 								<el-table-column prop="name" label="联系人" width="180">
@@ -77,19 +97,19 @@
 								<el-table-column prop="email" label="Email">
 								</el-table-column>
 							</el-table>
-						</template>
+						</template>-->
 					</div>
 				</el-col>
 			</el-row>
-			
+
 			<el-dialog title="添加分类" :visible.sync="addfl" width="30%">
 				<div>
 					<el-form label-width="80px">
 						<el-form-item label="分类编号">
-							<el-input ></el-input>
+							<el-input></el-input>
 						</el-form-item>
 						<el-form-item label="分类名称">
-							<el-input ></el-input>
+							<el-input></el-input>
 						</el-form-item>
 					</el-form>
 				</div>
@@ -103,19 +123,19 @@
 				<div>
 					<el-form label-width="80px">
 						<el-form-item label="供货单位编号">
-							<el-input ></el-input>
+							<el-input></el-input>
 						</el-form-item>
 						<el-form-item label="供货单位名称">
-							<el-input ></el-input>
+							<el-input></el-input>
 						</el-form-item>
 						<el-form-item label="供货单位地址">
-							<el-input ></el-input>
+							<el-input></el-input>
 						</el-form-item>
 						<el-form-item label="联系电话">
-							<el-input ></el-input>
+							<el-input></el-input>
 						</el-form-item>
 						<el-form-item label="邮箱">
-							<el-input ></el-input>
+							<el-input></el-input>
 						</el-form-item>
 					</el-form>
 				</div>
@@ -130,46 +150,82 @@
 		var gonghuoapp = new Vue({
 			el: '#gonghuoapp',
 			data: {
-				addfl:false,
-				addcs:false,
+				addfl: false,
+				addcs: false,
+				tableData2: [{
+					id: '001',
+					name: '厂商1',
+					address: '北京',
+					qk: '',
+					wangzhi: '',
+					kaihuhang: '',
+					zhanghao: '',
+					children: [{
+						id: '1',
+						name: '王五',
+						address: '技工1',
+						qk: '1300000000',
+						wangzhi: 'wangwu.@163.com'
+					}, {
+						id: '2',
+						name: '赵公子',
+						address: '技工1',
+						qk: '1300000000',
+						wangzhi: 'zhaogongzi.@163.com'
+					}]
+				}],
 				tableData: [],
-				gonghuodanwei:[{
-					id:'1',
-					name:'单位1'
-				},{
-					id:'1',
-					name:'单位1'
+				gonghuodanwei: [{
+					id: '1',
+					name: '单位1'
+				}, {
+					id: '1',
+					name: '单位1'
 				}],
-				changshang:[{
-					id:'001',
-					name:'厂商1',
-					address:'北京',
-					qk:'',
-					wangzhi:'',
-					kaihuhang:'',
-					zhanghao:''
-				},{
-					id:'002',
-					name:'厂商2',
-					address:'北京',
-					qk:'',
-					wangzhi:'',
-					kaihuhang:'',
-					zhanghao:''
+				changshang: [{
+					id: '001',
+					name: '厂商1',
+					address: '北京',
+					qk: '',
+					wangzhi: '',
+					kaihuhang: '',
+					zhanghao: '',
+					lianxiren: [{
+						id: '1',
+						name: '王五',
+						zhiwei: '技工1',
+						dianhua: '1300000000',
+						email: 'wangwu.@163.com'
+					}, {
+						id: '2',
+						name: '赵公子',
+						zhiwei: '技工1',
+						dianhua: '1300000000',
+						email: 'zhaogongzi.@163.com'
+					}]
+				}, {
+					id: '002',
+					name: '厂商2',
+					address: '北京',
+					qk: '',
+					wangzhi: '',
+					kaihuhang: '',
+					zhanghao: '',
+					lianxiren: [{
+						id: '3',
+						name: '张三',
+						zhiwei: '技工2',
+						dianhua: '1300000000',
+						email: 'zhangsan.@163.com'
+					}, {
+						id: '4',
+						name: '李四',
+						zhiwei: '技工1',
+						dianhua: '1300000000',
+						email: 'lisi.@163.com'
+					}]
 				}],
-				lianxiren:[{
-					id:'1',
-					name:'张三',
-					zhiwei:'技工2',
-					dianhua:'1300000000',
-					email:'zhangsan.@163.com'
-				},{
-					id:'2',
-					name:'李四',
-					zhiwei:'技工1',
-					dianhua:'1300000000',
-					email:'lisi.@163.com'
-				}]
+				lianxiren: []
 			},
 			methods: {
 
