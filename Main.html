@@ -122,7 +122,7 @@
 				return {
 					isCollapsed: false,
 					charts: '',
-					loginUser:{rid:1},
+					loginUser:{},
 					show:true,
 					titleshow:true
 				};
@@ -205,6 +205,7 @@
 			//调用
 			mounted() {
 				let _this=this;
+				this.loginUser=JSON.parse(sessionStorage.getItem("user"));
 				if(this.loginUser.rid!=1){
 					_this.show=false;
 					_this.titleshow=true;
