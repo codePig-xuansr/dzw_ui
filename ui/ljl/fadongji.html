@@ -127,7 +127,7 @@
 							<!--<el><label>分类编号</label><input type="text" v-model="fadongji.fadongjiid" placeholder="请输入内容" style=" height:30px;" /></el>-->
 
 							<el><label>分类名称</label><input type="text" v-model="fadongjiname" placeholder="按名称查询" style=" height:30px;" /></el>
-							<el-button type="primary" plain>查询</el-button>
+							<el-button type="primary" plain @click="cx">查询</el-button>
 
 							<el-button type="primary" plain @click="bmxl">增加</el-button>
 
@@ -311,15 +311,16 @@
 						alert(2)
 					}
 				},
-				/*cx() {
+				cx() {
 					let _this = this;
-					alert(this.projectChild)
-					$.getJSON(`http://localhost:8080/api/emps/han/${this.projectChild}`, function(data) {
-						_this.wx = data;
+					$.getJSON(`http://localhost:8080/api/ljl/fdj/selectLikeName/${_this.fadongjiname}`,
+						function(data) {
+							_this.wx = data;
 
-					});
-
-				},*/
+						}
+					);
+					//alert(_this.fadongjiname)
+				},
 				change(num) {
 					let _this = this;
 					this.pageinfo(num, _this.wx.pageSize);
