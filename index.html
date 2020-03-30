@@ -176,7 +176,7 @@
 								<el-dropdown-menu slot="dropdown">
 									<el-dropdown-item>个人信息</el-dropdown-item>
 									<el-dropdown-item>修改密码</el-dropdown-item>
-									<el-dropdown-item divided>退出登录</el-dropdown-item>
+									<el-dropdown-item divided><a href="javascript:;" @click="loginOut">退出登录</a></el-dropdown-item>
 								</el-dropdown-menu>
 							</el-dropdown>
 							<span style="margin-left: 30px;"></span>
@@ -220,10 +220,16 @@
 							done();
 						})
 						.catch(_ => {});
+				},
+				loginOut(){
+					if(confirm('确定退出登录吗？')){
+						window.sessionStorage.clear();
+						location.href='login.html';
+					}
 				}
 			},
 			mounted() {
-
+				this.To('Main.html');
 			}
 		});
 	</script>

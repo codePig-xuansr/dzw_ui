@@ -4,13 +4,14 @@
 	<head>
 		<meta charset="utf-8" />
 		<title></title>
-		<link rel="stylesheet" href="../../css/global.css" />
-		<link rel="stylesheet" href="../../css/index.css" />
-		<link href="../../css/common.css" rel="stylesheet" type="text/css" />
-		<link href="../../css/style.css" rel="stylesheet" type="text/css" />
-		<script type="text/javascript" src="../../js/jquery-1.12.4.js"></script>
-		<!--<script type="text/javascript" src="../../js/jq_ajax_config.js" ></script>-->
-		<script type="text/javascript" src="../../js/vue.js"></script>
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" href="css/global.css" />
+		<link rel="stylesheet" href="css/index.css" />
+		<link href="css/common.css" rel="stylesheet" type="text/css" />
+		<link href="css/style.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="js/jquery-1.12.4.js"></script>
+		<!--<script type="text/javascript" src="js/jq_ajax_config.js" ></script>-->
+		<script type="text/javascript" src="js/vue.js"></script>
 
 		<style>
 			.el-aside {
@@ -48,21 +49,6 @@
 			.el-menu--horizontal>.el-menu-item.is-active {
 				border-bottom: none !important;
 			}
-			
-			.demo-table-expand {
-				font-size: 0;
-			}
-			
-			.demo-table-expand label {
-				width: 90px;
-				color: #99a9bf;
-			}
-			
-			.demo-table-expand .el-form-item {
-				margin-right: 0;
-				margin-bottom: 0;
-				width: 50%;
-			}
 		</style>
 	</head>
 
@@ -80,74 +66,82 @@
 								<i class="el-icon-s-home"></i><span>主页</span>
 							</div>
 						</el-menu-item>
-						<el-submenu index="7">
+						<el-submenu index="7" class="1">
 							<template slot="title">
 								<i class="el-icon-s-custom" style="color: white;"></i>
 								<span>前台</span>
 							</template>
 							<!--子项-->
 							<el-menu-item index="7-1" @click="To('/dzw_ui/ui/sw/js.html')">结算中心</el-menu-item>
-							<el-menu-item index="7-2" @click="To('/dzw_ui/ui/sw/vip.html')">会员充值卡管理</el-menu-item>
-
+							<el-menu-item index="7-1" @click="To('/dzw_ui/ui/sw/vip.html')">会员充值卡管理</el-menu-item>
 						</el-submenu>
-						<el-submenu index="8">
+						<el-submenu index="8" class="8">
 							<template slot="title">
 								<i class="el-icon-s-custom" style="color: white;"></i>
-								<span>系统管理</span>
+								<span>权限管理</span>
 							</template>
 
 							<el-menu-item index="8-1" @click="To('/dzw_ui/ui/zkx/roleFun.html')">角色权限管理</el-menu-item>
 
 						</el-submenu>
-						<el-submenu index="2">
+						
+						<el-submenu index="2" class="2">
 							<template slot="title">
 								<i class="el-icon-s-operation" style="color: white;"></i>
 								<span>汽车维修</span>
 							</template>
 							<!--子项-->
 							<!--绑定单击事件跳转页面,路径参考-->
-							<el-menu-item index="2-1" @click="To('../fzx/maintenanceCar.html')">维修接车</el-menu-item>
-							<el-menu-item index="2-2" @click="To('../fzx/completionTest.html')">竣工检验</el-menu-item>
+							<el-menu-item index="2-1" @click="To('ui/fzx/maintenanceCar.html')">维修接车</el-menu-item>
+							<el-menu-item index="2-2" @click="To('ui/fzx/completionTest.html')">竣工检验</el-menu-item>
 						</el-submenu>
-						<el-submenu index="3">
+						<el-submenu index="3" class="3">
 							<template slot="title">
 								<i class="el-icon-s-data" style="color: white;"></i>
 								<span>主数据</span>
 							</template>
 							<!--子项-->
-							<el-menu-item index="3-1" @click="To('../ljl/fadongji.html')">车型档案</el-menu-item>
-							<el-menu-item index="3-2" @click="To('../ljl/weixiu.html')">维修项目</el-menu-item>
-							<el-menu-item index="3-3" @click="To('/dzw_ui/ui/zzy/spzl.html')">商品资料</el-menu-item>
-							<el-menu-item index="3-4" @click="To('')">供货单位</el-menu-item>
+
+							<!--
+                            	作者：2453688922@qq.com
+                            	时间：2020-03-25
+                            	描述：缺少子项发动机品牌
+                            -->
+							<el-menu-item index="3-1" @click="To('ui/ljl/fadongji.html')">发动机品牌</el-menu-item>
+							<el-menu-item index="3-1" @click="To('ui/ljl/chexingdangan.html')">车型档案</el-menu-item>
+							<el-menu-item index="3-2" @click="To('ui/ljl/weixiu.html')">维修项目</el-menu-item>
+							<el-menu-item index="3-3" @click="To('ui/zzy/spzl.html')">商品资料</el-menu-item>
+							<el-menu-item index="3-4" @click="To('ui/ljl/gonghuodanwei.html')">供货单位</el-menu-item>
 						</el-submenu>
-						<el-submenu index="4">
+						<el-submenu index="4" class="4">
 							<template slot="title">
 								<i class="el-icon-s-custom" style="color: white;"></i>
 								<span>客户档案</span>
 							</template>
 							<!--子项-->
-							<el-menu-item index="4-1" @click="To('../sw/che.html')">客户资料</el-menu-item>
-							<el-menu-item index="4-2" @click="To('../sw/che1.html')">车辆资料</el-menu-item>
+							<el-menu-item index="4-1" @click="To('/dzw_ui/ui/sw/che.html')">客户资料</el-menu-item>
+							<el-menu-item index="4-2" @click="To('/dzw_ui/ui/sw/che1.html')">车辆资料</el-menu-item>
 						</el-submenu>
-						<el-submenu index="5">
+						<el-submenu index="5" class="5">
 							<template slot="title">
 								<i class="el-icon-s-help" style="color: white;"></i>
 								<span>技工管理</span>
 							</template>
 							<!--子项-->
-							<el-submenu index="5-1">
+							<!--<el-submenu index="5-1">
 								<template slot="title">
-									<span @click="To('../zzy/team.html')">班组技工</span>
+									<span @click="To('ui/zzy/team.html')">班组技工</span>
 								</template>
-								<!--<el-menu-item index="5-1-1">自建</el-menu-item>
+								<el-menu-item index="5-1-1">自建</el-menu-item>
 							<el-menu-item index="5-1-2">联队</el-menu-item>
 							<el-menu-item index="5-1-3">加盟</el-menu-item>
-							<el-menu-item index="5-1-4">合伙人</el-menu-item>-->
-							</el-submenu>
-							<el-menu-item index="5-2" @click="To('../zzy/class.html')">技工星级</el-menu-item>
-							<el-menu-item index="5-3" @click="To('../zzy/car.html')">外勤车辆</el-menu-item>
+							<el-menu-item index="5-1-4">合伙人</el-menu-item>
+							</el-submenu>-->
+							<el-menu-item index="5-1" @click="To('ui/zzy/team.html')">班组技工</el-menu-item>
+							<el-menu-item index="5-2" @click="To('ui/zzy/class.html')">技工星级</el-menu-item>
+							<el-menu-item index="5-3" @click="To('ui/zzy/car.html')">外勤车辆</el-menu-item>
 						</el-submenu>
-						<el-submenu index="6">
+						<el-submenu index="6" class="6">
 							<template slot="title">
 								<i class="el-icon-user-solid" style="color: white;"></i>
 								<span>人事</span>
@@ -156,10 +150,10 @@
 								<template slot="title">
 									<span>员工资料</span>
 								</template>
-								<el-menu-item index="6-1-1" @click="To('../zxp/organization.html')">组织机构</el-menu-item>
-								<el-menu-item index="6-1-2" @click="To('../zxp/post.html')">岗位定义</el-menu-item>
-								<el-menu-item index="6-1-3" @click="To('../zxp/dimi.html')">离职登记</el-menu-item>
-								<el-menu-item index="6-1-4" @click="To('../zxp/communication.html')">通讯名录</el-menu-item>
+								<el-menu-item index="6-1-1" @click="To('ui/zxp/organization.html')">组织机构</el-menu-item>
+								<el-menu-item index="6-1-2" @click="To('ui/zxp/post.html')">岗位定义</el-menu-item>
+								<el-menu-item index="6-1-3" @click="To('ui/zxp/dimi.html')">离职登记</el-menu-item>
+								<el-menu-item index="6-1-4" @click="To('ui/zxp/communication.html')">通讯名录</el-menu-item>
 
 							</el-submenu>
 						</el-submenu>
@@ -178,11 +172,11 @@
 							<el-button type="text" v-if="cols==true" @click="cols=false">展开</el-button>
 							<span style="margin-left: 940px;"></span>
 							<el-dropdown>
-								<el-avatar src="../../images/background3.jpg"></el-avatar>
+								<el-avatar src="images/background3.jpg"></el-avatar>
 								<el-dropdown-menu slot="dropdown">
 									<el-dropdown-item>个人信息</el-dropdown-item>
 									<el-dropdown-item>修改密码</el-dropdown-item>
-									<el-dropdown-item divided>退出登录</el-dropdown-item>
+									<el-dropdown-item divided><a href="javascript:;" @click="loginOut">退出登录</a></el-dropdown-item>
 								</el-dropdown-menu>
 							</el-dropdown>
 							<span style="margin-left: 30px;"></span>
@@ -197,10 +191,10 @@
 					<div id="cnt"></div>
 				</el-main>
 			</el-container>
-		</el-container>
+	</el-container>
 	</body>
-	<script type="text/javascript" src="../../js/index.js"></script>
-	<script type="text/javascript" src="../../js/echarts.js" ></script>
+	<script type="text/javascript" src="js/index.js"></script>
+	<script type="text/javascript" src="js/totree.js" ></script>
 	<script>
 		var indexVm = new Vue({
 			el: '#indexVm',
@@ -226,10 +220,16 @@
 							done();
 						})
 						.catch(_ => {});
+				},
+				loginOut(){
+					if(confirm('确定退出登录吗？')){
+						window.sessionStorage.clear();
+						location.href='login.html';
+					}
 				}
 			},
 			mounted() {
-
+				this.To('Main.html');
 			}
 		});
 	</script>
