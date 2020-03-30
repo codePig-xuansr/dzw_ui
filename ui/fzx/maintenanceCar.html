@@ -61,7 +61,7 @@
 									<el-select @change="carinfo" v-model="carNo" filterable remote reserve-keyword placeholder="请输入车牌号"
 									  :remote-method="remoteMethod"
 									  :loading="loading">
-									  <el-option v-for="item in vcps" :key="item.vehiclecp" :label="item.vehiclecp" :value="item.vehiclecp">
+									  <el-option v-for="item in vcps" :key="item.carno" :label="item.carno" :value="item.carno">
 									  </el-option>
 									</el-select>
 								  </template>
@@ -69,49 +69,23 @@
 							  	<br>
 							  <div>
 							  <el-form-item>
-								<a>车主：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].clientname}}</a> <span class="kg"></span> 
-								<a>地址：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].clientaddress}}</a> <span class="kg"></span> 
-								<a>驾驶员：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].vehiclejsy}}</a> <span class="kg"></span> 
-								<a>手机号：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].vehicledh}}</a> <span class="kg"></span> 
+								<a>车主：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].kname}}</a> <span class="kg"></span> 
+								<a>地址：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].kaddress}}</a> <span class="kg"></span> 
+								<a>驾驶员：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].driver}}</a> <span class="kg"></span> 
+								<a>手机号：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].kphone}}</a> <span class="kg"></span> 
 							</el-form-item>
 							<br>
 							<el-form-item>
-								<a>品牌：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].brandname}}</a> <span class="kg"></span> 
-								<a>车型：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].motorcyclecxmc}}</a> <span class="kg"></span> 
-								<a>发动机品牌：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].enginename}}</a> <span class="kg"></span> 
-								<a>发动机号：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].vehicleffdjh}}</a> <span class="kg"></span> 
+								<a>品牌：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].carpp}}</a> <span class="kg"></span> 
+								<a>车型：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].carxinghao}}</a> <span class="kg"></span> 
+								<a>发动机品牌：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].fadongjipp}}</a> <span class="kg"></span> 
+								<a>发动机号：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].fadongjiid}}</a> <span class="kg"></span> 
 							</el-form-item>
 						</div>
 							</el-form>
 							<template>
 								<el-tabs v-model="tabs" @tab-click="tabck">
-								  <el-tab-pane label="今日维修" name="1">
-									 <template>
-										<el-table :data="temps" >
-											<!--展开行-->
-											<el-table-column type="expand">
-												<template slot-scope="scope">
-													<el-form label-position="left" inline class="demo-table-expand">
-														<el-form-item v-for="(temp,index) in st" :label="temp.name">
-															<span v-if="scope.row[temp.value]!=''">{{scope.row[temp.value]}}</span>
-															<span v-if="scope.row[temp.value]==''">无</span>
-														  </el-form-item>
-													</el-form>
-												</template>
-											</el-table-column>
-											<!--基本显示行-->
-										  <el-table-column v-for="(temp,index) in stsy" :label="temp.name" align="center" :resizable="false">
-											  <template slot-scope="scope">
-												<span>{{scope.row[temp.value]}}</span>
-											  </template>
-										  </el-table-column>
-										</el-table>
-									</template> 
-									<div v-if="temps[0]==undefined">
-										<el-link type="danger" :underline="false">暂时还没有数据哦</el-link>
-									</div>
-								  </el-tab-pane>
-								  <el-tab-pane label="历史维修" name="2">
+								  <el-tab-pane label="历史维修" name="1">
 									<template>
 										<el-table :data="temps" >
 											<!--展开行-->
@@ -170,56 +144,17 @@
 					carNo:'',
 				},
 				//详细显示列
-				st:[{name:'车牌号',value:'carHno'},{name:'维修单号',value:'orderType'},{name:'客户名称',value:'clientname'},{name:'手机',value:'clientiphone'},
-					{name:'业务类型',value:'btype'},{name:'单据状态',value:'status'},{name:'单据类型',value:'orderType'},{name:'服务顾问',value:'consultant'},{name:'开单时间',value:'orderTime'},
-					{name:'预计完工',value:'expectedCompletion'},{name:'完工时间',value:'complterTime'},{name:'结算时间',value:'colsing'}
+				st:[{name:'车牌号',value:'carno'},{name:'维修单号',value:'recordid'},{name:'客户名称',value:'kname'},{name:'手机',value:'kphone'},
+					{name:'业务类型',value:'yewutype'},{name:'单据类型',value:'danjutype'},{name:'开单时间',value:'recorddate'},
+					{name:'预计完工',value:'yujidate'},{name:'完工时间',value:'shijidate'},{name:'结算时间',value:'jsdate'}
 				],
 				//基本显示列
-				stsy:[{name:'维修单号',value:'rorder'},{name:'单据状态',value:'status'},{name:'业务类型',value:'btype'},{name:'车牌号',value:'carHno'},{name:'客户名称',value:'clientname'}],
+				stsy:[{name:'维修单号',value:'recordid'},{name:'结算状态',value:'jsstatus'},{name:'业务类型',value:'yewutype'},{name:'车牌号',value:'carno'},{name:'客户名称',value:'kname'}],
 				carNo:'',
 				loading:false,	
-				vcps:[{
-					vehiclecp:'111'
-				}],
-				ctcar:[{
-					clientname:'111',
-					clientaddress:'111',
-					vehiclejsy:'111',
-					vehicledh:'111',
-					brandname:'111',
-					motorcyclecxmc:'111',
-					enginename:'111',
-					vehicleffdjh:'111'
-				}],
-				temps:[{
-					carHno:'111',
-					rorder:'111',
-					orderType:'222',
-					clientname:'333',
-					clientiphone:'444',
-					btype:'555',
-					status:'666',
-					orderType:'777',
-					consultant:'888',
-					orderTime:'999',
-					expectedCompletion:'111',
-					complterTime:'222',
-					colsing:'333'
-				},{
-					carHno:'111',
-					rorder:'111',
-					orderType:'222',
-					clientname:'333',
-					clientiphone:'444',
-					btype:'555',
-					status:'666',
-					orderType:'777',
-					consultant:'888',
-					orderTime:'999',
-					expectedCompletion:'111',
-					complterTime:'222',
-					colsing:'333'
-				}],
+				vcps:[],
+				ctcar:[],
+				temps:[],
 				pcs:[{
 					cno:'1',
 					status:0,
@@ -236,25 +171,21 @@
 					let carno= this.carNo;
 					//this.tabs 1=今日维修 2=历史维修
 					if(_this.tabs==1){
-						jQuery.getJSON(`http://localhost:8080/api/cars/vehicle/${carno}/1`,function(data) {
-							_this.temps = data;
-						});
-					}else{
-						jQuery.getJSON(`http://localhost:8080/api/cars/vehicle/${carno}/2`,function(data) {
+						jQuery.getJSON(`http://localhost:8080/api/fzx/selectWeixiuAll/${carno}`,function(data) {
 							_this.temps = data;
 						});
 					}
 				},
-				remoteMethod(info){
+				remoteMethod(carno){
 					let _this=this;
-					if(info!=''){
+					if(carno!=''){
 						_this.loading=true;
 						setTimeout(()=>{
 							_this.loading=false;
-							jQuery.getJSON(`http://localhost:8080/api/cars/vcp/${info}`,function(data){
+							jQuery.getJSON(`http://localhost:8080/api/fzx/selectBy/${carno}`,function(data){
 								_this.vcps=data;
 							});
-						},1200);
+						},1000);
 					}else{
 						_this.vcps=[];
 					}
@@ -264,17 +195,13 @@
 					let _this=this;
 					let carno= this.carNo;
 					//车辆基本信息
-					jQuery.getJSON(`http://localhost:8080/api/cars/carinfo/${carno}`,function(data) {
+					jQuery.getJSON(`http://localhost:8080/api/fzx/selectAll/${carno}`,function(data) {
 						_this.ctcar = data;
 					});
 					
 					//维修数据，判断当前选择下标
 					if(_this.tabs==1){
-						jQuery.getJSON(`http://localhost:8080/api/cars/vehicle/${carno}/1`,function(data) {
-							_this.temps = data;
-						});
-					}else{
-						jQuery.getJSON(`http://localhost:8080/api/cars/vehicle/${carno}/2`,function(data) {
+						jQuery.getJSON(`http://localhost:8080/api/fzx/selectWeixiuAll/${carno}`,function(data) {
 							_this.temps = data;
 						});
 					}
