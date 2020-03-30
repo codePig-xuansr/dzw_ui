@@ -53,36 +53,29 @@
 				</el-col>
 				<p></p>
 				<h></h>
-				<el-dialog title="修改客户" :visible.sync="isShow3" width="40%">
+				<el-dialog title="修改客户" :visible.sync="isShow3" width="30%">
 					<el-form :model="xgkh" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-						<el-form-item label="客户编码" prop="clientid">
-							<el-input v-model="xgkh.clientid"></el-input>
+						<el-form-item label="客户名称" prop="clientname">
+							<el-input v-model="xgkh.kname"></el-input>
 						</el-form-item>
 						<el-form-item label="电话" prop="clientiphone">
-							<el-input v-model="xgkh.clientiphone"></el-input>
-						</el-form-item>
-						<el-form-item label="备注" prop="clientbz">
-							<el-input v-model="xgkh.clientbz"></el-input>
-						</el-form-item>
-						<el-form-item label="客户名称" prop="clientname">
-							<el-input v-model="xgkh.clientname"></el-input>
+							<el-input v-model="xgkh.kphone"></el-input>
 						</el-form-item>
 						<el-form-item label="客户地址" prop="clientaddress">
-							<el-input v-model="xgkh.clientaddress"></el-input>
+							<el-input v-model="xgkh.kaddress"></el-input>
 						</el-form-item>
-						<el-form-item label="是否会员" prop="clientlb">
+						<el-form-item label="是否会员">
 							<el-col :span="8">
-								<el-select v-model="xzkh.clientaddress" placeholder="是否为会员">
-									<el-option label="是" value="1"></el-option>
-									<el-option label="不是" value="2"></el-option>
+								<el-select v-model="xgkh.vipcode" placeholder="是否为会员" @change="queryVip">
+									<el-option label="是" :value=1></el-option>
+									<el-option label="不是" :value=0></el-option>
 								</el-select>
 							</el-col>
 						</el-form-item>
-
 						<el-form-item label="客户生日" required>
 							<el-col :span="11">
 								<el-form-item prop="clientbirthday">
-									<el-date-picker type="date" placeholder="选择日期" v-model="xgkh.clientbirthday" style="width: 100%;"></el-date-picker>
+									<el-date-picker type="date" placeholder="选择日期" v-model="xgkh.borndate" style="width: 100%;"></el-date-picker>
 								</el-form-item>
 							</el-col>
 						</el-form-item>
@@ -95,75 +88,75 @@
 				</el-dialog>
 				<el-button type="primary" @click="addClient" plain>新增</el-button>
 				<el-button type="primary" @click="add" plain>新增客户和车辆</el-button>
-				<el-dialog title="新增客户" :visible.sync="isShow1" width="40%">
-					<el-form :model="xzkh" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-						<el-form-item label="客户编码" prop="clientid">
-							<el-input v-model="xzkh.clientid"></el-input>
+				<el-dialog title="新增客户" :visible.sync="isShow1" width="30%">
+					<el-form :model="kehu" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+						<el-form-item label="客户名称" prop="clientname">
+							<el-input v-model="kehu.kname"></el-input>
 						</el-form-item>
 						<el-form-item label="电话" prop="clientiphone">
-							<el-input v-model="xzkh.clientiphone"></el-input>
-						</el-form-item>
-						<el-form-item label="备注" prop="clientbz">
-							<el-input v-model="xzkh.clientbz"></el-input>
-						</el-form-item>
-						<el-form-item label="客户名称" prop="clientname">
-							<el-input v-model="xzkh.clientname"></el-input>
+							<el-input v-model="kehu.kphone"></el-input>
 						</el-form-item>
 						<el-form-item label="客户地址" prop="clientaddress">
-							<el-input v-model="xzkh.clientaddress"></el-input>
+							<el-input v-model="kehu.kaddress"></el-input>
 						</el-form-item>
-
-						<el-form-item label="是否会员" prop="clientaddress">
+						<el-form-item label="是否会员">
 							<el-col :span="8">
-								<el-select v-model="xzkh.clientaddress" placeholder="是否为会员">
+								<el-select v-model="kehu.vipcode" placeholder="是否为会员" @change="queryVip">
 									<el-option label="是" value="1"></el-option>
-									<el-option label="不是" value="2"></el-option>
+									<el-option label="不是" value="0"></el-option>
 								</el-select>
 							</el-col>
 						</el-form-item>
 						<el-form-item label="客户生日" required>
 							<el-col :span="11">
 								<el-form-item prop="clientbirthday">
-									<el-date-picker type="date" placeholder="选择日期" v-model="xzkh.clientbirthday" style="width: 100%;"></el-date-picker>
+									<el-date-picker type="date" placeholder="选择日期" v-model="kehu.borndate" style="width: 100%;"></el-date-picker>
 								</el-form-item>
 							</el-col>
 						</el-form-item>
 						<el-form-item>
-							<el-button type="primary" @click="add1">立即创建</el-button>
+							<el-button type="primary" @click="addClient1">立即创建</el-button>
 							<el-button @click="resetForm('ruleForm')">重置</el-button>
 						</el-form-item>
 					</el-form>
-
+				</el-dialog>
+				<el-dialog title="新增会员卡" :visible.sync="isShow5" width="30%">
+					<el-form :model="vipcard" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+						<el-form-item label="会员账号">
+							<el-input v-model="vipcard.vipcode" @input="repetition"></el-input>
+						</el-form-item>
+						<el-form-item label="会员密码">
+							<el-input v-model="vipcard.vippwd"></el-input>
+						</el-form-item>
+						<el-form-item>
+							<el-button type="primary" @click="vipInsert">确定</el-button>
+							<el-button @click="resetForm('ruleForm')">重置</el-button>
+						</el-form-item>
+					</el-form>
 				</el-dialog>
 				<el-dialog title="新增客户和车辆" :visible.sync="isShow4" width="40%">
-					<el-form :model="xzkh" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-						<el-form-item label="客户编码" prop="clientid">
-							<el-input v-model="xzkh.clientid"></el-input>
+					<el-form :model="kehu" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+						<el-form-item label="客户名称" prop="clientname">
+							<el-input v-model="kehu.kname"></el-input>
 						</el-form-item>
 						<el-form-item label="电话" prop="clientiphone">
-							<el-input v-model="xzkh.clientiphone"></el-input>
-						</el-form-item>
-						<el-form-item label="备注" prop="clientbz">
-							<el-input v-model="xzkh.clientbz"></el-input>
-						</el-form-item>
-						<el-form-item label="客户名称" prop="clientname">
-							<el-input v-model="xzkh.clientname"></el-input>
+							<el-input v-model="kehu.kphone"></el-input>
 						</el-form-item>
 						<el-form-item label="客户地址" prop="clientaddress">
-							<el-input v-model="xzkh.clientaddress"></el-input>
+							<el-input v-model="kehu.kaddress"></el-input>
 						</el-form-item>
-						<el-form-item label="是否会员" prop="clientaddress">
+						<el-form-item label="是否会员">
 							<el-col :span="8">
-								<el-select v-model="xzkh.clientaddress" placeholder="是否为会员">
+								<el-select v-model="kehu.vipcode" placeholder="是否为会员">
 									<el-option label="是" value="1"></el-option>
-									<el-option label="不是" value="2"></el-option>
+									<el-option label="不是" value="0"></el-option>
 								</el-select>
 							</el-col>
 						</el-form-item>
-						<el-form-item label="客户生日">
+						<el-form-item label="客户生日" required>
 							<el-col :span="11">
 								<el-form-item prop="clientbirthday">
-									<el-date-picker type="date" placeholder="选择日期" v-model="xzkh.clientbirthday" style="width: 100%;"></el-date-picker>
+									<el-date-picker type="date" placeholder="选择日期" v-model="kehu.borndate" style="width: 100%;"></el-date-picker>
 								</el-form-item>
 							</el-col>
 						</el-form-item>
@@ -225,51 +218,41 @@
 						<el-form-item label="车系" prop="name">
 							<el-input v-model="xzcl.vehiclefcx"></el-input>
 						</el-form-item>
-
 						<el-form-item>
 							<el-button type="primary" @click="add1">立即创建</el-button>
 							<el-button @click="resetForm('ruleForm')">重置</el-button>
 						</el-form-item>
 					</el-form>
-
 				</el-dialog>
-				<!--			<el-button type="primary" @click="addPerson1">客户类别</el-button>
 
-				<el-dialog title="收货地址" :visible.sync="isShow2">
-					<el-table :data="tableData">
-						<el-table-column property="date" label="日期" width="150"></el-table-column>
-						<el-table-column property="name" label="姓名" width="200"></el-table-column>
-						<el-table-column property="address" label="地址"></el-table-column>
-					</el-table>
-				</el-dialog>-->
 				<el-row>
 					<el-col :span="24">
 						<div class="grid-content bg-purple-dark">
 							<template>
-								<el-table :data="client" height="250" border style="width: 100%">
-									<el-table-column fixed prop="clientid" label="编号">
+								<el-table :data="pageInfo.list" height="250" border style="width: 100%">
+									<el-table-column fixed prop="kid" label="编号">
 									</el-table-column>
-									<el-table-column prop="clientname" label="客户姓名">
+									<el-table-column prop="kname" label="客户姓名">
 									</el-table-column>
-									<el-table-column prop="clientaddress" label="详细地址">
+									<el-table-column prop="kaddress" label="详细地址">
 									</el-table-column>
-									<el-table-column prop="clientiphone" label="电话号码">
+									<el-table-column prop="kphone" label="电话号码">
 									</el-table-column>
-									<el-table-column prop="clientbirthday" label="出生日期">
-									</el-table-column>
-									<el-table-column prop="clientbz" label="备注">
-									</el-table-column>
-									<el-table-column prop="clientlb" label="邮编">
+									<el-table-column prop="borndate" label="出生日期">
 									</el-table-column>
 									<el-table-column label="操作">
 										<template slot-scope="scope">
-											<el-button type="text" @click="query(scope.row.clientid)">查看</el-button>
-											<el-button type="text" size="small" @click="update(scope.row.clientid)">编辑</el-button>
-											<el-button slot="reference" type="text" @click="del(scope.row.clientid)">删除</el-button>
+											<el-button type="text" @click="query(scope.row.kid)">查看</el-button>
+											<el-button type="text" size="small" @click="update(scope.row.kid)">编辑</el-button>
+											<el-button slot="reference" type="text" @click="del(scope.row.kid,scope.$index)">删除</el-button>
 										</template>
 									</el-table-column>
 								</el-table>
 							</template>
+							<div class="page">
+								<el-pagination layout="prev, pager, next" @current-change="current" @prev-click="prev" @next-click="next" :total="this.pageInfo.pages*10">
+								</el-pagination>
+							</div>
 						</div>
 					</el-col>
 				</el-row>
@@ -310,7 +293,7 @@
 								<el-col :span="24">
 									<div class="grid-content bg-purple-dark">
 										<template>
-											<el-table :data="client" border style="width: 100%">
+											<el-table :data="lb.list" border style="width: 100%">
 												<el-table-column fixed prop="clientid" label="单据类型">
 												</el-table-column>
 												<el-table-column prop="clientname" label="销售单号">
@@ -340,27 +323,28 @@
 		var cheVm = new Vue({
 			el: '#cheVm',
 			data: {
-				client: [{
-					clientid: "1",
-					clientname: "朱小鹏",
-					clientiphone: "132131",
-					clientbirthday: "1900-12-12",
-					clientbz: "企鹅",
-					clientlb: "我去饿我去",
-					clientaddress: "恶气恶气"
-				}],
+				pageInfo: {},
+				kehu: {
+					kname: "",
+					kphone: "",
+					vipcode: "",
+					kaddress: "",
+					borndate: ""
+				},
+				xgkh: {
+					kid: "",
+					kname: "",
+					kphone: "",
+					vipcode: "",
+					kaddress: "",
+					borndate: ""
+				},
+				vipcard: {
+					vipcode: "",
+					vippwd: ""
+				},
 				lb: {},
 				cl: {},
-				xzkh: {
-					clientid: "",
-					clientname: "",
-					clientiphone: "",
-					clientbirthday: "",
-					clientbz: "",
-					clientlb: "",
-					clientaddress: ""
-
-				},
 				xzcl: {
 					vehiclecp: "",
 					vehiclepp: "",
@@ -377,20 +361,12 @@
 					vehiclefrylb: "",
 					vehiclefcx: ""
 				},
-				xgkh: {
-					clientid: "",
-					clientname: "",
-					clientiphone: "",
-					clientbirthday: "",
-					clientbz: "",
-					clientlb: "",
-					clientaddress: ""
-				},
 				visible: false,
 				isShow1: false,
 				isShow2: false,
 				isShow3: false,
 				isShow4: false,
+				isShow5: false,
 				ruleForm: {
 					name: '',
 					region: '',
@@ -403,12 +379,10 @@
 				},
 				rules: {
 					clientid: [{
-							required: true,
-							message: '请输入编号',
-							trigger: 'blur'
-						},
-
-					],
+						required: true,
+						message: '请输入编号',
+						trigger: 'blur'
+					}, ],
 					clientname: [{
 							required: true,
 							message: '请输入客户姓名',
@@ -423,25 +397,17 @@
 						},
 
 					],
-					clientbz: [{
-							required: true,
-							message: '请输入活动名称',
-							trigger: 'blur'
-						},
-
-					],
 					clientaddress: [{
 						required: true,
 						message: '请输入地址',
-						trigger: 'change'
+						trigger: 'blur'
 					}],
 					clientbirthday: [{
 						type: 'date',
 						required: true,
 						message: '请选择日期',
-						trigger: 'change'
+						trigger: 'blur'
 					}],
-
 					clientlb: [{
 						type: 'array',
 						required: true,
@@ -451,21 +417,168 @@
 				}
 			},
 			methods: {
+				/*修改客户*/
+				update1() {
+					this.isShow3 = false;
+					let _this = this; //非常重要
+					if(this.xgkh.vipcode > 0) {
+						_this.xgkh.vipcode = _this.vipcard.vipcode;
+					}
+					$.ajax(`http://127.0.0.1:8080/api/kehu`,
+						{
+						type: "put",
+						contentType: "application/json",
+						data: JSON.stringify(_this.xgkh),
+						dataType: "json",
+						success(res) {
+							if(res.code == "200") {
+								alert('修改成功');
+								_this.xgkh = {
+									kid: "",
+									kname: "",
+									kphone: "",
+									vipcode: "",
+									kaddress: "",
+									borndate: ""
+								};
+								_this.vipcard = {
+									vipcode: "",
+									vippwd: ""
+								};
+							}
+						}
+					});
+				},
+				/*显示修改客户的静态模态框*/
+				update(id) {
+					this.isShow3 = true;
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/api/kehu/${id}`,
+						function(res) {
+							if(res.vipcode > 0) {
+								_this.vipcard.vipcode = res.vipcode;
+								res.vipcode = 1;
+							}
+							_this.xgkh = res;
+						})
+				},
+				/*分页查询*/
+				page(pageNum, pageSize) {
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/api/kehu/${pageNum}/${pageSize}`,
+						function(res) {
+							_this.pageInfo = res;
+						})
+				},
+				/*上一页查询*/
+				prev(cpage) {
+					this.page(cpage, 3);
+				},
+				/*下一页查询*/
+				next(cpage) {
+					this.page(cpage, 3);
+				},
+				/*当前页查询*/
+				current(cpage) {
+					this.page(cpage, 3);
+				},
+				/*显示新增模态框*/
 				addClient() {
 					this.isShow1 = true;
 				},
+				/*新增客户*/
+				addClient1() {
+					this.isShow1 = false;
+					let _this = this; //非常重要
+					_this.kehu.vipcode = _this.vipcard.vipcode;
+					$.ajax(`http://127.0.0.1:8080/api/kehu`, {
+						type: "post",
+						contentType: "application/json",
+						data: JSON.stringify(_this.kehu),
+						dataType: "json",
+						success(res) {
+							if(res.code == "200") {
+								alert('新增成功');
+								_this.kehu = {
+									kname: "",
+									kphone: "",
+									vipcode: "",
+									kaddress: "",
+									borndate: ""
+								};
+								_this.vipcard = {
+									vipcode: "",
+									vippwd: ""
+								};
+							}
+						}
+					});
+				},
+				/*显示新增会员卡*/
+				queryVip() {
+					if(this.kehu.vipcode == 1) {
+						this.isShow5 = true;
+					}
+				},
+				/*查询会员卡号是否被使用*/
+				repetition() {
+					let vipcode = this.vipcard.vipcode;
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/api/vip/${vipcode}`,
+						function(res) {
+							if(res.code == 200) {
+								alert("会员卡号已被使用");
+								_this.vipcard.vipcode = "";
+							}
+						})
+				},
+				/*新增会员卡*/
+				vipInsert() {
+					this.isShow5 = false;
+					let _this = this; //非常重要
+					$.ajax(`http://127.0.0.1:8080/api/vip`, {
+						type: "post",
+						contentType: "application/json",
+						data: JSON.stringify(_this.vipcard),
+						dataType: "json",
+						success(res) {
+							if(res.code == "200") {
+								alert('保存成功');
+							}
+						}
+					});
+				},
+				/*删除客户*/
+				del(id, index) {
+					let _this = this;
+					$.ajax(`http://127.0.0.1:8080/api/kehu/${id}`, {
+						type: 'delete',
+						contentType: 'application/json',
+						success(data) {
+							if(data.code == 200) {
+								alert("删除成功");
+								_this.pageInfo.list.splice(index, 1);
+								if(_this.pageInfo.list.length == 0) {
+									_this.page(_this.pageInfo.prePage, 3);
+								}
+							}
+						}
+					});
+				},
+				/*重置*/
 				resetForm(formName) {
 					this.$refs[formName].resetFields();
 				},
-				query(id) {},
-				update(id) {
-					this.isShow3 = true;
+				query(id) {
+
 				},
 				add1() {},
-				update1() {},
 				add() {
 					this.isShow4 = true;
 				}
+			},
+			mounted() {
+				this.page(1, 3);
 			}
 		});
 	</script>
