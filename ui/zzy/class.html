@@ -9,6 +9,7 @@
 			
 			#fish {
 				padding-left: 5px;
+				
 			}
 		</style>
 	</head>
@@ -39,9 +40,9 @@
 			<el-dialog title="新增等级" :visible.sync="add" width="30%" :before-close="handleClose">
 				<div>
 					<el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
-						<el-form-item label="等级编码">
+						<!--<el-form-item label="等级编码">
 							<el-input v-model="formLabelAlign.sid"></el-input>
-						</el-form-item>
+						</el-form-item>-->
 						<el-form-item label="等级名称">
 							<el-input v-model="formLabelAlign.sname"></el-input>
 						</el-form-item>
@@ -89,7 +90,7 @@
 			el: '#fish',
 			data: {
 				formLabelAlign:{
-					sid:'',
+					/*sid:'',*/
 					sname:'',
 					ticheng:'',
 					worktime:'',
@@ -133,7 +134,7 @@
 				
 				page(n,s) {
 					let _this = this;
-					jQuery.getJSON(`http://127.0.0.1:8080/api/class1/queryStarAll/${n}/${s}`,function(pg) {
+					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/class1/queryStarAll/${n}/${s}`,function(pg) {
 						_this.vehicleInfo = pg;
 
 						_this.list = pg.list;
@@ -151,23 +152,23 @@
 					this.page(1, size);
 				},
 				//添加数据
-				/*addall() {
+				addall() {
 					let _this=this;
-					jQuery.ajax("http://127.0.0.1:8080/api/class1/add",{
+					jQuery.ajax("http://127.0.0.1:8080/zzy/api/class1/addStar/{star}",{
 						type:'post',
 						data:JSON.stringify(_this.formLabelAlign),
 						contentType: 'application/json; charset=UTF-8',
 						success(data){
 							if(data=="ok"){
+								alert("新增失败！");
+							}else{							
 								alert("新增成功！");
 									this.add = false;
 								location.reload();
-							}else{
-								alert("新增失败！");
 							}
 						}
 					});
-				}*/
+				}
 			},
 			mounted() {
 				let _this = this;
