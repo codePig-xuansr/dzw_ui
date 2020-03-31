@@ -74,7 +74,7 @@
 							</template>
 							<!--子项-->
 							<el-menu-item index="7-1" @click="To('/dzw_ui/ui/sw/js.html')">结算中心</el-menu-item>
-							<el-menu-item index="7-1" @click="To('/dzw_ui/ui/sw/vip.html')">会员充值卡管理</el-menu-item>
+							<el-menu-item index="7-2" @click="To('/dzw_ui/ui/sw/vip.html')">会员充值卡管理</el-menu-item>
 						</el-submenu>
 						<el-submenu index="8" class="8">
 							<template slot="title">
@@ -209,7 +209,7 @@
 				checked1: false,
 				checked2: false,
 				checked3: false,
-				qx1: {}
+				userfuns: {}
 			},
 			methods: {
 				To(url) {
@@ -230,8 +230,14 @@
 				}
 			},
 			mounted() {
+				let _this=this;
 				this.To('Main.html');
-				console.info(sessionStorage.getItem("user"))
+				console.info(sessionStorage.getItem("user"));
+				let users=JSON.parse(sessionStorage.getItem("user"));
+				$.getJSON(`http://127.0.0.1:8080/zkx/api/funs/${users.user}/${users.pwd}`,function(funs){
+					_this.userfuns=funs;
+					localStorage.setItem("funs",funs);
+				})
 			}
 		});
 	</script>
