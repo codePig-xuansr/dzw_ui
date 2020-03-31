@@ -18,5 +18,6 @@ var menuMapping = {
 	'zsj002': 'ui/ljl/weixiu.html',
 	'zsj003': 'ui/zzy/spzl.html',
 	'zsj004': 'ui/ljl/gonghuodanwei.html',
-	'zsj005': 'ui/ljl/fadongji.html'
+	'zsj005': 'ui/ljl/fadongji.html',
+	'sy':'Main.html'
 }
