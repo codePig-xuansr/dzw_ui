@@ -208,7 +208,7 @@
 							type: 'error'
 						});
 					} else {
-						$.getJSON(`http://127.0.0.1:8080/api/zkx/user/${_this.user}/${_this.pwd}`,function(user){
+						$.getJSON(`http://127.0.0.1:8080/zkx/api/user/${_this.user}/${_this.pwd}`,function(user){
 							_this.loginUser=user;
 							_this.$message({
 								message: '登陆成功',
