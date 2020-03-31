@@ -68,13 +68,13 @@
 								<i class="el-icon-s-home"></i><span>主页</span>
 							</div>
 						</el-menu-item>
-						<el-submenu v-for="(temp,i) in userfuns" v-if="temp.fpid==0" index="i+1" :class="i">
+						<el-submenu v-for="(temp,i) in userfuns" v-if="temp.fpid==0" :index="i+1" :class="i">
 							<template slot="title">
 								<i class="el-icon-s-custom" style="color: white;"></i>
 								<span>{{temp.fname}}</span>
 							</template>
 							<!--子项-->
-							<el-menu-item v-for="(item,index) in userfuns"  v-if="item.fpid==temp.fid" @click="To(item.fcode)">{{item.fname}}</el-menu-item>
+							<el-menu-item v-for="(item,index) in userfuns" :index=i+1+"-"+(index+1) v-if="item.fpid==temp.fid" @click="To(item.fcode)">{{item.fname}}</el-menu-item>
 							<!--<el-menu-item index="7-2" @click="To('/dzw_ui/ui/sw/vip.html')">会员充值卡管理</el-menu-item>-->
 						</el-submenu>
 						</el-submenu>
