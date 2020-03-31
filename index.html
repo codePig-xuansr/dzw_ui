@@ -135,6 +135,9 @@
 				To(fcode) {
 					$("#cnt").load(window.menuMapping[fcode]);
 				},
+				toUrl(url){
+					$("#cnt").load(url);
+				},
 				handleClose(done) {
 					this.$confirm('确认关闭？')
 						.then(_ => {
