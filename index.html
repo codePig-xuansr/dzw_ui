@@ -12,7 +12,7 @@
 		<script type="text/javascript" src="js/jquery-1.12.4.js"></script>
 		<!--<script type="text/javascript" src="js/jq_ajax_config.js" ></script>-->
 		<script type="text/javascript" src="js/vue.js"></script>
-		<script type="text/javascript" src="js/view_filter.js" ></script>
+		<script type="text/javascript" src="js/view_filter.js"></script>
 
 		<style>
 			.el-aside {
@@ -67,13 +67,13 @@
 								<i class="el-icon-s-home"></i><span>主页</span>
 							</div>
 						</el-menu-item>
-						<el-submenu index="7" class="1">
+						<el-submenu v-for="(temp,i) in userfuns" v-if="temp.fpid==0" index=i+1 :class="i">
 							<template slot="title">
 								<i class="el-icon-s-custom" style="color: white;"></i>
-								<span>前台</span>
+								<span>{{temp.fname}}</span>
 							</template>
 							<!--子项-->
-							<el-menu-item index="7-1" @click="To('/dzw_ui/ui/sw/js.html')">结算中心</el-menu-item>
+							<el-menu-item  index="7-1" @click="To('/dzw_ui/ui/sw/js.html')">结算中心</el-menu-item>
 							<el-menu-item index="7-2" @click="To('/dzw_ui/ui/sw/vip.html')">会员充值卡管理</el-menu-item>
 						</el-submenu>
 						<el-submenu index="8" class="8">
@@ -85,7 +85,7 @@
 							<el-menu-item index="8-1" @click="To('/dzw_ui/ui/zkx/roleFun.html')">角色权限管理</el-menu-item>
 
 						</el-submenu>
-						
+
 						<el-submenu index="2" class="2">
 							<template slot="title">
 								<i class="el-icon-s-operation" style="color: white;"></i>
@@ -158,8 +158,6 @@
 
 							</el-submenu>
 						</el-submenu>
-
-						</el-submenu>
 						<!--填充侧边容器-->
 						<div style="margin-top: 340px;"></div>
 					</el-menu>
@@ -177,7 +175,9 @@
 								<el-dropdown-menu slot="dropdown">
 									<el-dropdown-item>个人信息</el-dropdown-item>
 									<el-dropdown-item>修改密码</el-dropdown-item>
-									<el-dropdown-item divided><a href="javascript:;" @click="loginOut">退出登录</a></el-dropdown-item>
+									<el-dropdown-item divided>
+										<a href="javascript:;" @click="loginOut">退出登录</a>
+									</el-dropdown-item>
 								</el-dropdown-menu>
 							</el-dropdown>
 							<span style="margin-left: 30px;"></span>
@@ -192,10 +192,10 @@
 					<div id="cnt"></div>
 				</el-main>
 			</el-container>
-	</el-container>
+		</el-container>
 	</body>
 	<script type="text/javascript" src="js/index.js"></script>
-	<script type="text/javascript" src="js/totree.js" ></script>
+	<script type="text/javascript" src="js/totree.js"></script>
 	<script>
 		var indexVm = new Vue({
 			el: '#indexVm',
@@ -222,21 +222,22 @@
 						})
 						.catch(_ => {});
 				},
-				loginOut(){
-					if(confirm('确定退出登录吗？')){
+				loginOut() {
+					if(confirm('确定退出登录吗？')) {
 						window.sessionStorage.clear();
-						location.href='login.html';
+						location.href = 'login.html';
 					}
 				}
 			},
 			mounted() {
-				let _this=this;
+				let _this = this;
 				this.To('Main.html');
 				console.info(sessionStorage.getItem("user"));
-				let users=JSON.parse(sessionStorage.getItem("user"));
-				$.getJSON(`http://127.0.0.1:8080/zkx/api/funs/${users.user}/${users.pwd}`,function(funs){
-					_this.userfuns=funs;
-					localStorage.setItem("funs",funs);
+				let users = JSON.parse(sessionStorage.getItem("user"));
+				$.getJSON(`http://127.0.0.1:8080/zkx/api/funs/${users.user}/${users.pwd}`, function(funs) {
+					_this.userfuns = funs;
+					localStorage.setItem("funs", funs);
+					console.info(JSON.stringify(_this.userfuns));
 				})
 			}
 		});
