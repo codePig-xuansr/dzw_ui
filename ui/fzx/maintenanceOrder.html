@@ -42,22 +42,22 @@
 						  <el-col :span="24">
 							  <el-form :inline="true" :rules="rus2" :model="pickcar" ref="pickcar">
 								  <el-form-item v-if="xde">
-									<a>车牌号码：</a><a class="tt" v-if="pickinfo[0]!=undefined">{{pickinfo[0].vehiclecp}}</a><span class="kg"></span> 
-									<a>车主姓名：</a><a class="tt" v-if="pickinfo[0]!=undefined">{{pickinfo[0].clientname}}</a><span class="kg"></span> 
-									<a>车辆型号：</a><a class="tt" v-if="pickinfo[0]!=undefined">{{pickinfo[0].motorcyclecxmc}}</a><span class="kg"></span> 
-									<a>车辆品牌：</a><a class="tt" v-if="pickinfo[0]!=undefined">{{pickinfo[0].brandname}}</a><span class="kg"></span> 
-									<a>发动机品牌：</a><a class="tt" v-if="pickinfo[0]!=undefined">{{pickinfo[0].enginename}}</a><span class="kg"></span> 
-									<a>发动机号：</a><a class="tt" v-if="pickinfo[0]!=undefined">{{pickinfo[0].vehicleffdjh}}</a><span class="kg"></span> 
+									<a>车牌号码：</a><a class="tt" v-if="pickinfo[0]!=undefined">{{pickinfo[0].carno}}</a><span class="kg"></span> 
+									<a>车主姓名：</a><a class="tt" v-if="pickinfo[0]!=undefined">{{pickinfo[0].kname}}</a><span class="kg"></span> 
+									<a>车辆型号：</a><a class="tt" v-if="pickinfo[0]!=undefined">{{pickinfo[0].carxinghao}}</a><span class="kg"></span> 
+									<a>车辆品牌：</a><a class="tt" v-if="pickinfo[0]!=undefined">{{pickinfo[0].carpp}}</a><span class="kg"></span> 
+									<a>发动机品牌：</a><a class="tt" v-if="pickinfo[0]!=undefined">{{pickinfo[0].fadongjipp}}</a><span class="kg"></span> 
+									<a>发动机号：</a><a class="tt" v-if="pickinfo[0]!=undefined">{{pickinfo[0].fadongjiid}}</a><span class="kg"></span> 
 								  </el-form-item>
 								<br>
-								<el-form-item label="服务顾问" prop="consultant">
+								<!--<el-form-item label="服务顾问" prop="consultant">
 									<template>
 										<el-select v-model="pickcar.consultant" placeholder="请选择" size="small" style="width: 120px;">
 										  <el-option v-for="(temp,index) in cs" :label="temp.name" :value="temp.name" :key="temp.name"></el-option>
 										</el-select>
 									  </template>
 								</el-form-item>
-								<span class="kg"></span>
+								<span class="kg"></span>-->
 								<el-form-item label="业务类别：" prop="businesstype"> 
 									<template>
 										<el-select v-model="pickcar.businesstype" placeholder="请选择" size="small" style="width: 120px;">
@@ -66,14 +66,14 @@
 									  </template>
 								</el-form-item>
 								<span class="kg"></span>
-								<el-form-item label="施工班次：" prop="construction">
+								<!--<el-form-item label="施工班次：" prop="construction">
 									<template>
 										<el-select v-model="pickcar.construction" placeholder="请选择" size="small" style="width: 120px;">
 										  <el-option label="白天" value="白天"></el-option>
 										  <el-option label="晚上" value="晚上"></el-option>
 										</el-select>
 									  </template>
-								</el-form-item>
+								</el-form-item>-->
 								<span class="kg"></span>
 								<el-form-item label="结算方式" prop="clearing">
 									<template>
@@ -127,7 +127,7 @@
 																	<span v-if="temp.values==0">
 																		<template>
 																			<el-checkbox-group v-model="wxs">
-																				<el-checkbox :label="scope.row.coding">&nbsp;</el-checkbox>
+																				<el-checkbox :label="scope.row.fwcod">&nbsp;</el-checkbox>
 																			</el-checkbox-group>
 																		  </template>
 																	</span>
@@ -181,7 +181,7 @@
 				pickinfo:{},
 				cs:[{name:'包组长'},{name:'刘来钱'},{name:'花生奶'},{name:'黄渤'},{name:'郭建'}],
 				bs:[{name:'中国重汽'},{name:'陕汽重卡'},{name:'中国一汽'},{name:'上汽红岩'},{name:'中轻型车'},{name:'钣喷'},{name:'保养'}],
-				ms:[{name:'项目编码',values:'coding'},{name:'项目名称',values:'itemName'},{name:'数量',values:'num'},{name:'优惠前单价',values:'standard'},{name:'优惠后单价',values:'vIP'},{name:'故障描述',values:'gztext'},{name:'故障原因',values:'gzcause'},{name:'维修班组',values:'wxgroup'},{name:'操作',values:'0'}],
+				ms:[{name:'项目编码',values:'fwcod'},{name:'项目名称',values:'fwname'},{name:'数量',values:'num'},{name:'优惠前单价',values:'fwprice'},{name:'优惠后单价',values:'vipprice'},{name:'故障描述',values:'gztext'},{name:'故障原因',values:'gzcause'},{name:'维修班组',values:'wxgroup'},{name:'操作',values:'0'}],
 				pickcar:{
 					carno:'',
 					consultant:'',
@@ -196,33 +196,13 @@
 							rorder: '',
 							status1: '接车中', 
 							ordertype: '维修'
-						},
-					maintains:[{
-						coding:'1',
-						itemName:'2',
-						num:'3',
-						standard:'4',
-						vIP:'5',
-						gztext:'6',
-						gzcause:'7',
-						wxgroup:'8'
-					},{
-						coding:'1',
-						itemName:'2',
-						num:'3',
-						standard:'4',
-						vIP:'5',
-						gztext:'6',
-						gzcause:'7',
-						wxgroup:'8'
-					}]
+					},
+					maintains:[]//添加维修项目
 				},
 				wxs:[],
 				//表单基础验证
 				rus2:{
-					consultant:[{required: true, message:'请选择服务顾问', trigger: 'change'}],
 					businesstype:[{required: true, message:'请选择业务类别', trigger: 'change'}],
-					construction:[{required: true, message:'请选择施工班次', trigger: 'change'}],
 					clearing:[{required: true, message:'请选择结算方式', trigger: 'change'}],
 					repairs:[{required: true, message:'请填写备注说明', trigger: 'blur'}],
 					driver:[{required: true, message:'请填写驾驶员', trigger: 'blur'}],
@@ -240,21 +220,21 @@
 					oneVm.$refs['minfo'].validate((valid)=>{
 						if(valid){
 							//选择维修项目判断
-							if(oneVm.coding[0]==undefined){
+							if(oneVm.fwcod[0]==undefined){
 								this.$message({
 									type:'error',
 									message:'请至少选择一项维修项目'
 								});
 								return;
 							}
-							let cd= oneVm.coding;
+							let cd= oneVm.fwcod;
 							for(let i=0;i<cd.length;i++){
 								cd[i].num=1;
 								cd[i].gztext = oneVm.minfo.gztext;
 								cd[i].gzcause = oneVm.minfo.gzcause;
 								cd[i].wxgroup = oneVm.minfo.wxgroup;
 								//计算价格
-								_this.pickcar.estimated = parseInt(_this.pickcar.estimated) + parseInt(cd[i].standard);
+								_this.pickcar.estimated = parseInt(_this.pickcar.estimated) + parseInt(cd[i].fwprice);
 							}
 							_this.addone=false;
 							_this.pickcar.maintains=cd;
@@ -274,14 +254,14 @@
 					addsVm.checked=[];
 					for(let i=0;i<c.length;i++){
 						//添加维修项目名到多选框,数组绑定
-						oneVm.wxs1.push(c[i].itemName);
+						oneVm.wxs1.push(c[i].fwname);
 					}
 					//主体数据
-					oneVm.coding=c;
+					oneVm.fwcod=c;
 					this.adds=false;
 				},
 				del(){
-					//console.log(this.wxs);
+					console.log(this.wxs);
 				},
 				//新增接车 
 				addwx(){
@@ -334,9 +314,9 @@
 			mounted(){
 				let _this=this;
 
-				jQuery.getJSON('http://localhost:8080/api/cars/mNo',(data)=>{
+				/*jQuery.getJSON('http://localhost:8080/api/cars/mNo',(data)=>{
 						_this.pickcar.mrecord.rorder="ER"+data;
-				});
+				});*/
 
 
 				let d=sessionStorage.getItem("d");
@@ -352,10 +332,10 @@
 				}else{
 					_this.xde=true;
 					let carno=sessionStorage.getItem("cno");
-					jQuery.getJSON(`http://localhost:8080/api/cars/pickinfo/${carno}`,(data)=>{
+					jQuery.getJSON(`http://localhost:8080/api/fzx/selectAll/${carno}`,(data)=>{
 						_this.pickinfo = data;
-						_this.pickcar.driver = data[0].vehiclejsy;
-						_this.pickcar.driverphone = data[0].vehicledh;
+						//_this.pickcar.driver = data[0].vehiclejsy;
+						//_this.pickcar.driverphone = data[0].vehicledh;
 					});
 				}
 				sessionStorage.removeItem("cno");

@@ -169,7 +169,6 @@
 				tabck(){
 					let _this=this;
 					let carno= this.carNo;
-					//this.tabs 1=今日维修 2=历史维修
 					if(_this.tabs==1){
 						jQuery.getJSON(`http://localhost:8080/api/fzx/selectWeixiuAll/${carno}`,function(data) {
 							_this.temps = data;
@@ -199,7 +198,6 @@
 						_this.ctcar = data;
 					});
 					
-					//维修数据，判断当前选择下标
 					if(_this.tabs==1){
 						jQuery.getJSON(`http://localhost:8080/api/fzx/selectWeixiuAll/${carno}`,function(data) {
 							_this.temps = data;
@@ -230,20 +228,10 @@
 								});
 							return;
 						}
+						sessionStorage.setItem("cno",carno);
 						indexVm.To('ui/fzx/maintenanceOrder.html');
-						//判断是否有接车中车辆
-						jQuery.getJSON(`http://localhost:8080/api/cars/pcar/${carno}`,(data)=>{
-							if(data=="false"){
-								_this.$message({
-									message: '该车辆正在接车,无法维修',
-									type: 'warning'
-								});
-								return;
-							}else{
-								sessionStorage.setItem("cno",carno);
-								indexVm.To('ui/fzx/maintenanceOrder.html');
-							}
-						});
+							
+
 					}
 				}
 			},
