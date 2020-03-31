@@ -13,6 +13,7 @@
 		<!--<script type="text/javascript" src="js/jq_ajax_config.js" ></script>-->
 		<script type="text/javascript" src="js/vue.js"></script>
 		<script type="text/javascript" src="js/view_filter.js"></script>
+		<script type="text/javascript" src="js/menu_const.js" ></script>
 
 		<style>
 			.el-aside {
@@ -73,90 +74,9 @@
 								<span>{{temp.fname}}</span>
 							</template>
 							<!--子项-->
-							<el-menu-item  index="7-1" @click="To('/dzw_ui/ui/sw/js.html')">结算中心</el-menu-item>
-							<el-menu-item index="7-2" @click="To('/dzw_ui/ui/sw/vip.html')">会员充值卡管理</el-menu-item>
+							<el-menu-item v-for="(item,index) in userfuns" v-if="item.fpid==temp.fid" @click="To(item.fcode)">{{item.fname}}</el-menu-item>
+							<!--<el-menu-item index="7-2" @click="To('/dzw_ui/ui/sw/vip.html')">会员充值卡管理</el-menu-item>-->
 						</el-submenu>
-						<el-submenu index="8" class="8">
-							<template slot="title">
-								<i class="el-icon-s-custom" style="color: white;"></i>
-								<span>权限管理</span>
-							</template>
-
-							<el-menu-item index="8-1" @click="To('/dzw_ui/ui/zkx/roleFun.html')">角色权限管理</el-menu-item>
-
-						</el-submenu>
-
-						<el-submenu index="2" class="2">
-							<template slot="title">
-								<i class="el-icon-s-operation" style="color: white;"></i>
-								<span>汽车维修</span>
-							</template>
-							<!--子项-->
-							<!--绑定单击事件跳转页面,路径参考-->
-							<el-menu-item index="2-1" @click="To('ui/fzx/maintenanceCar.html')">维修接车</el-menu-item>
-							<el-menu-item index="2-2" @click="To('ui/fzx/completionTest.html')">竣工检验</el-menu-item>
-						</el-submenu>
-						<el-submenu index="3" class="3">
-							<template slot="title">
-								<i class="el-icon-s-data" style="color: white;"></i>
-								<span>主数据</span>
-							</template>
-							<!--子项-->
-
-							<!--
-                            	作者：2453688922@qq.com
-                            	时间：2020-03-25
-                            	描述：缺少子项发动机品牌
-                            -->
-							<el-menu-item index="3-1" @click="To('ui/ljl/fadongji.html')">发动机品牌</el-menu-item>
-							<el-menu-item index="3-2" @click="To('ui/ljl/chexingdangan.html')">车型档案</el-menu-item>
-							<el-menu-item index="3-3" @click="To('ui/ljl/weixiu.html')">维修项目</el-menu-item>
-							<el-menu-item index="3-4" @click="To('ui/zzy/spzl.html')">商品资料</el-menu-item>
-							<el-menu-item index="3-5" @click="To('ui/ljl/gonghuodanwei.html')">供货单位</el-menu-item>
-						</el-submenu>
-						<el-submenu index="4" class="4">
-							<template slot="title">
-								<i class="el-icon-s-custom" style="color: white;"></i>
-								<span>客户档案</span>
-							</template>
-							<!--子项-->
-							<el-menu-item index="4-1" @click="To('/dzw_ui/ui/sw/che.html')">客户资料</el-menu-item>
-							<el-menu-item index="4-2" @click="To('/dzw_ui/ui/sw/che1.html')">车辆资料</el-menu-item>
-						</el-submenu>
-						<el-submenu index="5" class="5">
-							<template slot="title">
-								<i class="el-icon-s-help" style="color: white;"></i>
-								<span>技工管理</span>
-							</template>
-							<!--子项-->
-							<!--<el-submenu index="5-1">
-								<template slot="title">
-									<span @click="To('ui/zzy/team.html')">班组技工</span>
-								</template>
-								<el-menu-item index="5-1-1">自建</el-menu-item>
-							<el-menu-item index="5-1-2">联队</el-menu-item>
-							<el-menu-item index="5-1-3">加盟</el-menu-item>
-							<el-menu-item index="5-1-4">合伙人</el-menu-item>
-							</el-submenu>-->
-							<el-menu-item index="5-1" @click="To('ui/zzy/team.html')">班组技工</el-menu-item>
-							<el-menu-item index="5-2" @click="To('ui/zzy/class.html')">技工星级</el-menu-item>
-							<el-menu-item index="5-3" @click="To('ui/zzy/car.html')">外勤车辆</el-menu-item>
-						</el-submenu>
-						<el-submenu index="6" class="6">
-							<template slot="title">
-								<i class="el-icon-user-solid" style="color: white;"></i>
-								<span>人事</span>
-							</template>
-							<el-submenu index="6-1">
-								<template slot="title">
-									<span>员工资料</span>
-								</template>
-								<el-menu-item index="6-1-1" @click="To('ui/zxp/organization.html')">组织机构</el-menu-item>
-								<el-menu-item index="6-1-2" @click="To('ui/zxp/post.html')">岗位定义</el-menu-item>
-								<el-menu-item index="6-1-3" @click="To('ui/zxp/dimi.html')">离职登记</el-menu-item>
-								<el-menu-item index="6-1-4" @click="To('ui/zxp/communication.html')">通讯名录</el-menu-item>
-
-							</el-submenu>
 						</el-submenu>
 						<!--填充侧边容器-->
 						<div style="margin-top: 340px;"></div>
@@ -209,11 +129,11 @@
 				checked1: false,
 				checked2: false,
 				checked3: false,
-				userfuns: {}
+				userfuns: []
 			},
 			methods: {
-				To(url) {
-					$("#cnt").load(url);
+				To(fcode) {
+					$("#cnt").load(window.menuMapping[fcode]);
 				},
 				handleClose(done) {
 					this.$confirm('确认关闭？')
@@ -227,6 +147,9 @@
 						window.sessionStorage.clear();
 						location.href = 'login.html';
 					}
+				},
+				toTree(data,id,pid,name){
+					this.userfuns=window,toTreeData(data,id,pid,name);
 				}
 			},
 			mounted() {
@@ -234,9 +157,10 @@
 				this.To('Main.html');
 				console.info(sessionStorage.getItem("user"));
 				let users = JSON.parse(sessionStorage.getItem("user"));
+				
 				$.getJSON(`http://127.0.0.1:8080/zkx/api/funs/${users.user}/${users.pwd}`, function(funs) {
-					_this.userfuns = funs;
-					localStorage.setItem("funs", funs);
+					_this.userfuns=funs;
+					localStorage.setItem("funs", JSON.stringify(_this.userfuns));
 					console.info(JSON.stringify(_this.userfuns));
 				})
 			}
