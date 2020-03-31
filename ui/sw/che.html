@@ -147,7 +147,7 @@
 						</el-form-item>
 						<el-form-item label="是否会员">
 							<el-col :span="8">
-								<el-select v-model="kehu.vipcode" placeholder="是否为会员">
+								<el-select v-model="kehu.vipcode" placeholder="是否为会员" @change="queryVip">
 									<el-option label="是" value="1"></el-option>
 									<el-option label="不是" value="0"></el-option>
 								</el-select>
@@ -161,70 +161,80 @@
 							</el-col>
 						</el-form-item>
 					</el-form>
-					<el-form :model="xzcl" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+					<el-form :model="car" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 						<el-form-item label="车牌" prop="name">
-							<el-input v-model="xzcl.vehiclecp"></el-input>
+							<el-input v-model="car.carno"></el-input>
 						</el-form-item>
 						<el-row>
-							<el-col :span="10" style="margin-left: 40px;">
-								<el-button type="text" @click="isShow2 = true">车辆品牌
-									<el-input v-model="xzcl.vehiclepp"></el-input>
+							<el-col :span="10" style="margin-left: 20px;">
+								<el-button type="text">车辆品牌
+									<el-input v-model="car.carpp"></el-input>
 								</el-button>
 							</el-col>
 							<el-col :span="10" style="margin-left: 40px;">
-								<el-button type="text" @click="isShow3 = true">车辆型号
-									<el-input v-model="xzcl.vehiclexh"></el-input>
+								<el-button type="text">车辆型号
+									<el-input v-model="car.carxinghao"></el-input>
 								</el-button>
 							</el-col>
 						</el-row>
 						<el-form-item label="驾驶员" prop="name">
-							<el-input v-model="xzcl.vehiclejsy"></el-input>
+							<el-input v-model="car.driver"></el-input>
 						</el-form-item>
 						<el-form-item label="驾驶员电话" prop="name">
-							<el-input v-model="xzcl.vehicledh"></el-input>
+							<el-input v-model="car.driverphone"></el-input>
 						</el-form-item>
 						<el-row>
 							<el-col :span="10">
 								<el-form-item label="车辆归属" prop="region">
-									<el-select v-model="xzcl.vehiclegs" placeholder="请选择活动区域">
-										<el-option label="私家车" value="001"></el-option>
-										<el-option label="公用车" value="002"></el-option>
+									<el-select v-model="car.carguishu" placeholder="请选择车辆归属">
+										<el-option label="私家车" value="私家车"></el-option>
+										<el-option label="公用车" value="公用车"></el-option>
 									</el-select>
 								</el-form-item>
 							</el-col>
 						</el-row>
-						<el-form-item label="发动机" prop="name">
-							<el-input v-model="xzcl.vehiclefdj"></el-input>
-						</el-form-item>
 						<el-form-item label="驾驶证到期日期" required>
 							<el-col :span="11">
 								<el-form-item prop="date1">
-									<el-date-picker type="date" placeholder="选择日期" v-model="xzcl.vehiclefdq" style="width: 100%;"></el-date-picker>
+									<el-date-picker type="date" placeholder="选择日期" v-model="car.jszlostdate" style="width: 100%;"></el-date-picker>
 								</el-form-item>
 							</el-col>
 						</el-form-item>
-						<el-form-item label="车架号" prop="name">
-							<el-input v-model="xzcl.vehiclefcjh"></el-input>
-						</el-form-item>
-						<el-form-item label="发动机号" prop="name">
-							<el-input v-model="xzcl.vehicleffdjh"></el-input>
-						</el-form-item>
-						<el-form-item label="载重" prop="name">
-							<el-input v-model="xzcl.vehiclefzz"></el-input>
-						</el-form-item>
+						<el-row>
+							<el-col :span="10" style="margin-left: 20px;">
+								<el-button type="text" @click="fadongji(1,3)">发动机
+									<el-input v-model="car.fadongjiid"></el-input>
+								</el-button>
+							</el-col>
+						</el-row>
 						<el-form-item label="燃油类别" prop="name">
-							<el-input v-model="xzcl.vehiclefrylb"></el-input>
-						</el-form-item>
-						<el-form-item label="车系" prop="name">
-							<el-input v-model="xzcl.vehiclefcx"></el-input>
+							<el-input v-model="car.ranyoutype"></el-input>
 						</el-form-item>
 						<el-form-item>
-							<el-button type="primary" @click="add1">立即创建</el-button>
+							<el-button type="primary" @click="addkhwithcar">立即创建</el-button>
 							<el-button @click="resetForm('ruleForm')">重置</el-button>
 						</el-form-item>
 					</el-form>
 				</el-dialog>
-
+				<el-dialog title="发动机id" :visible.sync="isShow2" style="width: 50%;margin-left: 500px;">
+					<template>
+						<el-table :data="fadongjis.list" border style="width: 100%">
+							<el-table-column fixed prop="fadongjiid" label="发动机id">
+							</el-table-column>
+							<el-table-column prop="fadongjiname" label="发动机名称">
+							</el-table-column>
+							<el-table-column label="操作">
+								<template slot-scope="scope">
+									<el-button @click="check(scope.row.fadongjiid)" type="text" size="small">选择</el-button>
+								</template>
+							</el-table-column>
+						</el-table>
+					</template>
+					<div class="page">
+						<el-pagination layout="prev, pager, next" @current-change="current1" @prev-click="prev1" @next-click="next1" :total="this.fadongjis.pages*10">
+						</el-pagination>
+					</div>
+				</el-dialog>
 				<el-row>
 					<el-col :span="24">
 						<div class="grid-content bg-purple-dark">
@@ -257,61 +267,67 @@
 					</el-col>
 				</el-row>
 				<template>
-					<el-tabs>
-						<el-tab-pane type="primary" label="车辆信息" name="first">
+					<el-tabs v-model="activeName" type="border-card">
+						<el-tab-pane label="车辆信息" name="first">
 							<el-row>
 								<el-col :span="24">
 									<div class="grid-content bg-purple-dark">
 										<template>
 											<el-table :data="cl.list" border style="width: 100%" height="250">
-												<el-table-column fixed prop="vehiclecp" label="车牌">
+												<el-table-column prop="carno" label="车牌">
 												</el-table-column>
-												<el-table-column prop="vehiclepp" label="车辆品牌">
+												<el-table-column prop="carpp" label="车辆品牌">
 												</el-table-column>
-												<el-table-column prop="vehiclexh" label="车辆型号">
+												<el-table-column prop="carxinghao" label="车辆型号">
 												</el-table-column>
-												<el-table-column prop="vehiclejsy" label="驾驶员">
+												<el-table-column prop="driver" label="驾驶员">
 												</el-table-column>
-												<el-table-column prop="vehicledh" label="电话">
+												<el-table-column prop="driverphone" label="电话">
 												</el-table-column>
-												<el-table-column prop="vehiclegs" label="归属">
+												<el-table-column prop="carguishu" label="归属">
 												</el-table-column>
-												<el-table-column prop="vehiclefname" label="客户名称">
+												<el-table-column prop="kname" label="客户名称">
 												</el-table-column>
-												<el-table-column prop="vehiclefdj" label="发动机">
-												</el-table-column>
-												<el-table-column prop="clientbz" label="邮编">
+												<el-table-column prop="fadongjiname" label="发动机">
 												</el-table-column>
 											</el-table>
 										</template>
+										<div class="page">
+											<el-pagination layout="prev, pager, next" @current-change="current2" @prev-click="prev2" @next-click="next2" :total="this.cl.pages*10">
+											</el-pagination>
+										</div>
 									</div>
 								</el-col>
 							</el-row>
 						</el-tab-pane>
-						<el-tab-pane type="primary" label="历史消费" name="second">
+						<el-tab-pane label="历史消费" name="second">
 							<el-row>
 								<el-col :span="24">
 									<div class="grid-content bg-purple-dark">
 										<template>
-											<el-table :data="lb.list" border style="width: 100%">
-												<el-table-column fixed prop="clientid" label="单据类型">
+											<el-table :data="xf.list" border style="width: 100%" height="250">
+												<el-table-column prop="danjutype" label="单据类型">
 												</el-table-column>
-												<el-table-column prop="clientname" label="销售单号">
+												<el-table-column prop="recordid" label="销售单号">
 												</el-table-column>
-												<el-table-column prop="clientaddress" label="车牌号">
+												<el-table-column prop="carno" label="车牌号">
 												</el-table-column>
-												<el-table-column prop="clientiphone" label="维修业务">
+												<el-table-column prop="yewutype" label="维修业务">
 												</el-table-column>
-												<el-table-column prop="clientbirthday" label="进厂时间">
+												<el-table-column prop="recorddate" label="进厂时间">
 												</el-table-column>
-												<el-table-column prop="clientbz" label="完工时间">
+												<el-table-column prop="recorddate" label="完工时间">
 												</el-table-column>
-												<el-table-column prop="clientlb" label="结算时间">
+												<el-table-column prop="jsdate" label="结算时间">
 												</el-table-column>
-												<el-table-column prop="clientlb" label="消费金额">
+												<el-table-column prop="jsmoney" label="消费金额">
 												</el-table-column>
 											</el-table>
 										</template>
+										<div class="page">
+											<el-pagination layout="prev, pager, next" @current-change="current3" @prev-click="prev3" @next-click="next3" :total="this.xf.pages*10">
+											</el-pagination>
+										</div>
 									</div>
 								</el-col>
 							</el-row>
@@ -323,6 +339,20 @@
 		var cheVm = new Vue({
 			el: '#cheVm',
 			data: {
+				activeName: 'first',
+				fadongjis: {},
+				car: {
+					carpp: "",
+					carxinghao: "",
+					carno: "",
+					driver: "",
+					driverphone: "",
+					carguishu: "",
+					fadongjiid: "",
+					jszlostdate: "",
+					ranyoutype: "",
+					kid: ""
+				},
 				pageInfo: {},
 				kehu: {
 					kname: "",
@@ -343,24 +373,8 @@
 					vipcode: "",
 					vippwd: ""
 				},
-				lb: {},
+				xf: {},
 				cl: {},
-				xzcl: {
-					vehiclecp: "",
-					vehiclepp: "",
-					vehiclexh: "",
-					vehiclejsy: "",
-					vehicledh: "",
-					vehiclegs: "",
-					vehiclefdj: "001",
-					vehiclefname: "",
-					vehiclefdq: "",
-					vehiclefcjh: "",
-					vehicleffdjh: "",
-					vehiclefzz: "",
-					vehiclefrylb: "",
-					vehiclefcx: ""
-				},
 				visible: false,
 				isShow1: false,
 				isShow2: false,
@@ -417,6 +431,135 @@
 				}
 			},
 			methods: {
+				/*上一页消费记录查询*/
+				prev3(cpage) {
+					this.queryXF(cpage, this.xf.list[0].kid);
+				},
+				/*下一页消费记录查询*/
+				next3(cpage) {
+					this.queryXF(cpage, 3, this.xf.list[0].kid);
+				},
+				/*当前页消费记录查询*/
+				current3(cpage) {
+					this.queryXF(cpage, 3, this.xf.list[0].kid);
+				},
+				/*查询消费记录*/
+				queryXF(pageNum, pageSize, id) {
+					let _this = this; //非常重要
+					$.getJSON(`http://127.0.0.1:8080/api/weixiu/${pageNum}/${pageSize}/${id}`,
+						function(res) {
+							_this.xf = res;
+						})
+				},
+				/*上一页车辆查询*/
+				prev2(cpage) {
+					this.queryCl(cpage, this.cl.list[0].kid);
+				},
+				/*下一页车辆查询*/
+				next2(cpage) {
+					this.queryCl(cpage, 3, this.cl.list[0].kid);
+				},
+				/*当前页车辆查询*/
+				current2(cpage) {
+					this.queryCl(cpage, 3, this.cl.list[0].kid);
+				},
+				/*根据客户id查询车辆和消费记录*/
+				query(id) {
+					this.queryCl(1, 3, id);
+					this.queryXF(1, 3, id);
+				},
+				/*查询车辆*/
+				queryCl(pageNum, pageSize, id) {
+					let _this = this; //非常重要
+					$.getJSON(`http://127.0.0.1:8080/api/car/${pageNum}/${pageSize}/${id}`,
+						function(res) {
+							_this.cl = res;
+						})
+				},
+
+				/*上一页发动机查询*/
+				prev1(cpage) {
+					this.fadongji(cpage, 3);
+				},
+				/*下一页发动机查询*/
+				next1(cpage) {
+					this.fadongji(cpage, 3);
+				},
+				/*当前页发动机查询*/
+				current1(cpage) {
+					this.fadongji(cpage, 3);
+				},
+				/*选择发动机后回填数据*/
+				check(id) {
+					this.car.fadongjiid = id;
+					this.isShow2 = false;
+				},
+				/*查询所有发动机*/
+				fadongji(pageNum, pageSize) {
+					let _this = this; //非常重要
+					_this.isShow2 = true;
+					$.getJSON(`http://127.0.0.1:8080/api/fadongji/${pageNum}/${pageSize}`,
+						function(res) {
+							_this.fadongjis = res;
+						})
+				},
+				/*新增客户和车辆*/
+				addkhwithcar() {
+					this.isShow5 = false;
+					let _this = this; //非常重要
+					if(this.kehu.vipcode > 0) {
+						_this.kehu.vipcode = _this.vipcard.vipcode;
+					}
+					$.ajax(`http://127.0.0.1:8080/api/kehu`, {
+						type: "post",
+						contentType: "application/json",
+						data: JSON.stringify(_this.kehu),
+						dataType: "json",
+						success(res) {
+							if(res.code == "200") {
+								$.getJSON(`http://127.0.0.1:8080/api/kehu`,
+									function(res) {
+										_this.car.kid = res.kid;
+										$.ajax(`http://127.0.0.1:8080/api/car`, {
+											type: "post",
+											contentType: "application/json",
+											data: JSON.stringify(_this.car),
+											dataType: "json",
+											success(res) {
+												if(res.code == "200") {
+													alert("新增成功");
+													_this.isShow4 = false;
+													_this.kehu = {
+														kname: "",
+														kphone: "",
+														vipcode: "",
+														kaddress: "",
+														borndate: ""
+													};
+													_this.vipcard = {
+														vipcode: "",
+														vippwd: ""
+													};
+													_this.car = {
+														carpp: "",
+														carxinghao: "",
+														carno: "",
+														driver: "",
+														driverphone: "",
+														carguishu: "",
+														fadongjiid: "",
+														jszlostdate: "",
+														ranyoutype: "",
+														kid: ""
+													}
+												}
+											}
+										});
+									});
+							}
+						}
+					});
+				},
 				/*修改客户*/
 				update1() {
 					this.isShow3 = false;
@@ -424,8 +567,7 @@
 					if(this.xgkh.vipcode > 0) {
 						_this.xgkh.vipcode = _this.vipcard.vipcode;
 					}
-					$.ajax(`http://127.0.0.1:8080/api/kehu`,
-						{
+					$.ajax(`http://127.0.0.1:8080/api/kehu`, {
 						type: "put",
 						contentType: "application/json",
 						data: JSON.stringify(_this.xgkh),
@@ -470,15 +612,15 @@
 							_this.pageInfo = res;
 						})
 				},
-				/*上一页查询*/
+				/*上一页客户查询*/
 				prev(cpage) {
 					this.page(cpage, 3);
 				},
-				/*下一页查询*/
+				/*下一页客户查询*/
 				next(cpage) {
 					this.page(cpage, 3);
 				},
-				/*当前页查询*/
+				/*当前页客户查询*/
 				current(cpage) {
 					this.page(cpage, 3);
 				},
@@ -490,7 +632,9 @@
 				addClient1() {
 					this.isShow1 = false;
 					let _this = this; //非常重要
-					_this.kehu.vipcode = _this.vipcard.vipcode;
+					if(this.kehu.vipcode > 0) {
+						_this.kehu.vipcode = _this.vipcard.vipcode;
+					}
 					$.ajax(`http://127.0.0.1:8080/api/kehu`, {
 						type: "post",
 						contentType: "application/json",
@@ -569,10 +713,7 @@
 				resetForm(formName) {
 					this.$refs[formName].resetFields();
 				},
-				query(id) {
-
-				},
-				add1() {},
+				/*显示新增客户和车辆静态模态框*/
 				add() {
 					this.isShow4 = true;
 				}
