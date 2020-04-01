@@ -14,7 +14,7 @@
 			</template>
 			<div class="buttons">
 				<el-button @click="getFunData">获取权限</el-button>
-				<el-button @click="setCheckedNodes">通过 node 设置</el-button>
+				<el-button @click="setCheckedNodes(parent,uFuns)">此用户权限</el-button>
 				<el-button @click="resetChecked">清空</el-button>
 			</div>
 		</div>
@@ -25,6 +25,7 @@
 			data: {
 				role:{},
 				parent: [],
+				uFuns:[],
 				datas: [{
 					fid: "1",
 					fcode: "qt",
@@ -167,12 +168,16 @@
 				getCheckedKeys() {
 					console.log(this.$refs.tree.getCheckedKeys());
 				},
-				setCheckedNodes() {
-					this.$refs.tree.setCheckedNodes([{
-						id: 5
-					}, {
-						id: 9
-					}]);
+				setCheckedNodes(datas,ufuns) {
+					let arr=[];
+					ufuns.forEach(item =>{
+						datas.forEach(temp =>{
+							if(item.fid==temp.id){
+								arr.push({id:item.fid})
+							}
+						})
+					})
+					this.$refs.tree.setCheckedNodes(arr);
 				},
 				setCheckedKeys() {
 					this.$refs.tree.setCheckedKeys([3]);
@@ -199,7 +204,16 @@
 
 			},
 			mounted() {
+				let _this = this;
 				this.role=JSON.parse(localStorage.getItem("urole"));
+				$.get(`http://127.0.0.1:8080/zkx/api/funs/f`,function(allfuns){
+					_this.datas=allfuns;
+				})
+				
+				$.get(`http://127.0.0.1:8080/zkx/api/funs/${this.role.user}/${this.role.pwd}`,function(funs){
+					_this.uFuns=funs;
+					alert(JSON.stringify(_this.uFuns))
+				})
 				this.parent = window.toTreeData(this.datas, "fid", "fpid", "fname");
 				
 				console.info(JSON.stringify(this.parent));
