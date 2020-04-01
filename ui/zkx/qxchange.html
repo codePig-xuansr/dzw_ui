@@ -14,7 +14,7 @@
 			</template>
 			<div class="buttons">
 				<el-button @click="getFunData">获取权限</el-button>
-				<el-button @click="setCheckedNodes">通过 node 设置</el-button>
+				<el-button @click="setCheckedNodes(parent,uFuns)">此用户权限</el-button>
 				<el-button @click="resetChecked">清空</el-button>
 			</div>
 		</div>
@@ -168,12 +168,16 @@
 				getCheckedKeys() {
 					console.log(this.$refs.tree.getCheckedKeys());
 				},
-				setCheckedNodes() {
-					this.$refs.tree.setCheckedNodes([{
-						id: 5
-					}, {
-						id: 9
-					}]);
+				setCheckedNodes(datas,ufuns) {
+					let arr=[];
+					ufuns.forEach(item =>{
+						datas.forEach(temp =>{
+							if(item.fid==temp.id){
+								arr.push({id:item.fid})
+							}
+						})
+					})
+					this.$refs.tree.setCheckedNodes(arr);
 				},
 				setCheckedKeys() {
 					this.$refs.tree.setCheckedKeys([3]);
