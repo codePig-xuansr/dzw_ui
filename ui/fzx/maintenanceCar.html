@@ -218,7 +218,7 @@
 						}
 						sessionStorage.setItem('d',1);
 						sessionStorage.setItem("cno",carno);
-						indexVm.To('ui/fzx/maintenanceOrder.html');
+						indexVm.toUrl('ui/fzx/maintenanceOrder.html');
 					}else{
 						let carno= _this.carNo;
 						if(carno==''){
@@ -229,7 +229,7 @@
 							return;
 						}
 						sessionStorage.setItem("cno",carno);
-						indexVm.To('ui/fzx/maintenanceOrder.html');
+						indexVm.toUrl('ui/fzx/maintenanceOrder.html');
 							
 
 					}
@@ -237,9 +237,9 @@
 			},
 			mounted(){
 				let _this=this;
-				jQuery.getJSON('http://localhost:8080/api/cars/qas',(data)=>{
+				/*jQuery.getJSON('http://localhost:8080/api/cars/qas',(data)=>{
 					_this.pcs=data;
-				});
+				});*/
 			}
 		});
 	</script>
