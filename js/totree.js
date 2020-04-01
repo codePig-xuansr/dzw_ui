@@ -11,7 +11,7 @@ function toTreeData(data, id, pid, name) {
 	let parent = [];
 	for(let i = 0; i < data.length; i++) {
 
-		if(data[i][pid] !== "0") {} else {
+		if(data[i][pid] !== "0" && data[i][pid] !== 0) {} else {
 			let obj = {
 				label: data[i][name],
 				id: data[i][id],

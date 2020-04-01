@@ -33,7 +33,7 @@
 							<el-col :span="6">
 								<label>维修项目类别</label>
 								<template>
-									<el-tree :data="datas" show-checkbox node-key="id" ref="tree" highlight-current :props="defaultProps">
+									<el-tree :data="datas" show-checkbox node-key="id" ref="tree" @click="chaxunxiangmu" highlight-current :props="defaultProps">
 									</el-tree>
 								</template>
 							</el-col>
@@ -84,6 +84,11 @@
 					children: 'children',
 					label: 'label'
 				},
+				weixiutype:[{
+					xid:'1',
+					xname:'2',
+					xfid:'0'
+				}],
 				weixiu: [{
 					projectChild: '222',
 					coding: '0',
@@ -128,6 +133,9 @@
 				projectChild: ''
 			},
 			methods: {
+				chaxunxiangmu(){
+					alert(1)
+				},
 				bmxl() {
 					indexVm.To('ui/ljl/weixiuadd.html');
 				},
@@ -193,9 +201,18 @@
 
 			},
 			mounted() {
+				let _this = this;
 				//this.init();
-				this.datas = window.toTreeData(this.weixiu, "projectChild", "coding", "itemName");
-				console.info(JSON.stringify(this.datas));
+				$.getJSON(`http://localhost:8080/api/ljl/weixiu/All/type`,
+				function(rs){
+					_this.weixiutype = rs.list;
+					//alert(JSON.stringify(_this.datas))
+					//alert(JSON.stringify(rs.list))
+					_this.datas = window.toTreeData(rs.list, "xid", "xfid", "xname");
+					console.info(JSON.stringify(_this.datas));
+				});
+				//this.datas = window.toTreeData(this.weixiutype, "xid", "xfid", "xname");
+				//console.info(JSON.stringify(this.datas));
 				//alert(this.datas)
 			}
 
