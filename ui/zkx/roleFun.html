@@ -25,7 +25,7 @@
 					</el-table-column>
 					<el-table-column fixed="right" label="操作" width="120">
 						<template slot-scope="scope">
-							<el-button @click="addqx" type="text" size="small">
+							<el-button @click="addqx(scope.$index, scope.row)" type="text" size="small">
 								权限管理
 							</el-button>
 						</template>
@@ -274,12 +274,13 @@
 				]
 			},
 			methods: {
-				addqx() {
+				addqx(index,row) {
 					let _this = this;
+					alert(JSON.stringify(row));
 					this.dialogVisible666 = true;
 					setTimeout(
 						function() {
-							localStorage.setItem("urole", JSON.stringify(_this.role));
+							localStorage.setItem("urole", JSON.stringify(row));
 							$("#cnt2").load("ui/zkx/qxchange.html");
 						}, 2000);
 				},
