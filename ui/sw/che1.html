@@ -258,7 +258,7 @@
 								<div class="grid-content bg-purple-dark">
 									<template>
 										<el-table :data="kehu" border style="width: 100%" height="250">
-											<el-table-column  prop="kid" label="编号">
+											<el-table-column prop="kid" label="编号">
 											</el-table-column>
 											<el-table-column prop="kname" label="客户姓名">
 											</el-table-column>
@@ -305,6 +305,10 @@
 											</el-table-column>
 										</el-table>
 									</template>
+								</div>
+								<div class="page">
+									<el-pagination layout="prev, pager, next" @current-change="current3" @prev-click="prev3" @next-click="next3" :total="this.pageInfo.pages*10">
+									</el-pagination>
 								</div>
 							</el-col>
 						</el-row>
@@ -477,7 +481,7 @@
 				/*点击查看*/
 				query(id, carno) {
 					this.queryKehu(id);
-					this.queryXF(1, 3,carno);
+					this.queryXF(1, 3, carno);
 				},
 				/*根据id查询客户*/
 				queryKehu(id) {
