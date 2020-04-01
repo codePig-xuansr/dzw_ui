@@ -33,20 +33,20 @@
 						<span style="margin-left: 10px;"></span>
 						<el-button type="danger" plain size="small" @click="open">选择项目</el-button>
 					</el-form-item>
-					<el-form-item prop="wxgroup" label="维修班组">
+					<el-form-item prop="bzname" label="维修班组">
 						<template>
-							<el-select v-model="minfo.wxgroup">
-								<el-option-group v-for="(temp,index) in arts" :label=`${temp.classname}${k}${temp.manHour}元小时`>
-								  <el-option v-for="(tmp,dex) in temp.teams" :lable="tmp.teamname" :value="tmp.teamname"></el-option>
+							<el-select v-model="minfo.bzname">
+								<el-option-group v-for="(temp,index) in arts" :label=`${temp.bzname}${k}${temp.bzcost}元小时`>
+								  <el-option :lable="temp.bzname" :value="temp.bzname"></el-option>
 								</el-option-group>
 							</el-select>
 						</template>
 					</el-form-item>
-					<el-form-item prop="gztext" label="故障描述：">
-						<el-input v-model="minfo.gztext" type="textarea"></el-input>
+					<el-form-item prop="guzhanginfo" label="故障描述：">
+						<el-input v-model="minfo.guzhanginfo" type="textarea"></el-input>
 					</el-form-item>
-					<el-form-item prop="gzcause" label="故障原因：">
-						<el-input v-model="minfo.gzcause" type="textarea"></el-input>
+					<el-form-item prop="guzhangyuanyin" label="故障原因：">
+						<el-input v-model="minfo.guzhangyuanyin" type="textarea"></el-input>
 					</el-form-item>
 				  </el-form>
 			  </el-col>
@@ -61,21 +61,21 @@
 				wxs1:[],
 				fwcod:[],
 				minfo: {
-					gztext:'',
-					gzcause:'',
-					wxgroup:'111'
+					guzhanginfo:'',
+					guzhangyuanyin:'',
+					bzname:''
 				},
 				arts:{},
 				//表单基础验证
 				rules:{
-					wxgroup:[{required: true, message:'请选择维修班组', trigger: 'change'}],
-					gztext:[{required: true, message:'请输入故障描述', trigger: 'blur'}],
-					gzcause:[{required: true, message:'请输入故障原因', trigger: 'blur'}]
+					bzname:[{required: true, message:'请选择维修班组', trigger: 'change'}],
+					guzhanginfo:[{required: true, message:'请输入故障描述', trigger: 'blur'}],
+					guzhangyuanyin:[{required: true, message:'请输入故障原因', trigger: 'blur'}]
 				}
 			},
 			mounted(){
 				let _this=this;
-				jQuery.getJSON('http://localhost:8080/api/cars/art', function(data) {
+				jQuery.getJSON('http://localhost:8080/api/fzx/selectBz', function(data) {
 					_this.arts = data;
 				});
 			},
