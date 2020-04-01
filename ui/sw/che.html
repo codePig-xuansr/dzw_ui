@@ -701,10 +701,7 @@
 						success(data) {
 							if(data.code == 200) {
 								alert("删除成功");
-								_this.pageInfo.list.splice(index, 1);
-								if(_this.pageInfo.list.length == 0) {
-									_this.page(_this.pageInfo.prePage, 3);
-								}
+								_this.page(_this.pageInfo.prePage, 3);
 							}
 						}
 					});
