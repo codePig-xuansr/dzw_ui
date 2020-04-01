@@ -33,11 +33,11 @@
 						<span style="margin-left: 10px;"></span>
 						<el-button type="danger" plain size="small" @click="open">选择项目</el-button>
 					</el-form-item>
-					<el-form-item prop="bzname" label="维修班组">
+					<el-form-item prop="bzid" label="维修班组">
 						<template>
-							<el-select v-model="minfo.bzname">
-								<el-option-group v-for="(temp,index) in arts" :label=`${temp.bzname}${k}${temp.bzcost}元小时`>
-								  <el-option :lable="temp.bzname" :value="temp.bzname"></el-option>
+							<el-select v-model="minfo.bzid">
+								<el-option-group v-for="(temp,index) in ar" :label=`${temp.bzname}${k}${temp.bzcost}元小时`>
+								  <el-option :lable="temp.bzid" :value="temp.bzid"></el-option>
 								</el-option-group>
 							</el-select>
 						</template>
@@ -63,12 +63,13 @@
 				minfo: {
 					guzhanginfo:'',
 					guzhangyuanyin:'',
-					bzname:''
-				},
+					bzid:''
+					},
+				ar:{},
 				arts:{},
 				//表单基础验证
 				rules:{
-					bzname:[{required: true, message:'请选择维修班组', trigger: 'change'}],
+					bzid:[{required: true, message:'请选择维修班组', trigger: 'change'}],
 					guzhanginfo:[{required: true, message:'请输入故障描述', trigger: 'blur'}],
 					guzhangyuanyin:[{required: true, message:'请输入故障原因', trigger: 'blur'}]
 				}
@@ -77,6 +78,9 @@
 				let _this=this;
 				jQuery.getJSON('http://localhost:8080/api/fzx/selectBz', function(data) {
 					_this.arts = data;
+				});
+				jQuery.getJSON('http://localhost:8080/api/fzx/selectBzz', function(data) {
+					_this.ar = data;
 				});
 			},
 			methods:{

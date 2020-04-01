@@ -69,7 +69,7 @@
 							  	<br>
 							  <div>
 							  <el-form-item>
-								<a>车主：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].kname}}</a> <span class="kg"></span> 
+								<a>车主：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].driver}}</a> <span class="kg"></span> 
 								<a>地址：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].kaddress}}</a> <span class="kg"></span> 
 								<a>驾驶员：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].driver}}</a> <span class="kg"></span> 
 								<a>手机号：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].kphone}}</a> <span class="kg"></span> 
@@ -217,7 +217,7 @@
 							return;
 						}
 						sessionStorage.setItem('d',1);
-						sessionStorage.setItem("cno",carno);
+						sessionStorage.setItem("carno",carno);
 						indexVm.toUrl('ui/fzx/maintenanceOrder.html');
 					}else{
 						let carno= _this.carNo;
@@ -228,7 +228,7 @@
 								});
 							return;
 						}
-						sessionStorage.setItem("cno",carno);
+						sessionStorage.setItem("carno",carno);
 						indexVm.toUrl('ui/fzx/maintenanceOrder.html');
 							
 
@@ -240,6 +240,8 @@
 				/*jQuery.getJSON('http://localhost:8080/api/cars/qas',(data)=>{
 					_this.pcs=data;
 				});*/
+				
+				
 			}
 		});
 	</script>
