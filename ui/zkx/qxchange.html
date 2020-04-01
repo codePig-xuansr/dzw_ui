@@ -25,6 +25,7 @@
 			data: {
 				role:{},
 				parent: [],
+				uFuns:[],
 				datas: [{
 					fid: "1",
 					fcode: "qt",
@@ -199,7 +200,16 @@
 
 			},
 			mounted() {
+				let _this = this;
 				this.role=JSON.parse(localStorage.getItem("urole"));
+				$.get(`http://127.0.0.1:8080/zkx/api/funs/f`,function(allfuns){
+					_this.datas=allfuns;
+				})
+				
+				$.get(`http://127.0.0.1:8080/zkx/api/funs/${this.role.user}/${this.role.pwd}`,function(funs){
+					_this.uFuns=funs;
+					alert(JSON.stringify(_this.uFuns))
+				})
 				this.parent = window.toTreeData(this.datas, "fid", "fpid", "fname");
 				
 				console.info(JSON.stringify(this.parent));

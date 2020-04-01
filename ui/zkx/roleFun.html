@@ -10,7 +10,7 @@
 		<div id="roleFunApp">
 
 			<template>
-				<el-table :data="role" style="width: 100%" max-height="250">
+				<el-table :data="role" style="width: 100%" max-height="500">
 					<el-table-column fixed prop="username" label="员工姓名" width="150">
 					</el-table-column>
 					<el-table-column prop="comedate" label="入职日期" width="200">
@@ -294,6 +294,10 @@
 			},
 			mounted() {
 				let _this = this;
+				$.getJSON(`http://127.0.0.1:8080/zkx/api/user`,function(data){
+					_this.role=data;
+					console.info(JSON.stringify(_this.role));
+				})
 			}
 		})
 	</script>
