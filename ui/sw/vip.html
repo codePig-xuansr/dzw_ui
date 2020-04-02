@@ -13,36 +13,45 @@
 					<h1> 会员管理</h1>
 				</el-col>
 				<el-col :span="8">
-					<el-button type="primary" @click="add" plain>新增</el-button>
+					<el-button type="primary" @click="isShow1 = true" plain>新增</el-button>
 				</el-col>
-				<el-dialog title="新增会员" :visible.sync="isShow1">
-					<el-form :model="vip1" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+				<el-dialog title="新增会员" :visible.sync="isShow1" style="width: 1000px;margin-left: 500px;">
+					<el-form :model="xzvip" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 						<el-form-item label="会员账号" prop="clientid">
-							<el-input v-model="vip1.card"></el-input>
+							<el-input v-model="xzvip.vipcode" @input="repetition"></el-input>
 						</el-form-item>
 						<el-form-item label="账号密码" prop="clientiphone">
-							<el-input v-model="vip1.pwd"></el-input>
+							<el-input v-model="xzvip.vippwd"></el-input>
 						</el-form-item>
+						<el-row>
+							<el-col :span="10" style="margin-left: 70px;">
+								<el-button type="text" @click="client(1,3)">客户
+									<el-input v-model="kname"></el-input>
+								</el-button>
+							</el-col>
+						</el-row>
 						<el-form-item>
-							<el-button type="primary" @click="add1">立即创建</el-button>
+							<el-button type="primary" @click="add">立即创建</el-button>
 							<el-button @click="resetForm('ruleForm')">重置</el-button>
 						</el-form-item>
 					</el-form>
 				</el-dialog>
 			</el-row>
 			<template>
-				<el-table :data="vip" border style="width: 100%" height="250">
-					<el-table-column fixed prop="vipid" label="会员编号">
+				<el-table :data="vip.list" border style="width: 100%" height="250">
+					<el-table-column fixed prop="vipcode" label="会员账号">
 					</el-table-column>
-					<el-table-column prop="jifen" label="当前积分">
+					<el-table-column fixed prop="kname" label="持卡人">
 					</el-table-column>
-					<el-table-column prop="time" label="加入时间">
+					<el-table-column prop="vipdiscount" label="享受折扣">
 					</el-table-column>
-					<el-table-column prop="sunjifen" label="总积分">
+					<el-table-column prop="startdate" label="加入时间">
+					</el-table-column>
+					<el-table-column prop="jifen" label="总积分">
 					</el-table-column>
 					<el-table-column label="操作" width="150">
 						<template slot-scope="scope">
-							<el-button @click="del(scope.row.vehiclecp)" type="text" size="small">
+							<el-button @click="del(scope.row.vipcode,scope.row.kid)" type="text" size="small">
 								移除
 							</el-button>
 						</template>
@@ -50,35 +59,175 @@
 					</el-table-column>
 				</el-table>
 			</template>
-
+			<div class="page">
+				<el-pagination layout="prev, pager, next" @current-change="current" @prev-click="prev" @next-click="next" :total="this.vip.pages*10">
+				</el-pagination>
+			</div>
+			<el-dialog title="客户" :visible.sync="isShow2" style="width: 50%;margin-left: 525px;">
+				<template>
+					<el-table :data="kh.list" border style="width: 100%">
+						<el-table-column prop="kid" label="客户id">
+						</el-table-column>
+						<el-table-column prop="kname" label="客户名称">
+						</el-table-column>
+						<el-table-column label="操作" width="100">
+							<template slot-scope="scope">
+								<el-button @click="check(scope.row.kid,scope.row.kname)" type="text" size="small">选择</el-button>
+							</template>
+						</el-table-column>
+					</el-table>
+				</template>
+				<div class="page">
+					<el-pagination layout="prev, pager, next" @current-change="current1" @prev-click="prev1" @next-click="next1" :total="this.kh.pages*10">
+					</el-pagination>
+				</div>
+			</el-dialog>
 		</div>
 	</body>
 	<script>
 		var vip = new Vue({
 			el: "#vip",
 			data: {
+				kname: "",
 				isShow1: false,
-				vip: [{
-					vipid: "1",
-					jifen: "2",
-					time: "2012-12-12",
-					sunjifen: "3"
-				}, {
-					vipid: "2",
-					jifen: "56",
-					time: "2012-12-12",
-					sunjifen: "343"
-				}],
-				vip1: {
-					card: "",
-					pwd: ""
+				isShow2: false,
+				vip: {},
+				xzvip: {
+					vipcode: "",
+					vippwd: ""
+				},
+				kh: {},
+				kehu: {
+					kid: "",
+					vipcode: ""
 				}
 			},
 			methods: {
-				add() {
-					this.isShow1 = true;
+				del(vipcode,id) {
+					let _this = this;
+					$.ajax(`http://127.0.0.1:8080/api/vip/${vipcode}`, {
+						type: "delete",
+						contentType: "application/json",
+						success(res) {
+							if(res.code == "200") {
+								alert('删除成功');
+								_this.page(_this.vip.pageNum, 3);
+								_this.kehu.kid=id; 
+								_this.kehu.vipcode=0; 
+								$.ajax(`http://127.0.0.1:8080/api/kehu`, {
+									type: "put",
+									contentType: "application/json",
+									data: JSON.stringify(_this.kehu),
+									dataType: "json",
+									success(res) {
+										if(res.code == "200") {
+
+										}
+									}
+								});
+							}
+						}
+					});
 				},
-				add1() {}
+				/*查询会员卡号是否被使用*/
+				repetition() {
+					let vipcode = this.xzvip.vipcode;
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/api/vip/${vipcode}`,
+						function(res) {
+							if(res.code == 200) {
+								alert("会员卡号已被使用");
+								_this.xzvip.vipcode = "";
+							}
+						})
+				},
+				/*添加会员卡*/
+				add() {
+					this.isShow5 = false;
+					let _this = this; //非常重要
+					$.ajax(`http://127.0.0.1:8080/api/vip`, {
+						type: "post",
+						contentType: "application/json",
+						data: JSON.stringify(_this.xzvip),
+						dataType: "json",
+						success(res) {
+							if(res.code == "200") {
+								alert('保存成功');
+								_this.isShow1 = false;
+								_this.kehu.vipcode = _this.xzvip.vipcode;
+								$.ajax(`http://127.0.0.1:8080/api/kehu`, {
+									type: "put",
+									contentType: "application/json",
+									data: JSON.stringify(_this.kehu),
+									dataType: "json",
+									success(res) {
+										if(res.code == "200") {
+
+											_this.kehu = {
+												kid: "",
+												vipcode: ""
+											};
+											_this.xzvip = {
+												vipcode: "",
+												vippwd: ""
+											};
+										}
+									}
+								});
+							}
+						}
+					});
+				},
+				/*选择客户后回填数据*/
+				check(id, name) {
+					this.kehu.kid = id;
+					this.kname = name;
+					this.isShow2 = false;
+				},
+				/*上一页客户查询*/
+				prev1(cpage) {
+					this.client(cpage, 3);
+				},
+				/*下一页客户查询*/
+				next1(cpage) {
+					this.client(cpage, 3);
+				},
+				/*当前页客户查询*/
+				current1(cpage) {
+					this.client(cpage, 3);
+				},
+				/*客户分页查询*/
+				client(pageNum, pageSize) {
+					let _this = this;
+					_this.isShow2 = true;
+					$.getJSON(`http://127.0.0.1:8080/api/kehu/vip/${pageNum}/${pageSize}`,
+						function(res) {
+							_this.kh = res;
+						})
+				},
+				/*vip分页查询*/
+				page(pageNum, pageSize) {
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/api/vip/${pageNum}/${pageSize}`,
+						function(res) {
+							_this.vip = res;
+						})
+				},
+				/*上一页会员查询*/
+				prev(cpage) {
+					this.page(cpage, 3);
+				},
+				/*下一页会员查询*/
+				next(cpage) {
+					this.page(cpage, 3);
+				},
+				/*当前页会员查询*/
+				current(cpage) {
+					this.page(cpage, 3);
+				}
+			},
+			mounted() {
+				this.page(1, 3);
 			}
 		});
 	</script>
