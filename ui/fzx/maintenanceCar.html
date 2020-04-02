@@ -85,7 +85,30 @@
 							</el-form>
 							<template>
 								<el-tabs v-model="tabs" @tab-click="tabck">
-								  <el-tab-pane label="历史维修" name="1">
+								  <el-tab-pane label="今日维修" name="1">
+									<template>
+										<el-table :data="temps" >
+											<!--展开行-->
+											<el-table-column type="expand">
+												<template slot-scope="scope">
+													<el-form label-position="left" inline class="demo-table-expand">
+														<el-form-item v-for="temp in st" :key="temp.value" :label="temp.name" >
+															<span v-if="scope.row[temp.value]!=''">{{scope.row[temp.value]}}</span>
+															<span v-if="scope.row[temp.value]==''">无</span>
+														  </el-form-item>
+													</el-form>
+												</template>
+											</el-table-column>
+											<!--基本显示行-->
+										  <el-table-column v-for="temp in stsy" :key="temp.value" :label="temp.name" :align="'center'" :resizable="false" >
+											  <template slot-scope="scope">
+												<span>{{scope.row[temp.value]}}</span>
+											  </template>
+										  </el-table-column>
+										</el-table>
+									</template> 
+								  </el-tab-pane>
+								  <el-tab-pane label="历史维修" name="2">
 									<template>
 										<el-table :data="temps" >
 											<!--展开行-->
@@ -170,6 +193,10 @@
 					let _this=this;
 					let carno= this.carNo;
 					if(_this.tabs==1){
+						jQuery.getJSON(`http://localhost:8080/api/fzx/selectWeixiuAllorder/${carno}`,function(data) {
+							_this.temps = data;
+						});
+					}else{
 						jQuery.getJSON(`http://localhost:8080/api/fzx/selectWeixiuAll/${carno}`,function(data) {
 							_this.temps = data;
 						});
@@ -199,6 +226,10 @@
 					});
 					
 					if(_this.tabs==1){
+						jQuery.getJSON(`http://localhost:8080/api/fzx/selectWeixiuAllorder/${carno}`,function(data) {
+							_this.temps = data;
+						});
+					}else{
 						jQuery.getJSON(`http://localhost:8080/api/fzx/selectWeixiuAll/${carno}`,function(data) {
 							_this.temps = data;
 						});
