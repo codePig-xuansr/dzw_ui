@@ -55,13 +55,13 @@
 				<h></h>
 				<el-dialog title="修改客户" :visible.sync="isShow3" width="30%">
 					<el-form :model="xgkh" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-						<el-form-item label="客户名称" prop="clientname">
+						<el-form-item label="客户名称" prop="kname">
 							<el-input v-model="xgkh.kname"></el-input>
 						</el-form-item>
-						<el-form-item label="电话" prop="clientiphone">
+						<el-form-item label="电话" prop="kphone">
 							<el-input v-model="xgkh.kphone"></el-input>
 						</el-form-item>
-						<el-form-item label="客户地址" prop="clientaddress">
+						<el-form-item label="客户地址" prop="kaddress">
 							<el-input v-model="xgkh.kaddress"></el-input>
 						</el-form-item>
 						<el-form-item label="是否会员">
@@ -74,7 +74,7 @@
 						</el-form-item>
 						<el-form-item label="客户生日" required>
 							<el-col :span="11">
-								<el-form-item prop="clientbirthday">
+								<el-form-item prop="borndate">
 									<el-date-picker type="date" placeholder="选择日期" v-model="xgkh.borndate" style="width: 100%;"></el-date-picker>
 								</el-form-item>
 							</el-col>
@@ -90,16 +90,16 @@
 				<el-button type="primary" @click="add" plain>新增客户和车辆</el-button>
 				<el-dialog title="新增客户" :visible.sync="isShow1" width="30%">
 					<el-form :model="kehu" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-						<el-form-item label="客户名称" prop="clientname">
+						<el-form-item label="客户名称" prop="kname">
 							<el-input v-model="kehu.kname"></el-input>
 						</el-form-item>
-						<el-form-item label="电话" prop="clientiphone">
+						<el-form-item label="电话" prop="kphone">
 							<el-input v-model="kehu.kphone"></el-input>
 						</el-form-item>
-						<el-form-item label="客户地址" prop="clientaddress">
+						<el-form-item label="客户地址" prop="kaddress">
 							<el-input v-model="kehu.kaddress"></el-input>
 						</el-form-item>
-						<el-form-item label="是否会员">
+						<el-form-item label="是否会员" prop="vipcode">
 							<el-col :span="8">
 								<el-select v-model="kehu.vipcode" placeholder="是否为会员" @change="queryVip">
 									<el-option label="是" value="1"></el-option>
@@ -109,7 +109,7 @@
 						</el-form-item>
 						<el-form-item label="客户生日" required>
 							<el-col :span="11">
-								<el-form-item prop="clientbirthday">
+								<el-form-item prop="borndate">
 									<el-date-picker type="date" placeholder="选择日期" v-model="kehu.borndate" style="width: 100%;"></el-date-picker>
 								</el-form-item>
 							</el-col>
@@ -136,13 +136,13 @@
 				</el-dialog>
 				<el-dialog title="新增客户和车辆" :visible.sync="isShow4" width="40%">
 					<el-form :model="kehu" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-						<el-form-item label="客户名称" prop="clientname">
+						<el-form-item label="客户名称" prop="kname">
 							<el-input v-model="kehu.kname"></el-input>
 						</el-form-item>
-						<el-form-item label="电话" prop="clientiphone">
+						<el-form-item label="电话" prop="kphone">
 							<el-input v-model="kehu.kphone"></el-input>
 						</el-form-item>
-						<el-form-item label="客户地址" prop="clientaddress">
+						<el-form-item label="客户地址" prop="kaddress">
 							<el-input v-model="kehu.kaddress"></el-input>
 						</el-form-item>
 						<el-form-item label="是否会员">
@@ -155,37 +155,41 @@
 						</el-form-item>
 						<el-form-item label="客户生日" required>
 							<el-col :span="11">
-								<el-form-item prop="clientbirthday">
+								<el-form-item prop="borndate">
 									<el-date-picker type="date" placeholder="选择日期" v-model="kehu.borndate" style="width: 100%;"></el-date-picker>
 								</el-form-item>
 							</el-col>
 						</el-form-item>
 					</el-form>
-					<el-form :model="car" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-						<el-form-item label="车牌" prop="name">
+					<el-form :model="car" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+						<el-form-item label="车牌" prop="carno">
 							<el-input v-model="car.carno"></el-input>
 						</el-form-item>
 						<el-row>
-							<el-col :span="10" style="margin-left: 20px;">
-								<el-button type="text">车辆品牌
-									<el-input v-model="car.carpp"></el-input>
+							<el-col :span="10">
+								<el-button type="text">
+									<el-form-item label="车辆品牌" prop="carpp">
+										<el-input v-model="car.carpp"></el-input>
+									</el-form-item>
 								</el-button>
 							</el-col>
 							<el-col :span="10" style="margin-left: 40px;">
-								<el-button type="text">车辆型号
-									<el-input v-model="car.carxinghao"></el-input>
+								<el-button type="text">
+									<el-form-item label="车辆型号" prop="carxinghao">
+										<el-input v-model="car.carxinghao"></el-input>
+									</el-form-item>
 								</el-button>
 							</el-col>
 						</el-row>
-						<el-form-item label="驾驶员" prop="name">
+						<el-form-item label="驾驶员" prop="driver">
 							<el-input v-model="car.driver"></el-input>
 						</el-form-item>
-						<el-form-item label="驾驶员电话" prop="name">
+						<el-form-item label="驾驶员电话" prop="driverphone">
 							<el-input v-model="car.driverphone"></el-input>
 						</el-form-item>
 						<el-row>
 							<el-col :span="10">
-								<el-form-item label="车辆归属" prop="region">
+								<el-form-item label="车辆归属" prop="carguishu">
 									<el-select v-model="car.carguishu" placeholder="请选择车辆归属">
 										<el-option label="私家车" value="私家车"></el-option>
 										<el-option label="公用车" value="公用车"></el-option>
@@ -195,7 +199,7 @@
 						</el-row>
 						<el-form-item label="驾驶证到期日期" required>
 							<el-col :span="11">
-								<el-form-item prop="date1">
+								<el-form-item prop="jszlostdate">
 									<el-date-picker type="date" placeholder="选择日期" v-model="car.jszlostdate" style="width: 100%;"></el-date-picker>
 								</el-form-item>
 							</el-col>
@@ -207,7 +211,7 @@
 								</el-button>
 							</el-col>
 						</el-row>
-						<el-form-item label="燃油类别" prop="name">
+						<el-form-item label="燃油类别" prop="ranyoutype">
 							<el-input v-model="car.ranyoutype"></el-input>
 						</el-form-item>
 						<el-form-item>
@@ -392,38 +396,71 @@
 					desc: ''
 				},
 				rules: {
-					clientid: [{
+					kname: [{
 						required: true,
-						message: '请输入编号',
+						message: '请输入客户姓名',
 						trigger: 'blur'
-					}, ],
-					clientname: [{
-							required: true,
-							message: '请输入客户姓名',
-							trigger: 'blur'
-						},
-
-					],
-					clientiphone: [{
+					}],
+					kphone: [{
 							required: true,
 							message: '请输入客户电话',
 							trigger: 'blur'
-						},
+						}
 
 					],
-					clientaddress: [{
+					kaddress: [{
 						required: true,
 						message: '请输入地址',
 						trigger: 'blur'
 					}],
-					clientbirthday: [{
+					borndate: [{
 						type: 'date',
 						required: true,
 						message: '请选择日期',
 						trigger: 'blur'
 					}],
-					clientlb: [{
-						type: 'array',
+					vipcode: [{
+						required: true,
+						message: '请至少选择一个',
+						trigger: 'change'
+					}],
+					carno: [{
+						required: true,
+						message: '请输入车牌',
+						trigger: 'blur'
+					}],
+					carpp: [{
+						required: true,
+						message: '请输入车辆品牌',
+						trigger: 'blur'
+					}],
+					carxinghao: [{
+						required: true,
+						message: '请输入车辆型号',
+						trigger: 'blur'
+					}],
+					driver: [{
+						required: true,
+						message: '请输入驾驶员',
+						trigger: 'blur'
+					}],
+					driverphone: [{
+						required: true,
+						message: '请输入驾驶员电话',
+						trigger: 'blur'
+					}],
+					ranyoutype: [{
+						required: true,
+						message: '请输入燃油类别',
+						trigger: 'blur'
+					}],
+					jszlostdate: [{
+						type: 'date',
+						required: true,
+						message: '请选择日期',
+						trigger: 'blur'
+					}],
+					carguishu: [{
 						required: true,
 						message: '请至少选择一个',
 						trigger: 'change'

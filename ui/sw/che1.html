@@ -92,31 +92,35 @@
 				</el-col>
 				<el-button type="primary" @click="isShow1=true" plain>新增车辆</el-button>
 				<el-dialog title="新增车辆" :visible.sync="isShow1" width="40%">
-					<el-form :model="car" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-						<el-form-item label="车牌" prop="name">
+					<el-form :model="car" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+						<el-form-item label="车牌" prop="carno">
 							<el-input v-model="car.carno"></el-input>
 						</el-form-item>
 						<el-row>
-							<el-col :span="10" style="margin-left: 20px;">
-								<el-button type="text">车辆品牌
-									<el-input v-model="car.carpp"></el-input>
+							<el-col :span="10">
+								<el-button type="text">
+									<el-form-item label="车辆品牌" prop="carpp">
+										<el-input v-model="car.carpp"></el-input>
+									</el-form-item>
 								</el-button>
 							</el-col>
 							<el-col :span="10" style="margin-left: 40px;">
-								<el-button type="text">车辆型号
-									<el-input v-model="car.carxinghao"></el-input>
+								<el-button type="text">
+									<el-form-item label="车辆型号" prop="carxinghao">
+										<el-input v-model="car.carxinghao"></el-input>
+									</el-form-item>
 								</el-button>
 							</el-col>
 						</el-row>
-						<el-form-item label="驾驶员" prop="name">
+						<el-form-item label="驾驶员" prop="driver">
 							<el-input v-model="car.driver"></el-input>
 						</el-form-item>
-						<el-form-item label="驾驶员电话" prop="name">
+						<el-form-item label="驾驶员电话" prop="driverphone">
 							<el-input v-model="car.driverphone"></el-input>
 						</el-form-item>
 						<el-row>
 							<el-col :span="10">
-								<el-form-item label="车辆归属" prop="region">
+								<el-form-item label="车辆归属" prop="carguishu">
 									<el-select v-model="car.carguishu" placeholder="请选择车辆归属">
 										<el-option label="私家车" value="私家车"></el-option>
 										<el-option label="公用车" value="公用车"></el-option>
@@ -126,7 +130,7 @@
 						</el-row>
 						<el-form-item label="驾驶证到期日期" required>
 							<el-col :span="11">
-								<el-form-item prop="date1">
+								<el-form-item prop="jszlostdate">
 									<el-date-picker type="date" placeholder="选择日期" v-model="car.jszlostdate" style="width: 100%;"></el-date-picker>
 								</el-form-item>
 							</el-col>
@@ -145,7 +149,7 @@
 								</el-button>
 							</el-col>
 						</el-row>
-						<el-form-item label="燃油类别" prop="name">
+						<el-form-item label="燃油类别" prop="ranyoutype">
 							<el-input v-model="car.ranyoutype"></el-input>
 						</el-form-item>
 						<el-form-item>
@@ -355,7 +359,50 @@
 				isShow1: false,
 				isShow2: false,
 				isShow3: false,
-				isShow4: false
+				isShow4: false,
+				rules: {
+					carno: [{
+						required: true,
+						message: '请输入车牌',
+						trigger: 'blur'
+					}],
+					carpp: [{
+						required: true,
+						message: '请输入车辆品牌',
+						trigger: 'blur'
+					}],
+					carxinghao: [{
+						required: true,
+						message: '请输入车辆型号',
+						trigger: 'blur'
+					}],
+					driver: [{
+						required: true,
+						message: '请输入驾驶员',
+						trigger: 'blur'
+					}],
+					driverphone: [{
+						required: true,
+						message: '请输入驾驶员电话',
+						trigger: 'blur'
+					}],
+					ranyoutype: [{
+						required: true,
+						message: '请输入燃油类别',
+						trigger: 'blur'
+					}],
+					jszlostdate: [{
+						type: 'date',
+						required: true,
+						message: '请选择日期',
+						trigger: 'blur'
+					}],
+					carguishu: [{
+						required: true,
+						message: '请至少选择一个',
+						trigger: 'change'
+					}]
+				}
 			},
 			methods: {
 				/*查询车辆*/
