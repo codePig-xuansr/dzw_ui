@@ -9,7 +9,7 @@
 	<body>
 		<div id="app">
 			<template>
-				<el-tree :data="parent" show-checkbox  node-key="id" ref="tree" highlight-current :props="defaultProps">
+				<el-tree :data="parent" show-checkbox node-key="id" ref="tree" highlight-current :props="defaultProps">
 				</el-tree>
 			</template>
 			<div class="buttons">
@@ -23,139 +23,144 @@
 		var Main = new Vue({
 			el: "#app",
 			data: {
-				role:{},
+				role: {},
 				parent: [],
-				uFuns:[],
+				uFuns: [],
 				datas: [{
-					fid: "1",
-					fcode: "qt",
-					fname: "前台",
-					fpid: "0"
-				}, {
-					fid: "2",
-					fcode: "qt001",
-					fname: "结算中心",
-					fpid: "1"
-				}, {
-					fid: "4",
-					fcode: "qcwx",
-					fname: "汽车维修",
-					fpid: "0"
-				}, {
-					fid: "5",
-					fcode: "qcwx001",
-					fname: "维修接车",
-					fpid: "4"
-				}, {
-					fid: "6",
-					fcode: "qcwx002",
-					fname: "竣工检验",
-					fpid: "4"
-				}, {
-					fid: "12",
-					fcode: "khda",
-					fname: "客户档案",
-					fpid: "0"
-				}, {
-					fid: "13",
-					fcode: "khda001",
-					fname: "客户资料",
-					fpid: "12"
-				}, {
-					fid: "14",
-					fcode: "khda002",
-					fname: "车辆资料",
-					fpid: "12"
-				},{
-								fid: "3",
-								fcode: "qt002",
-								fname: "会员充值卡管理",
-								fpid: "1"
-							},{
+						fid: "1",
+						fcode: "qt",
+						fname: "前台",
+						fpid: "0"
+					}, {
+						fid: "2",
+						fcode: "qt001",
+						fname: "结算中心",
+						fpid: "1"
+					}, {
+						fid: "4",
+						fcode: "qcwx",
+						fname: "汽车维修",
+						fpid: "0"
+					}, {
+						fid: "5",
+						fcode: "qcwx001",
+						fname: "维修接车",
+						fpid: "4"
+					}, {
+						fid: "6",
+						fcode: "qcwx002",
+						fname: "竣工检验",
+						fpid: "4"
+					}, {
+						fid: "12",
+						fcode: "khda",
+						fname: "客户档案",
+						fpid: "0"
+					}, {
+						fid: "13",
+						fcode: "khda001",
+						fname: "客户资料",
+						fpid: "12"
+					}, {
+						fid: "14",
+						fcode: "khda002",
+						fname: "车辆资料",
+						fpid: "12"
+					}, {
+						fid: "3",
+						fcode: "qt002",
+						fname: "会员充值卡管理",
+						fpid: "1"
+					}, {
 						fid: "7",
 						fcode: "zsj",
 						fname: "主数据",
-						fpid: "0"},{
-								fid: "8",
-								fcode: "zsj001",
-								fname: "车型档案",
-								fpid: "7"
-							},
-							{
-								fid: "9",
-								fcode: "zsj002",
-								fname: "维修项目",
-								fpid: "7"
-							},
-							{
-								fid: "10",
-								fcode: "zsj003",
-								fname: "商品资料",
-								fpid: "7"
-							},
-							{
-								fid: "11",
-								fcode: "zsj004",
-								fname: "供货单位",
-								fpid: "7"
-							},{
+						fpid: "0"
+					}, {
+						fid: "8",
+						fcode: "zsj001",
+						fname: "车型档案",
+						fpid: "7"
+					},
+					{
+						fid: "9",
+						fcode: "zsj002",
+						fname: "维修项目",
+						fpid: "7"
+					},
+					{
+						fid: "10",
+						fcode: "zsj003",
+						fname: "商品资料",
+						fpid: "7"
+					},
+					{
+						fid: "11",
+						fcode: "zsj004",
+						fname: "供货单位",
+						fpid: "7"
+					}, {
 						fid: "15",
 						fcode: "jggl",
 						fname: "技工管理",
-						fpid: "0"},{
-								fid: "16",
-								fcode: "jggl001",
-								fname: "班组技工",
-								fpid: "15"
-							},
-							{
-								fid: "17",
-								fcode: "jggl002",
-								fname: "技工星级",
-								fpid: "15"
-							},
-							{
-								fid: "18",
-								fcode: "jggl003",
-								fname: "外勤车俩",
-								fpid: "15"
-							},{
+						fpid: "0"
+					}, {
+						fid: "16",
+						fcode: "jggl001",
+						fname: "班组技工",
+						fpid: "15"
+					},
+					{
+						fid: "17",
+						fcode: "jggl002",
+						fname: "技工星级",
+						fpid: "15"
+					},
+					{
+						fid: "18",
+						fcode: "jggl003",
+						fname: "外勤车俩",
+						fpid: "15"
+					}, {
 						fid: "19",
 						fcode: "rs",
 						fname: "人事",
-						fpid: "0"},{
-								fid: "20",
-								fcode: "rs001",
-								fname: "组织机构",
-								fpid: "19"
-							},
-							{
-								fid: "21",
-								fcode: "rs002",
-								fname: "岗位定义",
-								fpid: "19"
-							},
-							{
-								fid: "22",
-								fcode: "rs003",
-								fname: "离职登记",
-								fpid: "19"
-							},
-							{
-								fid: "23",
-								fcode: "rs004",
-								fname: "通讯名录",
-								fpid: "19"
-							},{
+						fpid: "0"
+					}, {
+						fid: "20",
+						fcode: "rs001",
+						fname: "组织机构",
+						fpid: "19"
+					},
+					{
+						fid: "21",
+						fcode: "rs002",
+						fname: "岗位定义",
+						fpid: "19"
+					},
+					{
+						fid: "22",
+						fcode: "rs003",
+						fname: "离职登记",
+						fpid: "19"
+					},
+					{
+						fid: "23",
+						fcode: "rs004",
+						fname: "通讯名录",
+						fpid: "19"
+					}, {
 						fid: "24",
 						fcode: "xtgl",
 						fname: "系统管理",
-						fpid: "0"},{
-							fid: "25",
-							fcode: "xtgl001",
-							fname: "员工权限管理",
-							fpid: "24"
-						}],
+						fpid: "0"
+					}, {
+						fid: "25",
+						fcode: "xtgl001",
+						fname: "员工权限管理",
+						fpid: "24"
+					}
+				],
 				defaultProps: {
 					children: 'children',
 					label: 'label'
@@ -168,12 +173,14 @@
 				getCheckedKeys() {
 					console.log(this.$refs.tree.getCheckedKeys());
 				},
-				setCheckedNodes(datas,ufuns) {
-					let arr=[];
-					ufuns.forEach(item =>{
-						datas.forEach(temp =>{
-							if(item.fid==temp.id){
-								arr.push({id:item.fid})
+				setCheckedNodes(datas, ufuns) {
+					let arr = [];
+					ufuns.forEach(item => {
+						datas.forEach(temp => {
+							if(item.fid == temp.id) {
+								arr.push({
+									id: item.fid
+								})
 							}
 						})
 					})
@@ -185,7 +192,7 @@
 				resetChecked() {
 					this.$refs.tree.setCheckedKeys([]);
 				},
-				
+
 				//获取选中的子权限集合
 				getFunData() {
 					let _this = this;
@@ -205,17 +212,19 @@
 			},
 			mounted() {
 				let _this = this;
-				this.role=JSON.parse(localStorage.getItem("urole"));
-				$.get(`http://127.0.0.1:8080/zkx/api/funs/f`,function(allfuns){
-					_this.datas=allfuns;
+				this.role = JSON.parse(localStorage.getItem("urole"));
+				$.get(`http://127.0.0.1:8080/zkx/api/funs/f`, function(allfuns) {
+					_this.datas = allfuns;
 				})
-				
-				$.get(`http://127.0.0.1:8080/zkx/api/funs/${this.role.user}/${this.role.pwd}`,function(funs){
-					_this.uFuns=funs;
-					alert(JSON.stringify(_this.uFuns))
+
+				$.get(`http://127.0.0.1:8080/zkx/api/funs/${this.role.user}/${this.role.pwd}`, function(funs) {
+					_this.uFuns = funs;
+					//alert(JSON.stringify(_this.uFuns));
 				})
 				this.parent = window.toTreeData(this.datas, "fid", "fpid", "fname");
-				
+				_this.resetChecked();
+				_this.setCheckedNodes(_this.datas, _this.uFuns);
+
 				console.info(JSON.stringify(this.parent));
 			}
 		})
