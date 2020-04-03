@@ -31,7 +31,7 @@
 						<template v-if="jg!=0">
 							<el-popover placement="top-start" title="温馨提示" width="200" trigger="hover">
 								<p style="color: red;"><a v-if="fy">该费用仅包含维修项目费，不包含维修工时费</a><a v-if="!fy">该费用包含维修项目费和接车费，不包含维修工时费</a></p>
-							<a style="color: coral;" slot="reference">预估金额：￥<span style="color: red;">{{jg}}</span>元</a>
+							<!--<a style="color: coral;" slot="reference">预估金额：￥<span style="color: red;">{{jg}}</span>元</a>-->
 						  </el-popover>
 						</template>
 						<span style="margin-left: 50px;"></span>
@@ -51,6 +51,14 @@
 								  </el-form-item>
 								<br>
 								<span class="kg"></span>
+								<el-form-item label="单据类型" prop="danjutype">
+									<template>
+										<el-select v-model="fzxweixiuadd.danjutype" placeholder="请选择" size="small" style="width: 120px;">
+										  <el-option v-for="(temp,index) in dj" :label="temp.name" :value="temp.name" :key="temp.name"></el-option>
+										</el-select>
+									  </template>
+								</el-form-item>
+								<span class="kg"></span>
 								<el-form-item label="服务顾问" prop="fuwugw">
 									<template>
 										<el-select v-model="fzxweixiuadd.fuwugw" placeholder="请选择" size="small" style="width: 120px;">
@@ -62,7 +70,7 @@
 								<el-form-item label="业务类别：" prop="yewutype"> 
 									<template>
 										<el-select v-model="fzxweixiuadd.yewutype" placeholder="请选择" size="small" style="width: 120px;">
-										  <el-option v-for="(temp,index) in bs" :label="temp.name" :value="temp.name" :key="temp.name"></el-option>
+										  <el-option v-for="(temp,index) in bs" :label="temp.xname" :value="temp.xname" :key="temp.xname"></el-option>
 										</el-select>
 									  </template>
 								</el-form-item>
@@ -114,23 +122,18 @@
 												  <el-col :span="24">
 													  <el-button type="warning" @click="addone=true">添加维修项目</el-button>
 													  <span style="margin-left: 840px;"></span>
-													  <el-button type="danger" icon="el-icon-delete" @click="del">删除</el-button>
 												  </el-col>
 												</el-row>
 												<div style="margin-top: 5px;"></div>
 												<el-row>
 												  <el-col :span="24">
 													  <template>
-														  <el-table :data="fzxweixiuadd.fzxxiangmutype" border empty-text="请添加维修项目">
+														  <el-table :data="fzxweixiuadd.fzxweixiuxm" border empty-text="请添加维修项目">
 															<el-table-column v-for="(temp,index) in ms" :label="temp.name" :align="'center'" :resizable="false" :key="temp.name">
 																<template slot-scope="scope">
 																	<span v-if="temp.values!=0">{{scope.row[temp.values]}}</span>
 																	<span v-if="temp.values==0">
-										  								<template>
-																			<el-checkbox-group v-model="wxs">
-																				<el-checkbox :label="scope.row.fwcod">&nbsp;</el-checkbox>
-																			</el-checkbox-group>
-																		  </template>
+										  								 <el-button type="danger" icon="el-icon-delete" @click="del(scope.$index,fzxweixiuadd.fzxweixiuxm)">删除</el-button>
 																	</span>
 																  </template>
 															</el-table-column>
@@ -182,8 +185,9 @@
 				adds:false,
 				pickinfo:{},
 				cs:[{name:'包组长'},{name:'刘来钱'},{name:'花生奶'},{name:'黄渤'},{name:'郭建'}],
-				bs:[{name:'中国重汽'},{name:'陕汽重卡'},{name:'中国一汽'},{name:'上汽红岩'},{name:'中轻型车'},{name:'钣喷'},{name:'保养'}],
-				ms:[{name:'项目编码',values:'fwcod'},{name:'项目名称',values:'fwname'},{name:'类别',values:'xid'},{name:'优惠前单价',values:'fwprice'},{name:'优惠后单价',values:'vipprice'},{name:'故障描述',values:'guzhanginfo'},{name:'故障原因',values:'guzhangyuanyin'},{name:'维修班组',values:'bzid'},{name:'操作',values:'0'}],
+				dj:[{name:'商业单据'},{name:'金融单据'}],
+				bs:[],
+				ms:[{name:'项目编码',values:'fwcod'},{name:'项目名称',values:'fwname'},{name:'优惠前单价',values:'fwprice'},{name:'优惠后单价',values:'vipprice'},{name:'故障描述',values:'guzhanginfo'},{name:'故障原因',values:'guzhangyuanyin'},{name:'维修班组',values:'bzid'},{name:'操作',values:'0'}],
 				fzxweixiuadd:{
 					recordid:'',
 					carno:'',
@@ -195,21 +199,18 @@
 					yujidate: '',
 					guzhanginfo:'',
 					guzhangyuanyin:'',
-					fzxxiangmutype:[]//添加维修项目
+					danjutype:'',
+					fzxweixiuxm:[]//添加维修项目
 				},
-				wxs:[],
 				jg:'0',
 				//表单基础验证
 				rus2:{
 					yewutype:[{required: true, message:'请选择业务类别', trigger: 'change'}],
-					//clearing:[{required: true, message:'请选择结算方式', trigger: 'change'}],
+					danjutype:[{required: true, message:'请选择单据类型', trigger: 'change'}],
 					beizhu:[{required: true, message:'请填写备注说明', trigger: 'blur'}],
-					//driver:[{required: true, message:'请填写驾驶员', trigger: 'blur'}],
 					yujidate:[{required: true, message:'请填写预计时间', trigger: 'blur'}],
-					fuwugw:[{required: true, message:'请选择服务顾问', trigger: 'blur'}],
-					shigongbc:[{required: true, message:'请选择班次', trigger: 'blur'}],
-					//driverphone:[{required: true, message:'请填写手机号码', trigger: 'blur'}]
-					
+					fuwugw:[{required: true, message:'请选择服务顾问', trigger: 'change'}],
+					shigongbc:[{required: true, message:'请选择班次', trigger: 'change'}],
 				}
 			},
 			methods:{
@@ -240,7 +241,7 @@
 								_this.jg = parseInt(_this.jg) + parseInt(cd[i].fwprice);
 							}
 							_this.addone=false;
-							_this.fzxweixiuadd.fzxxiangmutype=cd;
+							_this.fzxweixiuadd.fzxweixiuxm=cd;
 						}else{
 							return false;
 						}
@@ -263,9 +264,8 @@
 					oneVm.fwcod=c;
 					this.adds=false;
 				},
-				del(){
-					//console.log(this.wxs);
-					//alert(this.wxs);
+				del(index, rows){
+					rows.splice(index, 1);
 				},
 				//新增接车 
 				addwx(){
@@ -277,7 +277,7 @@
 					orderVm.$refs['fzxweixiuadd'].validate((valid)=>{
 						if(valid){
 							//验证维修项目
-							if(_this.fzxweixiuadd.fzxxiangmutype[0]==undefined){
+							if(_this.fzxweixiuadd.fzxweixiuxm[0]==undefined){
 								this.$message({
 									type:'error',
 									message:'请至少选择一项维修项目'
@@ -321,9 +321,9 @@
 			mounted(){
 				let _this=this;
 				_this.fzxweixiuadd.recordid = new Date().getTime();
-				/*jQuery.getJSON('http://localhost:8080/api/cars/mNo',(data)=>{
-						_this.fzxweixiuadd.mrecord.rorder="ER"+data;
-				});*/
+				jQuery.getJSON('http://localhost:8080/api/fzx/selectFwlb',(data)=>{
+						_this.bs = data;
+				});
 
 
 				let d=sessionStorage.getItem("d");

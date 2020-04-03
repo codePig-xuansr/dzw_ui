@@ -67,15 +67,15 @@
 				<el-col :span="5" style="margin-left: 600px;">
 					<div>
 						<el-form label-width="80px">
-							<el-form-item label="车牌号">
-								<el-input v-model="input"></el-input>
+							<el-form-item label="销售单号">
+								<el-input v-model="recordid"></el-input>
 							</el-form-item>
 						</el-form>
 					</div>
 				</el-col>
 				<el-col :span="3">
 					<div>
-						<el-button type="primary" icon="el-icon-search">搜索</el-button>
+						<el-button type="primary" icon="el-icon-search" @click="queryrecordid">搜索</el-button>
 					</div>
 				</el-col>
 				<el-col :span="4" style="margin-left: 200px;">
@@ -83,8 +83,8 @@
 						<el-form label-width="80px">
 							<el-form-item label="结算状态">
 								<el-select v-model="check" placeholder="请选择" @change="query">
-									<el-option label="未结算" value="1"></el-option>
-									<el-option label="已结算" value="2"></el-option>
+									<el-option label="未结算" :value=0></el-option>
+									<el-option label="已结算" :value=1></el-option>
 								</el-select>
 							</el-form-item>
 						</el-form>
@@ -93,45 +93,47 @@
 			</el-row>
 
 			<template>
-				<el-table :data="js" style="width: 100%">
+				<el-table :data="pageInfo.list" style="width: 100%">
 					<el-table-column type="expand">
 						<template slot-scope="props">
 							<el-form label-position="left" inline class="demo-table-expand">
 								<el-form-item label="销售单号">
-									<span>{{ props.row.rorder }}</span>
+									<span>{{ props.row.recordid }}</span>
 								</el-form-item>
 								<el-form-item label="单据类型">
-									<span>{{ props.row.orderType }}</span>
+									<span>{{ props.row.danjutype }}</span>
 								</el-form-item>
 								<el-form-item label="单据状态">
-									<span>{{ props.row.status }}</span>
+									<span v-if="props.row.status==1">已竣工</span>
+									<span v-if="props.row.status!=1">未竣工<span>
 								</el-form-item>
 								<el-form-item label="结算方式">
-									<span>{{ props.row.clearing }}</span>
+									<span v-if="props.row.jstype==1">现金</span>
+									<span v-if="props.row.jstype==2">银行卡<span>
 								</el-form-item>
 								<el-form-item label="结算状态">
-									<span v-if="props.row.statu==1">未结算</span>
-									<span v-if="props.row.statu!=1">已结算<span>
+									<span v-if="props.row.jsstatus==0">未结算</span>
+									<span v-if="props.row.jsstatus!=0">已结算<span>
 								</el-form-item>
 								<el-form-item label="结算时间">
-									<span>{{ props.row.colsing }}</span>
+									<span>{{ props.row.jsdate }}</span>
 								</el-form-item>
 								<el-form-item label="结算金额">
-									<span>{{ props.row.estimated }}</span>
+									<span>{{ props.row.jsmoney }}</span>
 								</el-form-item>
 								<el-form-item label="业务类型">
-									<span>{{ props.row.businessType }}</span>
+									<span>{{ props.row.yewutype }}</span>
 								</el-form-item>
 								<el-form-item label="客户名称">
-									<span>{{ props.row.khname }}</span>
+									<span>{{ props.row.kname }}</span>
 								</el-form-item>
 								<el-form-item label="维修班组">
-									<span>{{ props.row.wxgroup }}</span>
+									<span>{{ props.row.bzname }}</span>
 								</el-form-item>
 								<el-form-item label="车牌号">
-									<span>{{ props.row.carHno }}</span>
+									<span>{{ props.row.carno }}</span>
 								</el-form-item>
-								<el-button type="success" icon="el-icon-check" @click="js1(props.row.rorder)" circle v-if="props.row.statu==1">结算</el-button>
+								<el-button type="success" icon="el-icon-check" @click="js1(props.row.rorder)" circle v-if="props.row.jsstatus==0">结算</el-button>
 							</el-form>
 							<el-button type="text" @click="cx1( props.row.rorder)">费用明细</el-button>
 							<el-dialog title="提示" :visible.sync="isShow1" width="30%" :before-close="handleClose">
@@ -144,16 +146,6 @@
 								<p class="font-bold">共消费&nbsp;&nbsp;&nbsp;{{gxf}}</p>
 								<p style="color: #999999; size: 5px;">计算方式：(小组工时费×共消耗工时)×客户折扣</p>
 								<p></p>
-								<template>
-									<el-table :data="xm" style="width: 100%">
-										<el-table-column prop="xmName" label="维修项目" width="180">
-										</el-table-column>
-										<el-table-column prop="wxgroup" label="维修班组" width="180">
-										</el-table-column>
-										<el-table-column prop="orderTime" label="开单时间">
-										</el-table-column>
-									</el-table>
-								</template>
 								<span slot="footer" class="dialog-footer">
                           <el-button @click="isShow1 = false">取 消</el-button>
                      <el-button type="primary" @click="isShow1 = false">确 定</el-button>
@@ -161,19 +153,24 @@
 							</el-dialog>
 						</template>
 					</el-table-column>
-					<el-table-column label="销售单号" prop="rorder">
+					<el-table-column label="销售单号" prop="recordid">
 					</el-table-column>
-					<el-table-column label="进厂时间" prop="colsin">
+					<el-table-column label="进厂时间" prop="recorddate">
 					</el-table-column>
-					<el-table-column label="完工时间" prop="colsing">
+					<el-table-column label="完工时间" prop="yujidate">
 					</el-table-column>
-					<el-table-column label="车牌号" prop="carHno">
+					<el-table-column label="车牌号" prop="carno">
 					</el-table-column>
-					<el-table-column label="结算状态" prop="statu">
-						<template slot-scope="scope">{{ scope.row.statu==1?'未结算':'已结算' }}</template>
+					<el-table-column label="结算状态" prop="jsstatus">
+						<template slot-scope="scope">{{ scope.row.jsstatus==0?'未结算':'已结算' }}</template>
 					</el-table-column>
 				</el-table>
 			</template>
+
+			<div class="page">
+				<el-pagination layout="prev, pager, next" @current-change="current" @prev-click="prev" @next-click="next" :total="this.pageInfo.pages*10">
+				</el-pagination>
+			</div>
 		</div>
 
 	</body>
@@ -184,50 +181,10 @@
 		var JsVm = new Vue({
 			el: '#JsVm',
 			data: {
-				check: "未结算",
-				js: [{
-					rorder: "2121",
-					colsin: "2012-12-11",
-					colsing: "2012-12-12",
-					carHno: "湘B23121",
-					orderType: "完全",
-					status: "撒大",
-					statu: 2,
-					estimated: 433,
-					businessType: "撒打算",
-					khname: "朱小鹏",
-					wxgroup: "一班",
-					clearing: "现金"
-				}, {
-					rorder: "2121",
-					colsin: "2012-12-11",
-					colsing: "2012-12-12",
-					carHno: "湘B23121",
-					orderType: "完全",
-					status: "撒大",
-					statu: 1,
-					estimated: 433,
-					businessType: "撒打算",
-					khname: "朱小鹏",
-					wxgroup: "一班",
-					clearing: "现金"
-				}, {
-					rorder: "2121",
-					colsin: "2012-12-11",
-					colsing: "2012-12-12",
-					carHno: "湘B23121",
-					orderType: "完全",
-					status: "撒大",
-					statu: 1,
-					estimated: 433,
-					businessType: "撒打算",
-					khname: "朱小鹏",
-					wxgroup: "一班",
-					clearing: "现金"
-				}],
+				check: 0,
+				pageInfo: {},
+				recordid:"",
 				isShow1: false,
-				input: '',
-				xm: [],
 				vip: "会员",
 				vipzk: "23121",
 				gsf: "12",
@@ -235,8 +192,37 @@
 				gxf: "323"
 			},
 			methods: {
+				/*根据销售单号查询*/
+				queryrecordid() {
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/api/weixiu/${this.recordid}`,
+						function(res) {
+							_this.pageInfo = res;
+						})
+				},
+				/*分页查询*/
+				page(pageNum, pageSize, status) {
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/api/weixiu/status/${pageNum}/${pageSize}/${status}`,
+						function(res) {
+							_this.pageInfo = res;
+						})
+				},
+				/*上一页维修查询*/
+				prev(cpage) {
+					this.page(cpage, 3, this.check);
+				},
+				/*下一页维修查询*/
+				next(cpage) {
+					this.page(cpage, 3, this.check);
+				},
+				/*当前页维修查询*/
+				current(cpage) {
+					this.page(cpage, 3, this.check);
+				},
+				/*下拉框切换*/
 				query() {
-					console.info(this.check);
+					this.page(1, 3, this.check);
 				},
 				cx1(id) {
 					this.isShow1 = true
@@ -247,7 +233,10 @@
 							done();
 						})
 						.catch(_ => {});
-				},
+				}
+			},
+			mounted() {
+				this.page(1, 3, 0);
 			}
 		});
 	</script>
