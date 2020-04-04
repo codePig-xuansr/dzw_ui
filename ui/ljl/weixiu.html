@@ -17,29 +17,29 @@
 				<el-col :span="24">
 					<template>
 						<el-row>
-							<el><input type="text" v-model="projectChild" placeholder="请输入内容" style=" height:30px;" /></el>
+							<el><input type="text" v-model="xname" placeholder="请输入内容" style=" height:30px;" /></el>
 							<el-button type="primary" plain @click="cx()">查询</el-button>
-							<el-button type="primary" plain @click="addwx">项目类别增加</el-button>
+							<el-button type="primary" plain @click="weiliuleibiexinzeng">项目类别增加</el-button>
 							<el-button type="primary" plain @click="addwx">项目类别子级增加</el-button>
 							<el-button type="primary" plain @click="addwx">维修项目增加</el-button>
-							<el-button type="primary" plain>维修类别删除</el-button>
 							<!--<el-button type="primary" plain @click="bmxl">增加</el-button>-->
 
-							<el-button type="primary" plain>掉价</el-button>
+							<el-button type="primary" plain>调价</el-button>
 							<el-button type="primary" plain>保存</el-button>
 							<el-button type="primary" plain>导出</el-button>
 						</el-row>
 						<el-row>
 							<el-col :span="6">
 								<label>维修项目类别</label>
+								<!--el-button type="primary" plain @click="chaxunxiangmu">查询选中维修类型项目</el-button-->
 								<template>
-									<el-tree :data="datas" show-checkbox node-key="id" ref="tree" @click="chaxunxiangmu" highlight-current :props="defaultProps">
+									<el-tree :data="datas" show-checkbox node-key="id" ref="tree" @node-click="chaxunxiangmu()" highlight-current>
 									</el-tree>
 								</template>
 							</el-col>
 							<el-col :span="18">
 
-								<el-table :data="weixiu" border style="width: 100%">
+								<el-table :data="weixiu.list" border style="width: 100%">
 									<el-table-column v-for="(temp,index) in stsy" :label="temp.name" align="center" :resizable="false">
 										<template slot-scope="scope">
 											<span v-if='temp.value!=0'>{{scope.row[temp.value]}}</span>
@@ -53,13 +53,31 @@
 										</template>
 									</el-table-column>
 								</el-table>
-								<el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="wx.total" :page-sizes="[1,2,3,4,5]" :page-size="wx.pageSize">
+								<el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="weixiu.total" :page-sizes="[1,2,3,4,5]" :page-size="weixiu.pageSize">
 
 							</el-col>
 						</el-row>
 					</template>
 				</el-col>
 			</el-row>
+			<el-dialog title="新增维修类别" width="850px" :visible.sync="weixiuleibie">
+				<el-form label-width="80px">
+					<el-form-item label="项目编号：">
+						<el-input v-model="xiangmutype.xid" readonly></el-input>
+					</el-form-item>
+					<el-form-item label="类别名称：">
+						<el-input v-model="xiangmutype.xname"></el-input>
+					</el-form-item>
+					<el-form-item label="父级编号：">
+						<el-input v-model="xiangmutype.xfid" readonly></el-input>
+					</el-form-item>
+				</el-form>
+				<span slot="footer" class="dialog-footer">
+   				 	<el-button @click="weixiuleibie = false">取 消</el-button>
+   				 	<el-button type="primary">保存</el-button>
+  				</span>
+			</el-dialog>
+
 			<el-dialog title="新增维修项目" width="850px" :visible.sync="xinzengweixiu" :before-close="handleClose">
 				<div id="cnt2">
 
@@ -76,65 +94,100 @@
 		var weixiu = new Vue({
 			el: '#weixiu',
 			data: {
-				wx: [],
+				xiangmutype: {
+					xid:'',
+					xname:'',
+					xfid:0
+				},
 				datas: [],
+				weixiuleibie: false,
 				xinzengweixiu: false,
-				xiugaiweixiu:false,
+				xiugaiweixiu: false,
 				defaultProps: {
 					children: 'children',
 					label: 'label'
 				},
-				weixiutype:[{
-					xid:'1',
-					xname:'2',
-					xfid:'0'
+				weixiutype: [{
+					xid: '1',
+					xname: '2',
+					xfid: '0'
 				}],
-				weixiu: [{
-					projectChild: '222',
-					coding: '0',
-					itemName: '222',
-					priceType: '222',
-					vIP: '222',
-				}, {
-					projectChild: '111',
-					coding: '0',
-					itemName: '111',
-					priceType: '111',
-					vIP: '111',
-				}, {
-					projectChild: '333',
-					coding: '111',
-					itemName: '333',
-					priceType: '333',
-					vIP: '333',
-				}],
+				weixiu: [],
 				stsy: [{
 						name: '项目类别',
-						value: 'projectChild'
+						value: 'xname'
 					},
 					{
 						name: '项目编码',
-						value: 'coding'
+						value: 'fwcod'
 					},
 					{
 						name: '项目名称',
-						value: 'itemName'
+						value: 'fwname'
+					},
+					{
+						name: '售价按',
+						value: 'xname'
 					},
 					{
 						name: '售按价',
-						value: 'priceType'
+						value: 'fwprice'
 					},
 					{
 						name: 'vip价',
-						value: 'vIP'
+						value: 'vipprice'
 					}
 
 				],
-				projectChild: ''
+				xname: ''
 			},
 			methods: {
-				chaxunxiangmu(){
-					alert(1)
+				weiliuleibiexinzeng() {
+					let _this = this;
+					this.weixiuleibie = true;
+					$.getJSON(`http://localhost:8080/api/ljl/weixiu/All/weixiutypeMaxId`,
+						function(data){
+							_this.xiangmutype.xid = data+1;
+						});
+				},
+				chaxunxiangmu() {
+					this.PageInfo(1, 5);
+				},
+				PageInfo(n, s) {
+					let _this = this;
+					//获取当前选中的节点id
+					var chkIds1 = this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys());
+					//获取当前选中节点的所有信息
+					//var chkIds1 = this.$refs.tree.getCheckedNodes();
+					//alert(JSON.stringify(chkIds1))
+					$.getJSON(`http://localhost:8080/api/ljl/weixiu/All/weixiuxiangmu/${chkIds1}/${n}/${s}`,
+						function(data) {
+							_this.weixiu = data;
+							//赋值给当前查询的集合父级售价（×）
+							/*for(i = 0; i < _this.weixiu.list.length; i++) {
+								if(_this.weixiu.list[i].xfid == 0) {
+									_this.weixiu.list[i].xfid = _this.weixiu.list[i].xname;
+								} else {
+									$.getJSON(`http://localhost:8080/api/ljl/weixiu/All/fuji/${_this.weixiu.list[i].xfid}`,
+										function(rs) {
+											//alert(JSON.stringify(rs))
+											_this.weixiu.list[i].xfid = rs.xname;
+										}
+									);
+								}
+							}*/
+							//alert(JSON.stringify(data.list))
+
+						}
+					);
+				},
+				change(num) {
+					let _this = this;
+					this.PageInfo(num, _this.weixiu.pageSize);
+				},
+				//pageSize选择事件
+				sizec(size) {
+					this.PageInfo(1, size);
 				},
 				bmxl() {
 					indexVm.To('ui/ljl/weixiuadd.html');
@@ -147,11 +200,12 @@
 				},
 				cx() {
 					let _this = this;
-					alert(this.projectChild)
-					$.getJSON(`http://localhost:8080/api/emps/han/${this.projectChild}`, function(data) {
-						_this.wx = data;
+					//alert(this.xname)
+					$.getJSON(`http://localhost:8080/api/ljl/weixiu/All/byname/${this.xname}/1/5`,
+						function(data) {
+							_this.weixiu = data;
 
-					});
+						});
 
 				},
 				sc(coding) {
@@ -173,7 +227,7 @@
 							$("#cnt2").load("ui/ljl/weixiuadd.html");
 						});
 				},
-				
+
 				updatewx() {
 					let _this = this;
 					this.xiugaiweixiu = true;
@@ -204,13 +258,13 @@
 				let _this = this;
 				//this.init();
 				$.getJSON(`http://localhost:8080/api/ljl/weixiu/All/type`,
-				function(rs){
-					_this.weixiutype = rs.list;
-					//alert(JSON.stringify(_this.datas))
-					//alert(JSON.stringify(rs.list))
-					_this.datas = window.toTreeData(rs.list, "xid", "xfid", "xname");
-					console.info(JSON.stringify(_this.datas));
-				});
+					function(rs) {
+						_this.weixiutype = rs.list;
+						//alert(JSON.stringify(_this.datas))
+						//alert(JSON.stringify(rs.list))
+						_this.datas = window.toTreeData(rs.list, "xid", "xfid", "xname");
+						console.info(JSON.stringify(_this.datas));
+					});
 				//this.datas = window.toTreeData(this.weixiutype, "xid", "xfid", "xname");
 				//console.info(JSON.stringify(this.datas));
 				//alert(this.datas)
