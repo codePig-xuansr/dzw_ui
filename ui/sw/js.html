@@ -91,9 +91,45 @@
 					</div>
 				</el-col>
 			</el-row>
-
+			<el-dialog title="登录会员" :visible.sync="isShow2" style="width: 1000px;margin-left: 500px;">
+				<el-form ref="ruleForm" label-width="100px" class="demo-ruleForm">
+					<el-form-item label="会员账号" prop="clientid">
+						<el-input v-model="vipcode" @blur="repetition"></el-input>
+					</el-form-item>
+					<el-form-item label="账号密码" prop="clientiphone">
+						<el-input v-model="vippwd"></el-input>
+					</el-form-item>
+					<el-form-item>
+						<el-button type="primary" @click="loging">登录</el-button>
+						<el-button @click="isShow2 = false">重置</el-button>
+					</el-form-item>
+				</el-form>
+			</el-dialog>
+			<el-dialog title="会员信息" :visible.sync="isShow3" width=" 30%">
+				<el-form ref="ruleForm" label-width="100px" class="demo-ruleForm">
+					<!--<el-row>
+						<el-col :span="8">-->
+					<p class="font-bold">vip卡号:&nbsp;&nbsp;&nbsp;&nbsp;{{vip.vipcode}}</p>
+					<p class="font-bold">vip折扣:{{vip.vipdiscount}}</p>
+					<p class="font-bold">积分:&nbsp;&nbsp;&nbsp;{{vip.jifen}}</p>
+					<p class="font-bold">vip创建时间:&nbsp;&nbsp;&nbsp;{{vip.startdate}}</p>
+					<h4 class="font-bold">折后价:&nbsp;&nbsp;&nbsp;{{jsmoney}}</h4>
+					<p class="font-bold">
+						<template>
+							<el-radio v-model="radio" label="1">现金</el-radio>
+							<el-radio v-model="radio" label="2">银行卡</el-radio>
+						</template>
+					</p>
+					<!--	</el-col>
+					</el-row>-->
+					<el-form-item>
+						<el-button type="primary" @click="insertjs">确认</el-button>
+						<el-button @click="isShow3 = false">取消</el-button>
+					</el-form-item>
+				</el-form>
+			</el-dialog>
 			<template>
-				<el-table :data="pageInfo.list" style="width: 100%">
+				<el-table :data="pageInfo.list" style="width: 100%" @expand-change="expandChange">
 					<el-table-column type="expand">
 						<template slot-scope="props">
 							<el-form label-position="left" inline class="demo-table-expand">
@@ -133,19 +169,32 @@
 								<el-form-item label="车牌号">
 									<span>{{ props.row.carno }}</span>
 								</el-form-item>
-								<el-button type="success" icon="el-icon-check" @click="js1(props.row.rorder)" circle v-if="props.row.jsstatus==0">结算</el-button>
+								<el-button type="success" icon="el-icon-check" @click="js(props.row.recordid)" circle v-if="props.row.jsstatus==0">结算</el-button>
 							</el-form>
-							<el-button type="text" @click="cx1( props.row.rorder)">费用明细</el-button>
+							<el-button type="text" @click="isShow1 = true">费用明细</el-button>
 							<el-dialog title="提示" :visible.sync="isShow1" width="30%" :before-close="handleClose">
 								<h4 class="modal-title">费用明细</h4>
-								<small class="font-bold">销售单号:{{props.row.rorder}}</small>
-								<h5 class="font-bold">客户名：{{props.row.khname}} 客户级别：{{vip}} 客户折扣：{{vipzk}}</h5>
-								<p class="font-bold">车牌号码&nbsp;&nbsp;&nbsp;&nbsp;{{props.row.carHno}}</p>
-								<p class="font-bold">该小组维修 工时费:{{gsf}}</p>
-								<p class="font-bold">当前消耗工时:&nbsp;&nbsp;&nbsp;{{gs}}</p>
-								<p class="font-bold">共消费&nbsp;&nbsp;&nbsp;{{gxf}}</p>
-								<p style="color: #999999; size: 5px;">计算方式：(小组工时费×共消耗工时)×客户折扣</p>
-								<p></p>
+								<small class="font-bold">销售单号:{{props.row.recordid}}</small>
+								<h5 class="font-bold">客户名：{{props.row.kname}}&nbsp;&nbsp;<span v-if="props.row.jsstatus==1">客户级别：{{viptype}} 客户折扣：{{vipdiscount}}</span></h5>
+								<p class="font-bold">车牌号码&nbsp;&nbsp;&nbsp;&nbsp;{{props.row.carno}}</p>
+								<p class="font-bold">该小组维修 工时费:{{props.row.bzcost}}</p>
+								<p class="font-bold">当前消耗工时:&nbsp;&nbsp;&nbsp;{{props.row.bztime}}</p>
+								<p class="font-bold">人工费:&nbsp;&nbsp;&nbsp;{{rgfei}}</p>
+								<p class="font-bold">维修项目总消费:&nbsp;&nbsp;&nbsp;{{xmfei}}</p>
+								<p class="font-bold">共消费&nbsp;&nbsp;&nbsp;{{props.row.jsmoney}}</p>
+								<p style="color: #999999; size: 5px;">计算方式：(人工费(小组工时费×共消耗工时)+维修业务费用)<span v-if="props.row.jsstatus==1">×会员折扣</span></p>
+								<p>
+									<el-table :data="fw" style="">
+										<el-table-column label="销售单号" prop="recordid">
+										</el-table-column>
+										<el-table-column label="项目编号" prop="fwcod">
+										</el-table-column>
+										<el-table-column label="项目名称" prop="fwname">
+										</el-table-column>
+										<el-table-column label="项目价格" prop="fwprice">
+										</el-table-column>
+									</el-table>
+								</p>
 								<span slot="footer" class="dialog-footer">
                           <el-button @click="isShow1 = false">取 消</el-button>
                      <el-button type="primary" @click="isShow1 = false">确 定</el-button>
@@ -172,7 +221,6 @@
 				</el-pagination>
 			</div>
 		</div>
-
 	</body>
 	<script>
 		function getNow(s) {
@@ -181,17 +229,187 @@
 		var JsVm = new Vue({
 			el: '#JsVm',
 			data: {
+				radio: "",
+				jsrecord: {
+					recordid: "",
+					jstype: "",
+					jsmoney: ""
+				},
+				weixiu: {
+					recordid: "",
+					jsstatus: "1"
+				},
+				jsmoney: "",
+				vip: {
+					vipcode: "",
+					vipdiscount: "",
+					jifen: "",
+					startdate: ""
+				},
+				vipcode: "",
+				vippwd: "",
 				check: 0,
 				pageInfo: {},
-				recordid:"",
+				rgfei: "",
+				xmfei: "",
+				fw: [],
+				viptype: "不是会员",
+				vipdiscount: "0",
+				recordid: "",
 				isShow1: false,
-				vip: "会员",
-				vipzk: "23121",
-				gsf: "12",
-				gs: "21",
-				gxf: "323"
+				isShow2: false,
+				isShow3: false
 			},
 			methods: {
+				/*新增结算*/
+				insertjs() {
+					this.jsrecord.jstype = this.radio;
+					this.jsrecord.jsmoney = this.jsmoney;
+					let _this = this;
+					let jf = parseInt(_this.jsrecord.jsmoney * 0.01);
+					console.info(jf);
+					_this.vip.jifen = jf + _this.vip.jifen;
+					if(jf > 1000) {
+						_this.vip.vipdiscount = "0.90";
+					} else if(jf > 5000) {
+						_this.vip.vipdiscount = "0.85";
+					} else if(jf > 15000) {
+						_this.vip.vipdiscount = "0.80";
+					} else if(jf > 35000) {
+						_this.vip.vipdiscount = "0.75";
+					} else if(jf > 50000) {
+						_this.vip.vipdiscount = "0.7";
+					}
+					$.ajax(`http://127.0.0.1:8080/api/js`, {
+						type: "post",
+						contentType: "application/json",
+						data: JSON.stringify(_this.jsrecord),
+						dataType: "json",
+						success(res) {
+							if(res.code == "200") {
+								alert('保存成功');
+								_this.jsrecord = {
+									recordid: "",
+									jstype: "",
+									jsmoney: ""
+								}
+								_this.page(1, 3, 0);
+								_this.isShow3 = false;
+								/*修改维修表结算状态*/
+								$.ajax(`http://127.0.0.1:8080/api/weixiu`, {
+									type: "put",
+									contentType: "application/json",
+									data: JSON.stringify(_this.weixiu),
+									dataType: "json",
+									success(res) {
+										if(res.code == "200") {
+											_this.weixiu = {
+												recordid: "",
+												jsstatus: "1"
+											};
+										}
+									}
+								});
+								/*修改vip表积分*/
+								$.ajax(`http://127.0.0.1:8080/api/vip`, {
+									type: "put",
+									contentType: "application/json",
+									data: JSON.stringify(_this.vip),
+									dataType: "json",
+									success(res) {
+										if(res.code == "200") {
+											_this.vip = {
+												vipcode: "",
+												vipdiscount: "",
+												jifen: "",
+												startdate: ""
+											};
+										}
+									}
+								});
+							}
+						}
+					});
+				},
+				/*查询会员卡号是否存在*/
+				repetition() {
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/api/vip/${this.vipcode}`,
+						function(res) {
+							if(res.code != 200) {
+								alert("会员卡号不存在");
+								_this.vipcode = "";
+							}
+						})
+				},
+				/*登入会员*/
+				loging() {
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/api/vip/login/${this.vipcode}/${this.vippwd}`,
+						function(res) {
+							if(res.code == 200) {
+								_this.isShow2 = false;
+								_this.vipcode = "";
+								_this.vippwd = "";
+								alert("登录成功");
+								_this.vip = res.data;
+								_this.jsmoney = _this.jsmoney * res.data.vipdiscount;
+								$.getJSON(`http://127.0.0.1:8080/api/vip/getSessionVip`,
+									function(res) {});
+								_this.isShow3 = true;
+							}
+						})
+				},
+				js(recordid) {
+					let _this = this;
+					if(confirm("是否有会员卡")) {
+						_this.isShow2 = true;
+						_this.vipcode = "";
+						_this.vippwd = "";
+					} else {
+						alert("aa");
+					}
+				},
+				/*表格展开查询*/
+				expandChange(row, expanded) {
+					/*判断是否表格展开时*/
+					if(expanded.length > 0) {
+						let _this = this;
+						this.jsrecord.recordid = row.recordid;
+						this.weixiu.recordid = row.recordid;
+						if(row.jsstatus == 1) {
+							_this.viptype = "不是会员";
+							_this.vipdiscount = "0";
+							$.getJSON(`http://127.0.0.1:8080/api/vip/kh/${row.kid}`,
+								function(res) {
+									_this.vipdiscount = res.vipdiscount;
+									if(res.vipdiscount >= 0) {
+										_this.viptype = "普通会员";
+									}
+								});
+						}
+						$.getJSON(`http://127.0.0.1:8080/api/fuwu/${row.recordid}`,
+							function(res) {
+								_this.fw = res;
+								/*维修项目总价*/
+								let sumfw = 0;
+								_this.fw.forEach((item, i) => {
+									sumfw += item.fwprice;
+								})
+								_this.xmfei = sumfw;
+								/*人工费*/
+								let sumren = row.bzcost * row.bztime;
+								_this.rgfei = sumren;
+								if(row.jsstatus == 0) {
+									/*共消费*/
+									let sum = sumfw + sumren;
+									/*回填数据*/
+									row.jsmoney = sum;
+									_this.jsmoney = row.jsmoney;
+								}
+							})
+					}
+				},
 				/*根据销售单号查询*/
 				queryrecordid() {
 					let _this = this;
@@ -224,8 +442,9 @@
 				query() {
 					this.page(1, 3, this.check);
 				},
-				cx1(id) {
-					this.isShow1 = true
+				/*重置*/
+				resetForm(formName) {
+					this.$refs[formName].resetFields();
 				},
 				handleClose(done) {
 					this.$confirm('确认关闭？')

@@ -224,6 +224,9 @@
 				/*当前页会员查询*/
 				current(cpage) {
 					this.page(cpage, 3);
+				},/*重置*/
+				resetForm(formName) {
+					this.$refs[formName].resetFields();
 				}
 			},
 			mounted() {
