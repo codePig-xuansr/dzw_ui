@@ -20,7 +20,7 @@
 							<el><input type="text" v-model="xname" placeholder="请输入内容" style=" height:30px;" /></el>
 							<el-button type="primary" plain @click="cx()">查询</el-button>
 							<el-button type="primary" plain @click="weiliuleibiexinzeng">项目类别增加</el-button>
-							<el-button type="primary" plain @click="addwx">项目类别子级增加</el-button>
+							<el-button type="primary" plain @click="weixiuleibieziji">项目类别子级增加</el-button>
 							<el-button type="primary" plain @click="addwx">维修项目增加</el-button>
 							<!--<el-button type="primary" plain @click="bmxl">增加</el-button>-->
 
@@ -48,8 +48,8 @@
 									<el-table-column fixed="right" label="操作" width="200px">
 										<template slot-scope="scope">
 											<!--<el-button size="small" @click="bmxp">编辑</el-button>-->
-											<el-button size="small" @click="updatewx">编辑</el-button>
-											<el-button size="small">删除</el-button>
+											<el-button size="small" @click="updatewx(weixiu.list[scope.$index].fwcod)">编辑</el-button>
+											<el-button size="small" @click="del(weixiu.list[scope.$index].fwcod)">删除</el-button>
 										</template>
 									</el-table-column>
 								</el-table>
@@ -74,7 +74,30 @@
 				</el-form>
 				<span slot="footer" class="dialog-footer">
    				 	<el-button @click="weixiuleibie = false">取 消</el-button>
-   				 	<el-button type="primary">保存</el-button>
+   				 	<el-button type="primary" @click="xinzengfuji">保存</el-button>
+  				</span>
+			</el-dialog>
+
+			<el-dialog title="新增子级维修类别" width="850px" :visible.sync="weixiuleibiezi">
+				<el-form label-width="80px">
+					<el-form-item label="项目编号：">
+						<el-input v-model="xiangmutype.xid" readonly></el-input>
+					</el-form-item>
+					<el-form-item label="类别名称：">
+						<el-input v-model="xiangmutype.xname"></el-input>
+					</el-form-item>
+					<el-form-item label="父级编号：">
+						<!--<el-input v-model="xiangmutype.xfid"></el-input>-->
+						<el-select placeholder="请选择" v-model="xiangmutype.xfid">
+							<el-option v-for="(t,i) in weixiutype" :value="t.xid">
+								{{t.xname}}
+							</el-option>
+						</el-select>
+					</el-form-item>
+				</el-form>
+				<span slot="footer" class="dialog-footer">
+   				 	<el-button @click="weixiuleibiezi = false">取 消</el-button>
+   				 	<el-button type="primary" @click="xinzengziji">保存</el-button>
   				</span>
 			</el-dialog>
 
@@ -95,11 +118,12 @@
 			el: '#weixiu',
 			data: {
 				xiangmutype: {
-					xid:'',
-					xname:'',
-					xfid:0
+					xid: '',
+					xname: '',
+					xfid: 0
 				},
 				datas: [],
+				weixiuleibiezi: false,
 				weixiuleibie: false,
 				xinzengweixiu: false,
 				xiugaiweixiu: false,
@@ -107,11 +131,7 @@
 					children: 'children',
 					label: 'label'
 				},
-				weixiutype: [{
-					xid: '1',
-					xname: '2',
-					xfid: '0'
-				}],
+				weixiutype: [],
 				weixiu: [],
 				stsy: [{
 						name: '项目类别',
@@ -137,18 +157,65 @@
 						name: 'vip价',
 						value: 'vipprice'
 					}
-
 				],
 				xname: ''
 			},
 			methods: {
+				qingkongtype() {
+					this.xiangmutype = {
+						xid: '',
+						xname: '',
+						xfid: 0
+					}
+				},
+				xinzengfuji() {
+					let _this = this;
+					//alert(JSON.stringify(_this.xiangmutype))
+					$.ajax({
+						url: 'http://localhost:8080/api/ljl/weixiu/All/addweixiutypeF',
+						type: 'post',
+						dataType: 'json',
+						contentType: 'application/json',
+						data: JSON.stringify(_this.xiangmutype),
+						success(data) {
+							_this.$message({
+								message: data.msg,
+								type: 'success'
+							});
+							_this.qingkongtype();
+							_this.weixiuleibie = false;
+						},
+						error() {
+							alert("未知错误！");
+						}
+					})
+				},
+				xinzengziji() {
+					this.xinzengfuji();
+					this.weixiuleibiezi = false;
+				},
 				weiliuleibiexinzeng() {
 					let _this = this;
 					this.weixiuleibie = true;
 					$.getJSON(`http://localhost:8080/api/ljl/weixiu/All/weixiutypeMaxId`,
-						function(data){
-							_this.xiangmutype.xid = data+1;
+						function(data) {
+							_this.xiangmutype.xid = data + 1;
 						});
+				},
+				weixiuleibieziji() {
+					let _this = this;
+					this.weixiuleibiezi = true;
+					$.getJSON(`http://localhost:8080/api/ljl/weixiu/All/weixiutypeMaxId`,
+						function(data) {
+							_this.xiangmutype.xid = data + 1;
+							$.getJSON(`http://localhost:8080/api/ljl/weixiu/All/selecttype/typefu`,
+								function(rs) {
+									_this.weixiutype = rs;
+									//alert(JSON.stringify(_this.weixiutype))
+								}
+							);
+						}
+					);
 				},
 				chaxunxiangmu() {
 					this.PageInfo(1, 5);
@@ -189,15 +256,15 @@
 				sizec(size) {
 					this.PageInfo(1, size);
 				},
-				bmxl() {
+				/*bmxl() {
 					indexVm.To('ui/ljl/weixiuadd.html');
-				},
-				bmxp(coding) {
+				},*/
+				/*bmxp(coding) {
 
 					sessionStorage.setItem('xiu', coding)
 					indexVm.To('ui/ljl/weixiupdate.html');
 
-				},
+				},*/
 				cx() {
 					let _this = this;
 					//alert(this.xname)
@@ -206,19 +273,19 @@
 							_this.weixiu = data;
 
 						});
-
 				},
-				sc(coding) {
+				del(coding) {
 					let _this = this;
-
-					$.post(`http://localhost:8080/api/emps/shan/${coding}`, function(data) {
-						alert("删除成功");
-						indexVm.To('ui/ljl/weixiu.html');
-
-					});
-
+					$.post(`http://localhost:8080/api/ljl/weixiu/All/delete/${coding}`,
+						function(data) {
+							_this.$message({
+								message: data.msg,
+								type: 'success'
+							});
+							_this.PageInfo(1, 5);
+						}
+					);
 				},
-
 				addwx() {
 					let _this = this;
 					this.xinzengweixiu = true;
@@ -227,8 +294,9 @@
 							$("#cnt2").load("ui/ljl/weixiuadd.html");
 						});
 				},
-
-				updatewx() {
+				updatewx(fwcod) {
+					//alert(id)
+					sessionStorage.setItem('fwcod', fwcod);
 					let _this = this;
 					this.xiugaiweixiu = true;
 					setTimeout(
@@ -236,15 +304,12 @@
 							$("#cnt2").load("ui/ljl/weixiupdate.html");
 						});
 				},
-
-				init() {
+				/*init() {
 					let _this = this;
 					$.getJSON("http://localhost:8080/api/emps", function(data) {
 						_this.wx = data;
-
 					});
-				},
-
+				},*/
 				handleClose(done) {
 					this.$confirm('是否关闭?')
 						.then(_ => {
@@ -252,14 +317,13 @@
 						})
 						.catch(_ => {});
 				}
-
 			},
 			mounted() {
 				let _this = this;
 				//this.init();
 				$.getJSON(`http://localhost:8080/api/ljl/weixiu/All/type`,
 					function(rs) {
-						_this.weixiutype = rs.list;
+						//_this.weixiutype = rs.list;
 						//alert(JSON.stringify(_this.datas))
 						//alert(JSON.stringify(rs.list))
 						_this.datas = window.toTreeData(rs.list, "xid", "xfid", "xname");
@@ -269,7 +333,6 @@
 				//console.info(JSON.stringify(this.datas));
 				//alert(this.datas)
 			}
-
 		});
 	</script>
 

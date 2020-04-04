@@ -29,60 +29,43 @@
 						<tr>
 							<td>项目编码：</td>
 							<td>
-								<el-input style="width:150px" placeholder="请输入内容" v-model="maintaininfo.coding"></el-input>
+								<el-input style="width:150px" placeholder="请输入内容" v-model="weixiufuwu.fwcod"></el-input>
 							</td>
 							<br>
 							<br>
 							<td>项目名称：</td>
-							<el-input style="width:150px" placeholder="请输入内容" v-model="maintaininfo.itemName"></el-input>
+							<el-input style="width:150px" placeholder="请输入内容" v-model="weixiufuwu.fwname"></el-input>
 							<br /><br />&nbsp;&nbsp;
-							<td>售按价：</td>
-							<td>
-								<el-input style="width:150px" placeholder="请输入内容" v-model="maintaininfo.priceType"></el-input>
-							</td>
-						</tr>
-							<br>
-							<br>
-						<tr>
-							<td>项目类别：</td>
-							<td>
-								<template>
-									<el-select placeholder="请选择" v-model="maintaininfo.project">
-										<el-option label="中国一汽" :value="502" style="width:150px">
-										</el-option>
-										<el-option label="中度" value="311" style="width:150px">
-										</el-option>
-										<el-option label="西安康明斯" :value="14" style="width:150px">
-										</el-option>
-										<el-option label="轻度" value="310" style="width:150px">
-										</el-option>
-										<el-option label="重度" value="312" style="width:150px">
-										</el-option>
-										<el-option label="刹车片" :value="12" style="width:150px">
-										</el-option>
-										<el-option label="轮胎" :value="13" style="width:150px">
-										</el-option>
-									</el-select>
-								</template>
-							</td>
-							<br /><br />&nbsp;
-							<td>标准价：</td>
-							<td>
-								<el-input style="width:150px" placeholder="请输入内容" v-model="maintaininfo.standard"></el-input>
-							</td>
-							&nbsp;&nbsp;&nbsp;&nbsp;
-							<br>
-							<br>
-							<td>VIP价：</td>
-							<td>
-								<el-input style="width:150px" placeholder="请输入内容" v-model="maintaininfo.VIP"></el-input>
-							</td>
-						</tr>
+
+							<tr>
+								<td>项目类别：</td>
+								<td>
+									<template>
+										<el-select placeholder="请选择" v-model="weixiufuwu.xid">
+											<el-option v-for="(t,i) in weixiutype" :value="t.xid">
+												{{t.xname}}
+											</el-option>
+										</el-select>
+									</template>
+								</td>
+								<br /><br />&nbsp;
+								<td>标准价：</td>
+								<td>
+									<el-input style="width:150px" placeholder="请输入内容" v-model="weixiufuwu.fwprice" v-on:keyup.enter="jisuanvip" @input="jisuanvip"></el-input>
+								</td>
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<br>
+								<br>
+								<td>vipprice价：</td>
+								<td>
+									<el-input style="width:150px" placeholder="请输入内容" v-model="weixiufuwu.vipprice"></el-input>
+								</td>
+							</tr>
 					</div>
 					<br />
 					<div id="oo">
-						<el-button style="width:150px" @click="dj">保存</el-button>
-						<el-button style="width:150px" @click='fh'>返回</el-button>
+						<el-button style="width:150px" @click="add">保存</el-button>
+						<el-button style="width:150px" @click="fh">返回</el-button>
 					</div>
 				</el-col>
 			</el-row>
@@ -93,34 +76,40 @@
 		var weixiuadd = new Vue({
 			el: '#weixiuadd',
 			data: {
-				maintaininfo: {
-					coding: '',
-					itemName: '',
-					priceType: '',
-					standard: '',
-					VIP: '',
-					project: '',
-				}
+				weixiufuwu: {
+					fwcod: '',
+					fwname: '',
+					xid: '',
+					fwprice: '',
+					vipprice: 0
+				},
+				weixiutype:[]
 			},
 			methods: {
-				fh() {
-					indexVm.To('ui/ljl/weixiu.html');
+				fh(){
+					weixiu.xinzengweixiu = false;
 				},
-				dj() {
+				jisuanvip(){
+					//alert(1)
+					this.weixiufuwu.vipprice = this.weixiufuwu.fwprice*0.9;
+				},
+				add() {
 					let _this = this;
-					console.log(_this.maintaininfo);
+					//alert(JSON.stringify(this.weixiufuwu))
+					//console.log(_this.weixiufuwu);
 					//return;
 					jQuery.ajax({
-						url: 'http://localhost:8080/api/emps/datewx',
+						url: 'http://localhost:8080/api/ljl/weixiu/All/addweixiuxiangmu',
 						type: 'post',
 						dataType: 'json',
 						contentType: 'application/json',
-						data: JSON.stringify(_this.maintaininfo),
-						success() {
+						data: JSON.stringify(_this.weixiufuwu),
+						success(data) {
 							_this.$message({
-								message: '恭喜你，新增成功',
+								message: data.msg,
 								type: 'success'
 							});
+							weixiu.xinzengweixiu = false;
 						},
 						error() {
 							alert("未知错误！");
@@ -129,7 +118,18 @@
 				}
 			},
 			mounted() {
-				
+				let _this = this;
+				$.getJSON(`http://localhost:8080/api/ljl/weixiu/All/weixiuxiangmuMaxId`,
+					function(data) {
+						_this.weixiufuwu.fwcod = data + 1;
+						$.getJSON(`http://localhost:8080/api/ljl/weixiu/All/weixiuleibie/name`,
+							function(rs){
+								_this.weixiutype = rs;
+								//alert(JSON.stringify(_this.weixiutype))
+							}
+						);
+					}
+				);
 			}
 		});
 	</script>
