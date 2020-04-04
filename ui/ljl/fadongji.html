@@ -302,6 +302,7 @@
 							success(msg) {
 								if(msg.code == "200") {
 									alert("删除成功");
+									_this.pageinfo(1, 5);
 								} else {
 									alert("删除失败");
 								}
