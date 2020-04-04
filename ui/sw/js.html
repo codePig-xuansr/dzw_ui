@@ -267,7 +267,6 @@
 					this.jsrecord.jsmoney = this.jsmoney;
 					let _this = this;
 					let jf = parseInt(_this.jsrecord.jsmoney * 0.01);
-					console.info(jf);
 					_this.vip.jifen = jf + _this.vip.jifen;
 					if(jf > 1000) {
 						_this.vip.vipdiscount = "0.90";
@@ -293,7 +292,6 @@
 									jstype: "",
 									jsmoney: ""
 								}
-								_this.page(1, 3, 0);
 								_this.isShow3 = false;
 								/*修改维修表结算状态*/
 								$.ajax(`http://127.0.0.1:8080/api/weixiu`, {
@@ -303,6 +301,7 @@
 									dataType: "json",
 									success(res) {
 										if(res.code == "200") {
+											_this.page(1, 3, 0);
 											_this.weixiu = {
 												recordid: "",
 												jsstatus: "1"
@@ -367,7 +366,7 @@
 						_this.vipcode = "";
 						_this.vippwd = "";
 					} else {
-						alert("aa");
+						_this.insertjs();
 					}
 				},
 				/*表格展开查询*/
