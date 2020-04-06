@@ -13,7 +13,7 @@
 		<!--<script type="text/javascript" src="js/jq_ajax_config.js" ></script>-->
 		<script type="text/javascript" src="js/vue.js"></script>
 		<script type="text/javascript" src="js/view_filter.js"></script>
-		<script type="text/javascript" src="js/menu_const.js" ></script>
+		<script type="text/javascript" src="js/menu_const.js"></script>
 
 		<style>
 			.el-aside {
@@ -92,8 +92,12 @@
 							<el-dropdown>
 								<el-avatar src="images/background3.jpg"></el-avatar>
 								<el-dropdown-menu slot="dropdown">
-									<el-dropdown-item>个人信息</el-dropdown-item>
-									<el-dropdown-item>修改密码</el-dropdown-item>
+									<el-dropdown-item>
+										<a href="javascript:;" @click="">个人信息</a>
+									</el-dropdown-item>
+									<el-dropdown-item>
+										<a href="javascript:;" @click="dialogFormVisible = true">修改密码</a>
+									</el-dropdown-item>
 									<el-dropdown-item divided>
 										<a href="javascript:;" @click="loginOut">退出登录</a>
 									</el-dropdown-item>
@@ -106,6 +110,15 @@
 							</el-popover>
 						</el-menu-item>
 					</el-menu>
+					<el-dialog title="修改密码" :visible.sync="dialogFormVisible">
+						<span id="" style="width: 10%;">旧密码: </span><el-input placeholder="请输入旧密码" v-model="pass.oldpwd" @blur="checkoldpwd" show-password style="width: 90%;"></el-input><br /><br />
+						<span id="" style="width: 10%;">新密码: </span><el-input placeholder="请输入新密码" v-model="pass.newpwd" @blur="checknewpwd" show-password style="width: 90%;"></el-input><br /><br />
+						<span id="" style="width: 10%;">确认密码:</span><el-input placeholder="请再次输入密码" v-model="pass.checkpwd" @blur="checkpwd" show-password style="width: 90%;"></el-input>
+						<div slot="footer" class="dialog-footer">
+							<el-button @click="dialogFormVisible = false">取 消</el-button>
+							<el-button type="primary" @click="updatepwd">保 存</el-button>
+						</div>
+					</el-dialog>
 
 					<!--主体内容-->
 					<div id="cnt"></div>
@@ -119,6 +132,8 @@
 		var indexVm = new Vue({
 			el: '#indexVm',
 			data: {
+				updatePwd: false,
+				dialogFormVisible: false,
 				cols: false,
 				sz: [],
 				dialogVisible: false,
@@ -128,13 +143,20 @@
 				checked1: false,
 				checked2: false,
 				checked3: false,
-				userfuns: []
+				userfuns: {},
+				users: {},
+				pass: {
+					oldpwd: '',
+					newpwd: '',
+					checkpwd: ''
+				}
+
 			},
 			methods: {
 				To(fcode) {
 					$("#cnt").load(window.menuMapping[fcode]);
 				},
-				toUrl(url){
+				toUrl(url) {
 					$("#cnt").load(url);
 				},
 				handleClose(done) {
@@ -150,18 +172,59 @@
 						location.href = 'login.html';
 					}
 				},
-				toTree(data,id,pid,name){
-					this.userfuns=window,toTreeData(data,id,pid,name);
+				toTree(data, id, pid, name) {
+					this.userfuns = window, toTreeData(data, id, pid, name);
+				},
+				checkoldpwd() {
+					let _this = this;
+					if(this.pass.oldpwd != this.users.pwd) {
+						_this.$message.error('旧密码输入不正确！');
+						_this.updatePwd = false;
+					}else{
+						_this.updatePwd = true;
+					}
+				},
+				checknewpwd() {
+					let _this = this;
+					if(this.pass.newpwd == "") {
+						_this.$message({
+							message: '新密码不能为空',
+							type: 'warning'
+						});
+						_this.updatePwd = false;
+					}else{
+						_this.updatePwd = true;
+					}
+				},
+				checkpwd() {
+					let _this = this;
+					if(this.pass.checkpwd != this.pass.newpwd) {
+						_this.$message({
+							message: '两次密码输入不一致',
+							type: 'warning'
+						});
+						_this.updatePwd = false;
+					}else{
+						_this.updatePwd = true;
+					}
+				},
+				updatepwd(){
+					let _this = this;
+					if(_this.updatePwd){
+						_this.$message.success('修改密码');
+					}else{
+						_this.$message.error('请正确填写表单内容！');
+					}
 				}
 			},
 			mounted() {
 				let _this = this;
 				this.To('sy');
 				console.info(sessionStorage.getItem("user"));
-				let users = JSON.parse(sessionStorage.getItem("user"));
-				
-				$.getJSON(`http://127.0.0.1:8080/zkx/api/funs/${users.user}/${users.pwd}`, function(funs) {
-					_this.userfuns=funs;
+				this.users = JSON.parse(sessionStorage.getItem("user"));
+
+				$.getJSON(`http://127.0.0.1:8080/zkx/api/funs/${this.users.user}/${this.users.pwd}`, function(funs) {
+					_this.userfuns = funs;
 					localStorage.setItem("funs", JSON.stringify(_this.userfuns));
 					console.info(JSON.stringify(_this.userfuns));
 				})
