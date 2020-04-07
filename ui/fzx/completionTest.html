@@ -28,19 +28,20 @@
 					  <el-form :model="cominfo" inline="true">
 						<el-form-item label="开单日期：">
 							<template>
-								<el-date-picker style="width: 170px;" :editable="false" placeholder="请选择日期" v-model="cominfo.date" format="yyyy年MM月dd日" value-format="yyyy-MM-dd"></el-date-picker>
+								<el-date-picker style="width: 170px;" :editable="false" placeholder="请选择日期" v-model="cominfo.recorddate" format="yyyy年MM月dd日" value-format="yyyy-MM-dd"></el-date-picker>
 							</template>
 						</el-form-item>
 						<el-form-item label="竣工状态：">
 							<template>
 								<el-select v-model="cominfo.status" style="width: 150px;" clearable >
-								  <el-option label="未竣工" :value="0"></el-option>
+								  <el-option label="维修中" :value="0"></el-option>
 								  <el-option label="已竣工" :value="1"></el-option>
+								  <el-option label="不合格" :value="2"></el-option>
 								</el-select>
 							</template>
 						</el-form-item>
 						<el-form-item label="维修单号：">
-							<el-input v-model="cominfo.eno" placeholder="支持模糊搜索"></el-input>
+							<el-input v-model="cominfo.recordid" placeholder="支持模糊搜索"></el-input>
 						</el-form-item>
 						<el-form-item>
 							<el-button type="success" @click="ck">查询</el-button>
@@ -57,8 +58,9 @@
 								<template slot-scope="scope">
 									<span v-if="temp.values!='status'">{{scope.row[temp.values]}}</span>
 									<span v-if="temp.values=='status'">
-										<el-button v-if="scope.row.status" type="success" disabled>已竣工</el-button>
-										<el-button v-if="!scope.row.status" type="info" @click="jg(scope.row.recordid,scope.row.yujidate)">未竣工</el-button>
+										<el-button v-if="scope.row.status==1" type="success" disabled>已竣工</el-button>
+										<el-button v-if="scope.row.status==0" type="info" @click="jg(scope.row.recordid,scope.row.yujidate)">维修中</el-button>
+										<el-button v-if="scope.row.status==2" type="danger">不合格</el-button>
 									</span>
 								</template>
 							</el-table-column>
@@ -68,14 +70,35 @@
 				</el-row>
 				<el-row>
 					<br>
-				  <el-col :span="24" offset=6>
+				  <el-col :span="24" offset="6">
 					  <template>
-						<el-pagination  prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,prev, pager, next, jumper" :total="pages.total"  :page-size="pages.pageSize">
-					  </el-pagination>
+					 <el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="pages.total" :page-sizes="[3,6,9]" :page-size="pages.pageSize">
 					  </template>
 				  </el-col>
 				</el-row>
 			</el-card>
+			
+			<el-card>
+				<el-row>
+				  <el-col :span="24">
+					 <h4 style="float: left;">竣工记录</h4>
+				  </el-col>
+				</el-row>
+				<el-row>
+				  <el-col :span="24">
+					  <template>
+						  <el-table :data="jgrecord" border >
+							<el-table-column v-for="(temp,index) in jgr" :label="temp.name" align="center">
+								<template slot-scope="scope">
+									<span>{{scope.row[temp.values]}}</span>
+								</template>
+							</el-table-column>
+						  </el-table>
+					  </template>
+				  </el-col>
+				</el-row>
+			</el-card>
+			
 			<el-dialog title="竣工检验" :visible.sync="cs">
 				<div>
 					<el-row>
@@ -115,10 +138,6 @@
 								<el-tab-pane name="2">
 									<!-- 不合格 -->
 									<el-form :model="completion" inline="true">
-										<el-form-item label="已返工：">
-											<a style="color: red;">{{fgct}}</a><span style="margin-left: 5px;">次</span>
-										</el-form-item>
-										<br>
 										<div>
 									  <el-form-item label="返工原因：">
 										<el-input v-model="completion.delays" style="width: 200px;" type="textarea"></el-input>
@@ -153,9 +172,9 @@
 			data:{
 				cs:false,
 				cominfo:{
-					date:null,
-					status:'',
-					eno:'',
+					recorddate:null,
+					status:null,
+					recordid:null,
 				},
 				completion:{
 					eno:'',
@@ -171,28 +190,29 @@
 				hg:'1',
 				//显示行
 				ms:[{name:'维修单号',values:'recordid'},{name:'车牌号',values:'carno'},{name:'业务类型',values:'yewutype'},{name:'单据类型',values:'danjutype'},{name:'开单时间',values:'recorddate'},{name:'预计完工',values:'yujidate'},{name:'竣工状态',values:'status'}],
-				weixiurecord:[{
-					recordid:'1111',
-					carno:'222',
-					yewutype:'333',
-					danjutype:'444',
-					recorddate:'2020-03-24',
-					yujidate:'2020-03-25',
-					status:''
+				weixiurecord:[],
+				jgr:[{name:'维修单号',values:'recordid'},{name:'实际完工时间',values:'shijidate'},{name:'误工原因',values:'yuanyin'},{name:'处罚金额',values:'chufa'},{name:'质检员',values:'checkperson'},{name:'负责人',values:'fuzeperson'},{name:'竣工状态',values:'jgstatus'}],
+				jgrecord:[{
+					recordid:'331',
+					shijidate:'332',
+					yuanyin:'333',
+					chufa:'3334',
+					checkperson:'335',
+					fuzeperson:'336',
+					jgstatus:'1'
 				},{
-					recordid:'666',
-					carno:'666',
-					yewutype:'666',
-					danjutype:'666',
-					recorddate:'2020-03-24',
-					yujidate:'2020-03-25',
-					status:'1'
+					recordid:'441',
+					shijidate:'442',
+					yuanyin:'443',
+					chufa:'444',
+					checkperson:'445',
+					fuzeperson:'446',
+					jgstatus:'2'
 				}],
 				pages:{},
 				edate:'',
 				today:'',
 				wg:true,
-				fgct:"",
 				ruls4:{
 					delays:[{required: true, message:'请填写误工原因', trigger: 'blur'}],
 					penatly:[{required: true, message:'请填写处罚金额', trigger: 'blur'}],
@@ -217,23 +237,6 @@
 					this.cs=true;
 					
 				},
-				tabs(i){
-					let _this=this;
-					if(i==2){
-						if(this.$refs['completion']!=undefined){
-							this.$refs['completion'].resetFields();
-						}
-						//查询返工次数
-						jQuery.getJSON(`http://localhost:8080/api/cars/rwk/${this.completion.eno}`,function(data){
-							if(data!='0'){
-								_this.fgct=data;
-							}else{
-								_this.fgct="0";
-							};
-						});
-					}
-
-				},
 				//竣工检查
 				comjg(){
 					let _this=this;
@@ -245,8 +248,7 @@
 								type: 'warning',
 							}).then(()=>{
 								if(this.hg=='1'){
-									//未返工
-									if(_this.fgct=='0'){
+									
 										this.completion.qualified='0';
 										jQuery.ajax({
 											url: `http://localhost:8080/api/cars/comp`,
@@ -266,22 +268,10 @@
 															
 											}
 										})
-									}else{
-										//返工后合格竣工
-										jQuery.post(`http://localhost:8080/api/cars/hgqud/${_this.completion.eno}`,function(data){
-											_this.$message({
-											type: 'success',
-											message: '竣工成功！'
-										});
-											_this.cs=false;
-											indexVm.To('ui/fzx/completionTest.html');
-										});
-
-									}
+									
 								}else{
 									let _this=this;
-									//未返工新增，
-									if(this.fgct=='0'){
+									
 										_this.completion.qualified='1';
 											jQuery.ajax({
 											url: `http://localhost:8080/api/cars/comp`,
@@ -301,17 +291,6 @@
 															
 											}
 										})
-									}else{
-										//返工修改+1
-										jQuery.post(`http://localhost:8080/api/cars/upqd/${_this.completion.eno}`,function(data){
-											_this.$message({
-												type: 'success',
-												message: '返工成功!'
-											});
-											_this.cs=false;
-											indexVm.To('html/lt/completionTest.html');
-										});
-									}
 								}
 
 							});
@@ -321,40 +300,33 @@
 					});
 				},
 				ck(){
-					this.page(1,this.pages.pageSize);
+					if(this.cominfo.recorddate==''){this.cominfo.recorddate=null};
+					if(this.cominfo.status==''){this.cominfo.status=null};
+					if(this.cominfo.recordid==''){this.cominfo.recordid=null};
+					this.page(1,3,this.cominfo.recorddate,this.cominfo.status,this.cominfo.recordid);
 				},
 				reset(){
-					this.cominfo.date=null;
+					this.cominfo.recorddate=null;
 					this.cominfo.status='';
-					this.cominfo.eno='';
+					this.cominfo.recordid='';
 				},
-				page(num,size){
+				page(num,size,recorddate,status,recordid){
 					let _this=this;
-					jQuery.ajax({
-						url: `http://localhost:8080/api/cars/allm/${num}/${size}`,
-						type: 'post',
-						dataType: 'json',
-						contentType: 'application/json',
-						data: JSON.stringify(_this.cominfo),
-						success(data) {
-							_this.pages=data;
-							_this.weixiurecord=data.list;	
-						},
-						error() {			
-										
-						}
-					})
+					jQuery.getJSON(`http://localhost:8080/api/fzx/selectFwAll/${num}/${size}/${recorddate}/${status}/${recordid}`,function(pg) {
+						_this.pages = pg;
+						_this.weixiurecord = pg.list;
+					});
 				},
 				change(num){
-					this.page(num,this.pages.pageSize);
+					this.page(num,this.pages.pageSize,this.cominfo.recorddate,this.cominfo.status,this.cominfo.recordid);
 				},
 				sizec(size){
-					this.page(1,size);
+					this.page(1,size,this.cominfo.recorddate,this.cominfo.status,this.cominfo.recordid);
 				}
 			},
 			mounted(){
 				let _this=this;
-				_this.page(1,4);
+				_this.page(1,3,_this.cominfo.recorddate,_this.cominfo.status,_this.cominfo.recordid);
 			}
 		});
 	</script>
