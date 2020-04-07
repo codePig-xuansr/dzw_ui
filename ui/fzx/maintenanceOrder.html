@@ -110,7 +110,7 @@
 									<template><el-input v-model="fzxweixiuadd.beizhu" type="textarea" style="width: 300px;"></el-input></template>
 								</el-form-item>
 								<el-form-item v-if="lc" label="接车里程数：">
-									<template><el-input v-model="km" oninput="this.value=this.value.replace(/[^\d]/g,'')" size="small" placeholder="单位：km"></el-input> </template>
+									<template><el-input v-model="fzxweixiuadd.licheng" oninput="this.value=this.value.replace(/[^\d]/g,'')" size="small" placeholder="单位：km"></el-input> </template>
 								</el-form-item>
 							  </el-form>
 							  <el-form>
@@ -143,7 +143,22 @@
 												</el-row>
 											</template>
 										</el-tab-pane>
-										<el-tab-pane label="结算信息"></el-tab-pane>
+										<el-tab-pane label="结算信息">
+											<el-row>
+												  <el-col :span="24">
+													  <template>
+														  <el-table :data="fzxweixiuadd.fzxweixiuxm">
+															<el-table-column v-for="(temp,index) in ms" :label="temp.name" :align="'center'" :resizable="false" :key="temp.name">
+																<template slot-scope="scope">
+																	<span v-if="temp.values!=0">{{scope.row[temp.values]}}</span>
+																	
+																  </template>
+															</el-table-column>
+														  </el-table>
+													  </template>
+												  </el-col>
+												</el-row>
+										</el-tab-pane>
 									  </el-tabs>
 								</el-form-item>
 							  </el-form>
@@ -178,7 +193,6 @@
 				xde:false,
 				fy:true,
 				lc:false,
-				km:'',
 				d:true,
 				checked:false,
 				addone:false,
@@ -200,6 +214,7 @@
 					guzhanginfo:'',
 					guzhangyuanyin:'',
 					danjutype:'',
+					licheng:'0',
 					fzxweixiuxm:[]//添加维修项目
 				},
 				jg:'0',
@@ -333,6 +348,11 @@
 					//显示里程数
 					_this.lc=true;
 					_this.fy=false;
+					_this.xde=true;
+					let carno=sessionStorage.getItem("carno");
+					jQuery.getJSON(`http://localhost:8080/api/fzx/selectAll/${carno}`,(data)=>{
+						_this.pickinfo = data;
+					});
 					//_this.fzxweixiuadd.mrecord.ordertype='救援';
 					//如果为救援开单，成功后需修改该车状态，结算同样
 					

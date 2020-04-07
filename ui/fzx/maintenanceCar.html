@@ -137,15 +137,43 @@
 					</div>
 					<div v-if="yw=='2'">
 						<el-row>
+							<el-form :inline="true" :model="form1" label-width="80px" >
+							  <el-form-item>
+								<template>
+									<el-select @change="carinfo" v-model="carNo" filterable remote reserve-keyword placeholder="请输入车牌号"
+									  :remote-method="remoteMethod"
+									  :loading="loading">
+									  <el-option v-for="item in vcps" :key="item.carno" :label="item.carno" :value="item.carno">
+									  </el-option>
+									</el-select>
+								  </template>
+							  </el-form-item>
+							  	<br>
+							  <div>
+							  <el-form-item>
+								<a>车主：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].driver}}</a> <span class="kg"></span> 
+								<a>地址：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].kaddress}}</a> <span class="kg"></span> 
+								<a>驾驶员：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].driver}}</a> <span class="kg"></span> 
+								<a>手机号：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].kphone}}</a> <span class="kg"></span> 
+							</el-form-item>
+							<br>
+							<el-form-item>
+								<a>品牌：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].carpp}}</a> <span class="kg"></span> 
+								<a>车型：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].carxinghao}}</a> <span class="kg"></span> 
+								<a>发动机品牌：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].fadongjipp}}</a> <span class="kg"></span> 
+								<a>发动机号：</a> <a v-if="ctcar[0]!=undefined">{{ctcar[0].fadongjiid}}</a> <span class="kg"></span> 
+							</el-form-item>
+						</div>
+							</el-form>
 						  <el-col :span="24">
 							  <span style="font-size: 14px;">请选择派车车辆：</span>
 							  <el-select v-model="pc" placeholder="请选择">
-								<el-option v-for="temp in pcs" :value="temp.cno" v-if="temp.status=='0'" :key="temp.cno">
-								  <span style="float: left">{{temp.cno}}</span>
+								<el-option v-for="temp in pcs" :value="temp.kacode" v-if="temp.kastatus=='0'" :key="temp.cno">
+								  <span style="float: left">{{temp.kacode}}</span>
 								  <span style="float: right; color: #8492a6; font-size: 13px">空闲</span>
 								</el-option>
-								<el-option v-for="temp in pcs" value="temp.cno" v-if="temp.status!='0'" :disabled="true" :key="temp.cno">
-									<span style="float: left">{{temp.cno}}</span>
+								<el-option v-for="temp in pcs" value="temp.kacode" v-if="temp.kastatus!='0'" :disabled="true" :key="temp.cno">
+									<span style="float: left">{{temp.kacode}}</span>
 									<span style="float: right; color: #8492a6; font-size: 13px">派车中</span>
 								  </el-option>
 							  </el-select>
@@ -179,11 +207,11 @@
 				ctcar:[],
 				temps:[],
 				pcs:[{
-					cno:'1',
-					status:0,
+					kacode:'1',
+					kastatus:0,
 				},{
-					cno:'2',
-					status:1,
+					kacode:'2',
+					kastatus:1,
 				},],
 				pc:'',
 				jct:true,
@@ -239,8 +267,9 @@
 					let _this=this;
 					//判断业务类型
 					if(_this.yw=='2'){
-						let carno= _this.pc;
-						if(carno==''){
+						let carnoo= _this.pc;
+						let carno= _this.carNo;
+						if(carno==''||carnoo==''){
 							_this.$message({
 									message: '请选择车辆',
 									type: 'error'
@@ -268,9 +297,9 @@
 			},
 			mounted(){
 				let _this=this;
-				/*jQuery.getJSON('http://localhost:8080/api/cars/qas',(data)=>{
+				jQuery.getJSON('http://localhost:8080/api/fzx/selectKache',(data)=>{
 					_this.pcs=data;
-				});*/
+				});
 				
 				
 			}
