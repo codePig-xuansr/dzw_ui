@@ -49,9 +49,17 @@
 						<el-form-item label="当前里程">
 							<el-input v-model="formLabelAlign.licheng"></el-input>
 						</el-form-item>
-						<el-form-item label="归属班组">
-							<el-input v-model="formLabelAlign.bzname"></el-input>
-						</el-form-item>
+						<el-form-item label="归属班组">							
+						 <el-select v-model="formLabelAlign.bzid" placeholder="请选择">
+				              <el-option
+				                v-for="item in options"
+				                :key="item.value"
+				                :label="item.label"
+				                :value="item.value"
+				                :disabled="item.disabled">
+				              </el-option>
+				          </el-select>
+						</el-form-item>					
 					</el-form>
 				</div>
 				<span slot="footer" class="dialog-footer">
@@ -96,11 +104,33 @@
 					carpp:'',
 					carxinghao:'',
 					licheng:'',
-					bzname:'',
+					bzid:'',
 				},
 				add: false,
 				modify: false,
 				piges: {},
+				options: [{
+				          value: '1',
+				          label: '维修组1',
+				
+				        }, {
+				          value: '2',
+				          label: '维修组2',
+				
+				        }, {
+				          value: '3',
+				          label: '维修组3',
+				
+				        }, {
+				          value: '4',
+				          label: '油漆组',
+				
+				        }, {
+				          value: '5',
+				          label: '钣金组',
+				
+				        }],
+				        value: '归属班组',
 				carlist: [],
 				list: [],
 				stsy: [{
@@ -156,23 +186,24 @@
 					this.page(1, size);
 				},
 				//添加数据
-				/*addall() {
+				addall() {
 					let _this=this;
-					jQuery.ajax("http://127.0.0.1:8080/api/cars/insert",{
+					jQuery.ajax("http://127.0.0.1:8080/zzy/api/carinfos/addCarinfo/{carinfo}",{
 						type:'post',
 						data:JSON.stringify(_this.formLabelAlign),
 						contentType: 'application/json; charset=UTF-8',
-						success(data){
+						success(data){						
 							if(data=="ok"){
-								alert("新增成功！");
-									this.add = false;
-								location.reload();
-							}else{
 								alert("新增失败！");
+							}else{
+								alert("新增成功！");
+								_this.add = false;
+								_this.page(1,3);
+								
 							}
 						}
 					});
-				}*/
+				}
 			},
 			mounted() {
 				let _this = this;
