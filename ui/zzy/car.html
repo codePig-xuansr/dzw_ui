@@ -21,16 +21,16 @@
 					<template>
 						<!--<el-button type="button" class="btn btn-success btn-block" id="generate-excel"><i class="fa fa-file-excel-o" aria-hidden="true"></i> 将表格转换为Excel</el-button>-->
 							<el-button type="success" @click="add = true">添加数据</el-button>						
-						<el-table :data="vehicleInfo" border style="width: 100%">
+						<el-table :data="vehicleInfo.list" border style="width: 100%">
 							<el-table-column v-for="(temp,index) in stsy" :label="temp.name" align="center" :resizable="false">
 								<template slot-scope="scope">
 									<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>
-									<el-button type="danger" v-if="temp.value==0" @click="delOne(scope.row.numbercar)">删除</el-button>
+									<el-button type="danger" v-if="temp.value==0" @click="delOne(scope.row.carno)">删除</el-button>
 									<el-button type="primary" v-if="temp.value==0" @click="modify = true">修改</el-button>									
 								</template>
 							</el-table-column>
 						</el-table>
-						<el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="carlist.total" :page-sizes="[1,2,3,4,5]" :page-size="carlist.pageSize">
+						<el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="vehicleInfo.total" :page-sizes="[1,2,3,4,5]" :page-size="vehicleInfo.pageSize">
 					</template>			
 				</el-col>
 			</el-row>
@@ -38,19 +38,19 @@
 				<div>
 					<el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
 						<el-form-item label="车牌号">
-							<el-input v-model="formLabelAlign.numbercar"></el-input>
+							<el-input v-model="formLabelAlign.carno"></el-input>
 						</el-form-item>
 						<el-form-item label="品牌">
-							<el-input v-model="formLabelAlign.brand"></el-input>
+							<el-input v-model="formLabelAlign.carpp"></el-input>
 						</el-form-item>
 						<el-form-item label="车型">
-							<el-input v-model="formLabelAlign.typecar"></el-input>
+							<el-input v-model="formLabelAlign.carxinghao"></el-input>
 						</el-form-item>
 						<el-form-item label="当前里程">
-							<el-input v-model="formLabelAlign.mileage"></el-input>
+							<el-input v-model="formLabelAlign.licheng"></el-input>
 						</el-form-item>
 						<el-form-item label="归属班组">
-							<el-input v-model="formLabelAlign.teamname"></el-input>
+							<el-input v-model="formLabelAlign.bzname"></el-input>
 						</el-form-item>
 					</el-form>
 				</div>
@@ -64,19 +64,19 @@
 				<div>
 					<el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
 						<el-form-item label="车牌号">
-							<el-input v-model="formLabelAlign.numbercar"></el-input>
+							<el-input v-model="formLabelAlign.carno"></el-input>
 						</el-form-item>
 						<el-form-item label="品牌">
-							<el-input v-model="formLabelAlign.brand"></el-input>
+							<el-input v-model="formLabelAlign.carpp"></el-input>
 						</el-form-item>
 						<el-form-item label="车型">
-							<el-input v-model="formLabelAlign.typecar"></el-input>
+							<el-input v-model="formLabelAlign.carxinghao"></el-input>
 						</el-form-item>
 						<el-form-item label="当前里程">
-							<el-input v-model="formLabelAlign.mileage"></el-input>
+							<el-input v-model="formLabelAlign.licheng"></el-input>
 						</el-form-item>
 						<el-form-item label="归属班组">
-							<el-input v-model="formLabelAlign.teamname"></el-input>
+							<el-input v-model="formLabelAlign.bzname"></el-input>
 						</el-form-item>
 					</el-form>
 				</div>
@@ -92,11 +92,11 @@
 			el: '#fish',
 			data: {
 				formLabelAlign:{
-					numbercar:'',
-					brand:'',
-					typecar:'',
-					mileage:'',
-					teamname:'',
+					carno:'',
+					carpp:'',
+					carxinghao:'',
+					licheng:'',
+					bzname:'',
 				},
 				add: false,
 				modify: false,
@@ -105,57 +105,43 @@
 				list: [],
 				stsy: [{
 					name: '车牌号',
-					value: 'numbercar'
+					value: 'carno'
 				}, {
 					name: '品牌',
-					value: 'brand'
+					value: 'carpp'
 				}, {
 					name: '车型',
-					value: 'typecar'
+					value: 'carxinghao'
 				}, {
 					name: '当前里程',
-					value: 'mileage'
+					value: 'licheng'
 				},
 				{
 					name: '归属班组',
-					value: 'teamname'
+					value: 'bzname'
 				},
 				{
 					name: '操作',
 					value: '0'
 				}],
-				vehicleInfo:[{
-					numbercar:'1111',
-					brand:'222',
-					typecar:'333',
-					mileage:'444',
-					teamname:'2020-03-24',
-					comstatus:''
-				},{
-					numbercar:'1111',
-					brand:'222',
-					typecar:'333',
-					mileage:'444',
-					teamname:'2020-03-24',
-					comstatus:''
-				}],
+				vehicleInfo:[],
 			},
 			methods: {
-				delOne(numbercar) {
+				/*delOne(carno) {
 					let _this = this;
 					if(confirm("确认删除？")) {
 						jQuery.post("http://127.0.0.1:8080/api/cars/dele", {
-							numbercar: `${numbercar}`
+							carno: `${carno}`
 						}, function(data) {
 							alert("删除成功！");
 							location.reload();
 						});
 					}
-				},
-				page(num, size) {
+				},*/
+				page(pageNum, pageSize) {
 					let _this = this;
-					jQuery.getJSON(`http://127.0.0.1:8080/api/cars/page/${num}/${size}`, {}, function(pg) {
-						_this.carlist = pg;
+					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/carinfos/queryCarinfo/${pageNum}/${pageSize}`, function(pg) {
+						_this.vehicleInfo = pg;
 						_this.list = pg.list;
 					});
 				},
@@ -163,14 +149,14 @@
 
 				change(num) {
 					let _this = this;
-					this.page(num, _this.carlist.pageSize);
+					this.page(num, _this.vehicleInfo.pageSize);
 				},
 				//pageSize选择事件
 				sizec(size) {
 					this.page(1, size);
 				},
 				//添加数据
-				addall() {
+				/*addall() {
 					let _this=this;
 					jQuery.ajax("http://127.0.0.1:8080/api/cars/insert",{
 						type:'post',
@@ -186,11 +172,11 @@
 							}
 						}
 					});
-				}
+				}*/
 			},
 			mounted() {
 				let _this = this;
-				_this.page(1, 5);
+				_this.page(1, 3);
 			}
 		});
 	</script>
