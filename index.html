@@ -211,7 +211,20 @@
 				updatepwd(){
 					let _this = this;
 					if(_this.updatePwd){
-						_this.$message.success('修改密码');
+						_this.users.pwd=_this.pass.newpwd;
+						$.ajax(`http://127.0.0.1:8080/zkx/api/user/u`,{
+							type:"put",
+							dataType:"json",
+							contentType:"application/json",
+							data:JSON.stringify(_this.users),
+							success(res){
+								if(res>0){
+									alert('修改成功，请重新登录');
+									sessionStorage.clear();
+									location.href='login.html';
+								}
+							}
+						});
 					}else{
 						_this.$message.error('请正确填写表单内容！');
 					}
