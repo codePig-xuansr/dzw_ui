@@ -227,14 +227,15 @@
 								 this.$message({
 					              type: 'success',
 					              message: '修改成功！'
-					            });
+					           });
 							}else{
 								 this.$message({
 					              type: 'error',
 					              message: '错误！'
 					            });
 							}
-							$("#cnt2").load("ui/zkx/roleFun.html");
+							roleFunApp.dialogVisible666=false;
+							$("#cnt").load("ui/zkx/roleFun.html");
 						}
 					});
 					console.log(JSON.stringify(arry));
@@ -253,7 +254,7 @@
 						_this.ufs.push(obj.fid);
 					});
 					_this.uFuns = funs;
-					alert(JSON.stringify(_this.uFuns));
+					//alert(JSON.stringify(_this.uFuns));
 				})
 				this.parent = window.toTreeData(this.datas, "fid", "fpid", "fname");
 				_this.resetChecked();
