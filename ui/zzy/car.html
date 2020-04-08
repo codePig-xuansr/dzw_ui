@@ -25,7 +25,7 @@
 							<el-table-column v-for="(temp,index) in stsy" :label="temp.name" align="center" :resizable="false">
 								<template slot-scope="scope">
 									<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>
-									<el-button type="danger" v-if="temp.value==0" @click="delOne(scope.row.carno)">删除</el-button>
+									<el-button type="danger" v-if="temp.value==0" @click="delOne(scope.row.kaid)">删除</el-button>
 									<el-button type="primary" v-if="temp.value==0" @click="modify = true">修改</el-button>									
 								</template>
 							</el-table-column>
@@ -38,17 +38,17 @@
 				<div>
 					<el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
 						<el-form-item label="车牌号">
-							<el-input v-model="formLabelAlign.carno"></el-input>
+							<el-input v-model="formLabelAlign.kano"></el-input>
 						</el-form-item>
 						<el-form-item label="品牌">
-							<el-input v-model="formLabelAlign.carpp"></el-input>
+							<el-input v-model="formLabelAlign.kapp"></el-input>
 						</el-form-item>
 						<el-form-item label="车型">
-							<el-input v-model="formLabelAlign.carxinghao"></el-input>
+							<el-input v-model="formLabelAlign.katype"></el-input>
 						</el-form-item>
-						<el-form-item label="当前里程">
-							<el-input v-model="formLabelAlign.licheng"></el-input>
-						</el-form-item>
+						<!--<el-form-item label="当前里程">
+							<el-input v-model="formLabelAlign.kalc"></el-input>
+						</el-form-item>-->
 						<el-form-item label="归属班组">							
 						 <el-select v-model="formLabelAlign.bzid" placeholder="请选择">
 				              <el-option
@@ -100,10 +100,10 @@
 			el: '#fish',
 			data: {
 				formLabelAlign:{
-					carno:'',
-					carpp:'',
-					carxinghao:'',
-					licheng:'',
+					kano:'',
+					kapp:'',
+					katype:'',
+					/*kalc:'',*/
 					bzid:'',
 				},
 				add: false,
@@ -135,16 +135,16 @@
 				list: [],
 				stsy: [{
 					name: '车牌号',
-					value: 'carno'
+					value: 'kano'
 				}, {
 					name: '品牌',
-					value: 'carpp'
+					value: 'kapp'
 				}, {
 					name: '车型',
-					value: 'carxinghao'
+					value: 'katype'
 				}, {
 					name: '当前里程',
-					value: 'licheng'
+					value: 'kalc'
 				},
 				{
 					name: '归属班组',
@@ -157,22 +157,31 @@
 				vehicleInfo:[],
 			},
 			methods: {
-				/*delOne(carno) {
+				//删除方法
+				delOne(kaid) {
+					//alert(kaid)					
 					let _this = this;
-					if(confirm("确认删除？")) {
-						jQuery.post("http://127.0.0.1:8080/api/cars/dele", {
-							carno: `${carno}`
-						}, function(data) {
-							alert("删除成功！");
-							location.reload();
+					if(window.confirm('是否确定删除？')) {
+						$.ajax(`http://127.0.0.1:8080/zzy/api/kache/deleteKache/${kaid}`, {
+							type: "delete",
+							dataType: "json",
+							success(msg) {
+								if(msg.code == "200") {
+									alert("删除成功");
+									_this.page(1,5);
+								} else {
+									alert("删除失败");
+								}
+							}
 						});
 					}
-				},*/
+				},
 				page(pageNum, pageSize) {
 					let _this = this;
-					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/carinfos/queryCarinfo/${pageNum}/${pageSize}`, function(pg) {
+					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/kache/queryKache/${pageNum}/${pageSize}`, function(pg) {
 						_this.vehicleInfo = pg;
 						_this.list = pg.list;
+						/*alert(JSON.stringify(pg.list))*/
 					});
 				},
 				//页数改变事件
@@ -188,8 +197,10 @@
 				//添加数据
 				addall() {
 					let _this=this;
-					jQuery.ajax("http://127.0.0.1:8080/zzy/api/carinfos/addCarinfo/{carinfo}",{
+					/*alert(JSON.stringify(_this.formLabelAlign))*/
+					jQuery.ajax("http://127.0.0.1:8080/zzy/api/kache/addkache",{
 						type:'post',
+						dataType:"json",
 						data:JSON.stringify(_this.formLabelAlign),
 						contentType: 'application/json; charset=UTF-8',
 						success(data){						
