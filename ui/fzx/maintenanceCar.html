@@ -169,11 +169,11 @@
 							  <span style="font-size: 14px;">请选择派车车辆：</span>
 							  <el-select v-model="pc" placeholder="请选择">
 								<el-option v-for="temp in pcs" :value="temp.kacode" v-if="temp.kastatus=='0'" :key="temp.cno">
-								  <span style="float: left">{{temp.kacode}}</span>
+								  <span style="float: left">{{temp.kano}}</span>
 								  <span style="float: right; color: #8492a6; font-size: 13px">空闲</span>
 								</el-option>
 								<el-option v-for="temp in pcs" value="temp.kacode" v-if="temp.kastatus!='0'" :disabled="true" :key="temp.cno">
-									<span style="float: left">{{temp.kacode}}</span>
+									<span style="float: left">{{temp.kano}}</span>
 									<span style="float: right; color: #8492a6; font-size: 13px">派车中</span>
 								  </el-option>
 							  </el-select>
