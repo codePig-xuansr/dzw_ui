@@ -62,9 +62,9 @@
 			</el-row>
 			<el-dialog title="新增维修类别" width="850px" :visible.sync="weixiuleibie">
 				<el-form label-width="80px">
-					<el-form-item label="项目编号：">
+					<!--<el-form-item label="项目编号：">
 						<el-input v-model="xiangmutype.xid" readonly></el-input>
-					</el-form-item>
+					</el-form-item>-->
 					<el-form-item label="类别名称：">
 						<el-input v-model="xiangmutype.xname"></el-input>
 					</el-form-item>
@@ -80,9 +80,9 @@
 
 			<el-dialog title="新增子级维修类别" width="850px" :visible.sync="weixiuleibiezi">
 				<el-form label-width="80px">
-					<el-form-item label="项目编号：">
+					<!--<el-form-item label="项目编号：">
 						<el-input v-model="xiangmutype.xid" readonly></el-input>
-					</el-form-item>
+					</el-form-item>-->
 					<el-form-item label="类别名称：">
 						<el-input v-model="xiangmutype.xname"></el-input>
 					</el-form-item>
@@ -118,7 +118,7 @@
 			el: '#weixiu',
 			data: {
 				xiangmutype: {
-					xid: '',
+					xid: 0,
 					xname: '',
 					xfid: 0
 				},
@@ -183,6 +183,7 @@
 								type: 'success'
 							});
 							_this.qingkongtype();
+							_this.weixiutypeinfo();
 							_this.weixiuleibie = false;
 						},
 						error() {
@@ -197,25 +198,25 @@
 				weiliuleibiexinzeng() {
 					let _this = this;
 					this.weixiuleibie = true;
-					$.getJSON(`http://localhost:8080/api/ljl/weixiu/All/weixiutypeMaxId`,
+					/*$.getJSON(`http://localhost:8080/api/ljl/weixiu/All/weixiutypeMaxId`,
 						function(data) {
 							_this.xiangmutype.xid = data + 1;
-						});
+						});*/
 				},
 				weixiuleibieziji() {
 					let _this = this;
 					this.weixiuleibiezi = true;
-					$.getJSON(`http://localhost:8080/api/ljl/weixiu/All/weixiutypeMaxId`,
+					/*$.getJSON(`http://localhost:8080/api/ljl/weixiu/All/weixiutypeMaxId`,
 						function(data) {
-							_this.xiangmutype.xid = data + 1;
-							$.getJSON(`http://localhost:8080/api/ljl/weixiu/All/selecttype/typefu`,
-								function(rs) {
-									_this.weixiutype = rs;
-									//alert(JSON.stringify(_this.weixiutype))
-								}
-							);
+							_this.xiangmutype.xid = data + 1;*/
+					$.getJSON(`http://localhost:8080/api/ljl/weixiu/All/selecttype/typefu`,
+						function(rs) {
+							_this.weixiutype = rs;
+							//alert(JSON.stringify(_this.weixiutype))
 						}
 					);
+					/*}
+					);*/
 				},
 				chaxunxiangmu() {
 					this.PageInfo(1, 5);
@@ -316,19 +317,23 @@
 							done();
 						})
 						.catch(_ => {});
+				},
+				weixiutypeinfo() {
+					let _this = this;
+					$.getJSON(`http://localhost:8080/api/ljl/weixiu/All/type`,
+						function(rs) {
+							//_this.weixiutype = rs.list;
+							//alert(JSON.stringify(_this.datas))
+							//alert(JSON.stringify(rs.list))
+							_this.datas = window.toTreeData(rs.list, "xid", "xfid", "xname");
+							console.info(JSON.stringify(_this.datas));
+						});
 				}
 			},
 			mounted() {
 				let _this = this;
+				_this.weixiutypeinfo();
 				//this.init();
-				$.getJSON(`http://localhost:8080/api/ljl/weixiu/All/type`,
-					function(rs) {
-						//_this.weixiutype = rs.list;
-						//alert(JSON.stringify(_this.datas))
-						//alert(JSON.stringify(rs.list))
-						_this.datas = window.toTreeData(rs.list, "xid", "xfid", "xname");
-						console.info(JSON.stringify(_this.datas));
-					});
 				//this.datas = window.toTreeData(this.weixiutype, "xid", "xfid", "xname");
 				//console.info(JSON.stringify(this.datas));
 				//alert(this.datas)

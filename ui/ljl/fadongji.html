@@ -155,9 +155,9 @@
 			</el-row>
 			<el-dialog title="新增发动机品牌" width="700px" :visible.sync="xinzengfadongji">
 				<el-form label-width="80px">
-					<el-form-item label="发动机编号：">
+					<!--<el-form-item label="发动机编号：">
 						<el-input v-model="fadongji.fadongjiid" readonly></el-input>
-					</el-form-item>
+					</el-form-item>-->
 					<el-form-item label="发动机名称：">
 						<el-input v-model="fadongji.fadongjiname"></el-input>
 				</el-form>
@@ -193,7 +193,7 @@
 			data: {
 				fadongjilist: [],
 				fadongji: {
-					fadongjiid: '',
+					fadongjiid: 0,
 					fadongjiname: '',
 					fadongjipp: '',
 					scdate: new Date().toLocaleDateString()
@@ -228,10 +228,10 @@
 				bmxl() {
 					let _this = this;
 					this.xinzengfadongji = true;
-					$.getJSON(`http://localhost:8080/api/ljl/fdj/MaxId`,
+					/*$.getJSON(`http://localhost:8080/api/ljl/fdj/MaxId`,
 						function(data) {
 							_this.fadongji.fadongjiid = data + 1;
-						});
+						});*/
 				},
 				qx() {
 					this.xinzengfadongji = false;
