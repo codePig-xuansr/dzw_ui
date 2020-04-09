@@ -102,7 +102,11 @@
 											<!--基本显示行-->
 										  <el-table-column v-for="temp in stsy" :key="temp.value" :label="temp.name" :align="'center'" :resizable="false" >
 											  <template slot-scope="scope">
-												<span>{{scope.row[temp.value]}}</span>
+												<span v-if="temp.value!='jsstatus'">{{scope.row[temp.value]}}</span>
+												<span  v-if="temp.value=='jsstatus'">
+													<span v-if="scope.row.jsstatus==0">未结算</span>
+													<span v-if="scope.row.jsstatus==1">已结算</span>
+												</span>
 											  </template>
 										  </el-table-column>
 										</el-table>
@@ -125,7 +129,11 @@
 											<!--基本显示行-->
 										  <el-table-column v-for="temp in stsy" :key="temp.value" :label="temp.name" :align="'center'" :resizable="false" >
 											  <template slot-scope="scope">
-												<span>{{scope.row[temp.value]}}</span>
+											  	<span v-if="temp.value!='jsstatus'">{{scope.row[temp.value]}}</span>
+												<span  v-if="temp.value=='jsstatus'">
+													<span v-if="scope.row.jsstatus==0">未结算</span>
+													<span v-if="scope.row.jsstatus==1">已结算</span>
+												</span>
 											  </template>
 										  </el-table-column>
 										</el-table>
@@ -168,11 +176,11 @@
 						  <el-col :span="24">
 							  <span style="font-size: 14px;">请选择派车车辆：</span>
 							  <el-select v-model="pc" placeholder="请选择">
-								<el-option v-for="temp in pcs" :value="temp.kacode" v-if="temp.kastatus=='0'" :key="temp.cno">
+								<el-option v-for="temp in pcs" :value="temp.kano" v-if="temp.kastatus=='0'" :key="temp.kano">
 								  <span style="float: left">{{temp.kano}}</span>
 								  <span style="float: right; color: #8492a6; font-size: 13px">空闲</span>
 								</el-option>
-								<el-option v-for="temp in pcs" value="temp.kacode" v-if="temp.kastatus!='0'" :disabled="true" :key="temp.cno">
+								<el-option v-for="temp in pcs" value="temp.kano" v-if="temp.kastatus!='0'" :disabled="true" :key="temp.kano">
 									<span style="float: left">{{temp.kano}}</span>
 									<span style="float: right; color: #8492a6; font-size: 13px">派车中</span>
 								  </el-option>
@@ -206,13 +214,7 @@
 				vcps:[],
 				ctcar:[],
 				temps:[],
-				pcs:[{
-					kacode:'1',
-					kastatus:0,
-				},{
-					kacode:'2',
-					kastatus:1,
-				},],
+				pcs:[],
 				pc:'',
 				jct:true,
 			},
