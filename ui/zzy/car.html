@@ -26,7 +26,7 @@
 								<template slot-scope="scope">
 									<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>
 									<el-button type="danger" v-if="temp.value==0" @click="delOne(scope.row.kaid)">删除</el-button>
-									<el-button type="primary" v-if="temp.value==0" @click="modify = true">修改</el-button>									
+									<el-button type="primary" v-if="temp.value==0" @click="queryBySid(scope.row.kaid)">修改</el-button>									
 								</template>
 							</el-table-column>
 						</el-table>
@@ -70,27 +70,35 @@
 			
 			<el-dialog title="修改等级" :visible.sync="modify" width="30%" :before-close="handleClose">
 				<div>
-					<el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
+					<el-form :label-position="labelPosition" label-width="80px" :model="carlist">
 						<el-form-item label="车牌号">
-							<el-input v-model="formLabelAlign.carno"></el-input>
+							<el-input v-model="carlist.kano"></el-input>
 						</el-form-item>
 						<el-form-item label="品牌">
-							<el-input v-model="formLabelAlign.carpp"></el-input>
+							<el-input v-model="carlist.kapp"></el-input>
 						</el-form-item>
 						<el-form-item label="车型">
-							<el-input v-model="formLabelAlign.carxinghao"></el-input>
+							<el-input v-model="carlist.katype"></el-input>
 						</el-form-item>
 						<el-form-item label="当前里程">
-							<el-input v-model="formLabelAlign.licheng"></el-input>
+							<el-input v-model="carlist.kalc"></el-input>
 						</el-form-item>
-						<el-form-item label="归属班组">
-							<el-input v-model="formLabelAlign.bzname"></el-input>
-						</el-form-item>
+						<el-form-item label="归属班组">							
+						 <el-select v-model="carlist.bzname" placeholder="请选择">
+				              <el-option
+				                v-for="item in options"
+				                :key="item.value"
+				                :label="item.label"
+				                :value="item.value"
+				                :disabled="item.disabled">
+				              </el-option>
+				          </el-select>
+						</el-form-item>		
 					</el-form>
 				</div>
 				<span slot="footer" class="dialog-footer">
    				 <el-button @click="modify = false">取 消</el-button>
-   				 <el-button type="primary" @click="addall">保存</el-button>
+   				 <el-button type="primary" @click="modifyall">保存</el-button>
   				</span>
 			</el-dialog>
 		</div>
@@ -194,6 +202,34 @@
 				sizec(size) {
 					this.page(1, size);
 				},
+				//根据sid查询状态信息
+				queryBySid(kaid){
+					alert(kaid)
+					let _this = this;	
+					_this.modify = true;
+					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/kache/queryKacheByid/${kaid}`,function(pg) {
+						_this.carlist = pg;							
+					});
+				},
+				//修改数据
+				modifyall() {
+					let _this=this;
+					alert(JSON.stringify(_this.carlist))
+					jQuery.ajax("http://127.0.0.1:8080/zzy/api/kache/modifyKache/{kache}",{
+						type:'put',
+						data:JSON.stringify(_this.carlist),
+						contentType: 'application/json; charset=UTF-8',
+						success(data){
+							if(data=="ok"){
+								alert("修改失败！");
+							}else{							
+								alert("修改成功！");
+								_this.modify = false;
+								_this.page(1,5);
+							}
+						}
+					});
+				},
 				//添加数据
 				addall() {
 					let _this=this;
@@ -209,7 +245,7 @@
 							}else{
 								alert("新增成功！");
 								_this.add = false;
-								_this.page(1,3);
+								_this.page(1,5);
 								
 							}
 						}
@@ -218,7 +254,7 @@
 			},
 			mounted() {
 				let _this = this;
-				_this.page(1, 3);
+				_this.page(1, 5);
 			}
 		});
 	</script>
