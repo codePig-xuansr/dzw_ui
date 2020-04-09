@@ -21,14 +21,14 @@
 				<el-col :span="24">
 					<template>
 						<!--<el-button type="button" class="btn btn-success btn-block" id="generate-excel"><i class="fa fa-file-excel-o" aria-hidden="true"></i> 将表格转换为Excel</el-button>-->
-							<el-button type="success" @click="add = true">添加数据</el-button>
+							<el-button type="primary" plain @click="add = true">添加数据</el-button>
 							
 						<el-table :data="vehicleInfo.list" border style="width: 100%">
 							<el-table-column v-for="(temp,index) in stsy" :label="temp.name" align="center" :resizable="false">
 								<template slot-scope="scope">
 									<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>
-									<el-button type="danger" v-if="temp.value==0" @click="delOne(scope.row.sid)">删除</el-button>
-									<el-button type="primary" v-if="temp.value==0" @click="queryBySid(scope.row.sid)">修改</el-button>							
+									<el-button type="primary" plain v-if="temp.value==0" @click="delOne(scope.row.sid)">删除</el-button>
+									<el-button type="primary" plain v-if="temp.value==0" @click="queryBySid(scope.row.sid)">修改</el-button>							
 								</template>
 							</el-table-column>
 						</el-table>

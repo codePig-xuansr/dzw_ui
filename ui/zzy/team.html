@@ -3,10 +3,9 @@
 
 	<head>
 		<meta charset="UTF-8">
-		<title>班组技工</title>
+		<title>商品资料</title>
 		<style>
-			/* 请为你的每个页面设置一个内边距 */
-			
+			/* 请为你的每个页面设置一个内边距 */			
 			#fish {
 				padding-left: 5px;
 			}
@@ -15,31 +14,26 @@
 
 	<body>
 		<!--绑定vue引擎，命名：页面名字+Vm-->
-		<div id="fish" >
+		<div id="fish">
 			<el-row>
 				<el-col :span="24">
 					<template>
 						<!--<el-button type="button" class="btn btn-success btn-block" id="generate-excel"><i class="fa fa-file-excel-o" aria-hidden="true"></i> 将表格转换为Excel</el-button>-->
-						<el-button type="success" @click="add = true">添加数据</el-button>
-						<el-table :data="vehicleInfo" border style="width: 100%;float: left;">
-							<el-table-column v-for="(temp,index) in stsy" :label="temp.name" align="center" :resizable="false" >
+						<el-button type="primary" plain @click="add = true">添加数据</el-button>
+
+						<el-table :data="vehicleInfo" border style="width: 100%">
+							<el-table-column v-for="(temp,index) in stsy" :label="temp.name" align="center" :resizable="false">
 								<template slot-scope="scope">
 									<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>
-									<el-button type="danger" v-if="temp.value==0" @click="delOne(scope.row.numbercar)">删除</el-button>
-									<br />
-									<br />
-									<el-button type="primary" v-if="temp.value==0" @click="addteam = true">修改</el-button>									
+									<el-button type="primary" plain v-if="temp.value==0" @click="delOne(scope.row.teamno)">删除</el-button><br/>
+									<el-button type="primary" plain v-if="temp.value==0" @click="modify = true">修改</el-button>
 								</template>
 							</el-table-column>
 						</el-table>
 						<el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="carlist.total" :page-sizes="[1,2,3,4,5]" :page-size="carlist.pageSize">
 					</template>
-
 				</el-col>
 			</el-row>
-			
-			
-			
 			<el-dialog title="新增班组技工" :visible.sync="add" width="60%" :before-close="handleClose">
 				<div>
 					<el-form :label-position="labelPosition" :inline="true" label-width="80px" :model="formLabelAlign">
@@ -133,7 +127,6 @@
    				 <el-button type="primary" @click="addall">保存</el-button>
   				</span>
 			</el-dialog>
-
 		</div>
 	</body>
 	<script>
@@ -141,21 +134,18 @@
 			el: '#fish',
 			data: {
 				formLabelAlign: {
-					teamno: '1',
-					teamname: '2',
-					number: '3',
-					artname: '4',
-					sex: '5',
-					phone: '6',
-					site: '7',
-					logname: '8',
-					idcard: '9',
-					classno: '10',
-					typeg: '11',
-					brands: '12',
+					teamno: '',
+					teamname: '',
+					number: '',
+					artname: '',
+					sex: '',
+					phone: '',
+					site: '',
+					logname: '',
+					idcard: '',
 				},
 				add: false,
-				addteam:false,
+				modify:false,
 				piges: {},
 				carlist: [],
 				list: [],
