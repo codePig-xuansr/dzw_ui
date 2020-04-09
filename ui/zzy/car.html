@@ -84,7 +84,7 @@
 							<el-input v-model="carlist.kalc"></el-input>
 						</el-form-item>
 						<el-form-item label="归属班组">							
-						 <el-select v-model="carlist.bzname" placeholder="请选择">
+						 <el-select v-model="carlist.bzid" placeholder="请选择">
 				              <el-option
 				                v-for="item in options"
 				                :key="item.value"
@@ -208,13 +208,15 @@
 					let _this = this;	
 					_this.modify = true;
 					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/kache/queryKacheByid/${kaid}`,function(pg) {
-						_this.carlist = pg;							
+						_this.carlist = pg;
+						var a=["维修组1","维修组2","维修组3","油漆组","钣金组"];
+						_this. carlist.bzid= a[pg.bzid-1];
 					});
 				},
 				//修改数据
 				modifyall() {
 					let _this=this;
-					alert(JSON.stringify(_this.carlist))
+					/*alert(JSON.stringify(_this.carlist))*/
 					jQuery.ajax("http://127.0.0.1:8080/zzy/api/kache/modifyKache/{kache}",{
 						type:'put',
 						data:JSON.stringify(_this.carlist),

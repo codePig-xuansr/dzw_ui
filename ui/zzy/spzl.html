@@ -32,9 +32,6 @@
 				<el-col :span="24">
 					<template>
 						<!--<el-button type="button" class="btn btn-success btn-block" id="generate-excel"><i class="fa fa-file-excel-o" aria-hidden="true"></i> 将表格转换为Excel</el-button>-->				
-						
-						
-
 						<el-table :data="vehicleInfo" style="width: 100%">
 							<el-table-column v-for="(temp,index) in stsy" :label="temp.name" align="center" :resizable="false">
 								<template slot-scope="scope">
@@ -161,13 +158,13 @@
 						name: '商品名称',
 						value: 'number'
 					}, {
+						name: '商品品牌',
+						value: 'sex'
+					},{
 						name: '使用车型',
 						value: 'artname'
 					},
-					{
-						name: '商品品牌',
-						value: 'sex'
-					},
+					
 					{
 						name: '数量单位',
 						value: 'phone'
