@@ -37,11 +37,11 @@
 							<el-button style="width: 250px;">
 								<div class="ibox float-e-margins">
 									<div class="ibox-title" style="margin-left: -100px;">
-										<span class="label label-success pull-right">月</span>
+										<span class="label label-success pull-right">今天</span>
 										<h5>收入</h5>
 									</div>
 									<div class="ibox-content" style="margin-left: -90px;">
-										<h1 class="no-margins">0</h1>
+										<h1 class="no-margins">{{toDayMoney}}</h1>
 
 										<small>总收入</small>
 									</div>
@@ -52,11 +52,11 @@
 							<el-button style="width: 250px;">
 								<div class="ibox float-e-margins" style="margin-left: -130px;">
 									<div class="ibox-title">
-										<span class="label label-info pull-right">全年</span>
+										<span class="label label-info pull-right">今天</span>
 										<h5>订单</h5>
 									</div>
 									<div class="ibox-content" style="margin-left:50px;">
-										<h1 class="no-margins">0</h1>
+										<h1 class="no-margins">{{dd}}</h1>
 
 										<small>新订单</small>
 									</div>
@@ -68,12 +68,12 @@
 								<div class="ibox float-e-margins">
 									<div class="ibox-title" style="margin-left: -100px;">
 										<span class="label label-primary pull-right">今天</span>
-										<h5>访客</h5>
+										<h5>维修车辆台次</h5>
 									</div>
 									<div class="ibox-content" style="margin-left: -60px;">
-										<h1 class="no-margins">1</h1>
+										<h1 class="no-margins">{{toDayWx}}</h1>
 
-										<small>新访客</small>
+										<small>维修台次</small>
 									</div>
 								</div>
 							</el-button>
@@ -82,13 +82,13 @@
 							<el-button style="width: 250px;">
 								<div class="ibox float-e-margins">
 									<div class="ibox-title" style="margin-left: -20px;">
-										<span class="label label-danger pull-right">最近一个月</span>
-										<h5>活跃用户</h5>
+										<span class="label label-danger pull-right">合计</span>
+										<h5>总收入</h5>
 									</div>
 									<div class="ibox-content" style="margin-left: -50px;">
-										<h1 class="no-margins">1</h1>
+										<h1 class="no-margins">{{sum}}</h1>
 
-										<small>12月</small>
+										<small>总收入</small>
 									</div>
 								</div>
 							</el-button>
@@ -124,7 +124,11 @@
 					charts: '',
 					loginUser:{},
 					show:true,
-					titleshow:true
+					titleshow:true,
+					toDayMoney:0,
+					dd:0,
+					toDayWx:0,
+					sum:0
 				};
 			},
 			methods: {
@@ -212,6 +216,21 @@
 				}else{
 					_this.titleshow=false;
 					_this.show=true;
+					$.getJSON(`http://127.0.0.1:8080/zkx/api/main/money`,function(res){
+						_this.toDayMoney=res;
+					})
+					
+					$.getJSON(`http://127.0.0.1:8080/zkx/api/main/dd`,function(res){
+						_this.dd=res;
+					})
+					
+					$.getJSON(`http://127.0.0.1:8080/zkx/api/main/wx`,function(res){
+						_this.toDayWx=res;
+					})
+					
+					$.getJSON(`http://127.0.0.1:8080/zkx/api/main/sum`,function(res){
+						_this.sum=res;
+					})
 				}
 				this.$nextTick(function() {
 					this.drawPie('main')
