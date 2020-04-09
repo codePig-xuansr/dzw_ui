@@ -150,6 +150,10 @@
 								<el-tab-pane name="2">
 									<!-- 不合格 -->
 									<el-form :model="jgrecord" inline="true">
+										<el-form-item label="已返工：">
+											<a style="color: red;">{{fgct}}</a><span style="margin-left: 5px;">次</span>
+										</el-form-item>
+										<br>
 										<div>
 									  <el-form-item label="返工原因：">
 										<el-input v-model="jgrecord.yuanyin" style="width: 200px;" type="textarea"></el-input>
@@ -183,6 +187,7 @@
 			el:'#comVm',
 			data:{
 				cs:false,
+				fgct:'',
 				cominfo:{
 					recorddate:null,
 					status:null,
@@ -215,13 +220,29 @@
 				}
 			},
 			methods:{
+				tabs(i){
+					let _this=this;
+					if(i==2){
+						if(this.$refs['jgrecord']!=undefined){
+							this.$refs['jgrecord'].resetFields();
+						}
+						//查询返工次数
+						jQuery.getJSON(`http://localhost:8080/api/fzx/selectJgcs/${this.jgrecord.recordid}`,function(data){
+							if(data!='0'){
+								_this.fgct=data.zicount;
+							}else{
+								_this.fgct="0";
+							};
+						});
+					}
+
+				},
 				//竣工模态框调用....
 				jg(recordid,edate){
 					//移除校验结果
 					if(this.$refs['jgrecord']!=undefined){
 						this.$refs['jgrecord'].resetFields();
 					}
-					
 					this.jgrecord.recordid=recordid;
 					this.edate=edate;
 					this.today = new Date().toLocaleString('chinese',{hour12:false});
@@ -230,7 +251,6 @@
 					//当前时间>预计完工，true:超过
 					this.wg=date2Str>date1Str;
 					this.cs=true;
-					
 				},
 				//竣工检查
 				comjg(){
