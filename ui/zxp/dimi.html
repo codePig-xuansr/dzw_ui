@@ -22,7 +22,7 @@
 	<br />
 	<br />
 	<template id="a2">
-		<el-table :data="vehicleInfo" height="300" border style="width: 100%;margin-left: 200px;">
+		<el-table :data="vehicleInfo" height="300" border style="width: 77%;margin-left: 150px;">
 			<el-table-column prop="departmentname" label="部门" width="100">
 				<el-input v-model="vehicleInfo.departmentname"></el-input>
 			</el-table-column>
@@ -46,19 +46,14 @@
 				<el-input v-model="vehicleInfo.dimissioncause"></el-input>
 			</el-table-column>
 
-			<el-table-column label="操作" width="300">
+			<el-table-column label="操作" width="180">
 				<template slot-scope="temp">
 					<!--<el-popover placement="top-start" title="标题：回滚" width="200" trigger="hover" content="恢复此员工的职位！" style="color: red;">
 						<el-button slot="reference" style="background-color: cyan;" @click="open(temp.row.empid)">回滚</el-button>
 					</el-popover>-->
 
-					<el-popover placement="top-start" title="标题：打开" width="200" trigger="hover" content="查看此员工所有信息！">
-						<el-button slot="reference" style="background-color: lightcoral;" @click="chaxun(temp.row.empid)">查看</el-button>
-					</el-popover>
-
-					<el-popover placement="top-start" title="标题：删除" width="200" trigger="hover" content="删除此员工在公司所有资料！">
-						<el-button slot="reference" style="background-color: mediumspringgreen;" @click="openn(temp.row.empid)">删除</el-button>
-					</el-popover>
+					<el-button type="primary"   @click="modify = true">查看</el-button>
+								<el-button type="primary"    @click="delOne(vehicleInfo.list[scope.$index].uid)" style="position: relative;float: 50px;">删除</el-button>
 
 				</template>
 			</el-table-column>
