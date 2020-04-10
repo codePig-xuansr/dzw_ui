@@ -114,17 +114,22 @@
 					<p class="font-bold">积分:&nbsp;&nbsp;&nbsp;{{vip.jifen}}</p>
 					<p class="font-bold">vip创建时间:&nbsp;&nbsp;&nbsp;{{vip.startdate}}</p>
 					<h4 class="font-bold">折后价:&nbsp;&nbsp;&nbsp;{{jsmoney}}</h4>
-					<p class="font-bold">
-						<template>
-							<el-radio v-model="radio" label="1">现金</el-radio>
-							<el-radio v-model="radio" label="2">银行卡</el-radio>
-						</template>
-					</p>
-					<!--	</el-col>
-					</el-row>-->
 					<el-form-item>
-						<el-button type="primary" @click="insertjs">确认</el-button>
+						<el-button type="primary" @click="show">确认</el-button>
 						<el-button @click="isShow3 = false">取消</el-button>
+					</el-form-item>
+				</el-form>
+			</el-dialog>
+			<el-dialog title="支付方式" :visible.sync="isShow4" width=" 30%">
+				<el-form ref="ruleForm" label-width="100px" class="demo-ruleForm">
+					<template>
+						<el-radio v-model="radio" label="1">现金</el-radio>
+						<el-radio v-model="radio" label="2">银行卡</el-radio>
+					</template>
+					</p>
+					<el-form-item style="margin-left: 100px;">
+						<el-button type="primary" @click="insertjs">确认</el-button>
+						<el-button @click="isShow4= false">取消</el-button>
 					</el-form-item>
 				</el-form>
 			</el-dialog>
@@ -258,9 +263,14 @@
 				recordid: "",
 				isShow1: false,
 				isShow2: false,
-				isShow3: false
+				isShow3: false,
+				isShow4: false
 			},
 			methods: {
+				show() {
+					this.isShow3 = false;
+					this.isShow4 = true;
+				},
 				/*新增结算*/
 				insertjs() {
 					this.jsrecord.jstype = this.radio;
@@ -292,7 +302,7 @@
 									jstype: "",
 									jsmoney: ""
 								}
-								_this.isShow3 = false;
+								_this.isShow4 = false;
 								/*修改维修表结算状态*/
 								$.ajax(`http://127.0.0.1:8080/api/weixiu`, {
 									type: "put",
@@ -353,8 +363,8 @@
 								alert("登录成功");
 								_this.vip = res.data;
 								_this.jsmoney = _this.jsmoney * res.data.vipdiscount;
-								$.getJSON(`http://127.0.0.1:8080/api/vip/getSessionVip`,
-									function(res) {});
+								/*$.getJSON(`http://127.0.0.1:8080/api/vip/getSessionVip`,
+									function(res) {});*/
 								_this.isShow3 = true;
 							}
 						})
@@ -366,7 +376,7 @@
 						_this.vipcode = "";
 						_this.vippwd = "";
 					} else {
-						_this.insertjs();
+						_this.isShow4 = true;
 					}
 				},
 				/*表格展开查询*/
