@@ -59,8 +59,8 @@
 									<span v-if="temp.values!='status'">{{scope.row[temp.values]}}</span>
 									<span v-if="temp.values=='status'">
 										<el-button v-if="scope.row.status==1" type="success" disabled>已竣工</el-button>
-										<el-button v-if="scope.row.status==0" type="info" @click="jg(scope.row.recordid,scope.row.yujidate)">维修中</el-button>
-										<el-button v-if="scope.row.status==2" type="danger"@click="jg(scope.row.recordid,scope.row.yujidate)">返工中</el-button>
+										<el-button v-if="scope.row.status==0" type="info" @click="jg(scope.row.recordid,scope.row.yujidate,scope.row.recorddate)">维修中</el-button>
+										<el-button v-if="scope.row.status==2" type="danger"@click="jg(scope.row.recordid,scope.row.yujidate,scope.row.recorddate)">返工中</el-button>
 									</span>
 								</template>
 							</el-table-column>
@@ -213,6 +213,7 @@
 				edate:'',
 				today:'',
 				wg:true,
+				dqdate:'',
 				ruls4:{
 					yuanyin:[{required: true, message:'请填写误工原因', trigger: 'blur'}],
 					chufa:[{required: true, message:'请填写处罚金额', trigger: 'blur'}],
@@ -238,7 +239,8 @@
 
 				},
 				//竣工模态框调用....
-				jg(recordid,edate){
+				jg(recordid,edate,dqdate){
+					this.dqdate=dqdate;
 					//移除校验结果
 					if(this.$refs['jgrecord']!=undefined){
 						this.$refs['jgrecord'].resetFields();
@@ -266,10 +268,16 @@
 										let status= this.fzxweixiuadd.status=this.hg;
 										let recordid= this.fzxweixiuadd.recordid=this.jgrecord.recordid;
 										let _this=this;
+										//结束时间
+					        			let date1 = new Date();    
+					        			//_this.dqdate开单时间
+					        			let date2 = date1.getTime() - new Date(_this.dqdate).getTime();   //时间差的毫秒数  
+					       				let leave1=date2%(8760*3600*1000);	//计算天数后剩余的毫秒数
+					        			let bztime=Math.floor(leave1/(3600*1000));//相差多少小时
 										_this.jgrecord.recordid= _this.fzxweixiuadd.recordid=_this.jgrecord.recordid;
 										_this.jgrecord.jgstatus= _this.fzxweixiuadd.status=_this.hg;
 										jQuery.ajax({
-											url: `http://localhost:8080/api/fzx/updatejg/${status}/${recordid}`,
+											url: `http://localhost:8080/api/fzx/updatejg/${status}/${bztime}/${recordid}`,
 											type: 'put',
 											dataType: 'json',
 											contentType: 'application/json',
@@ -298,18 +306,23 @@
 										})
 									
 								}else{
-									let _this=this;
+										let _this=this;
 										let status= this.fzxweixiuadd.status=this.hg;
 										let recordid= this.fzxweixiuadd.recordid=this.jgrecord.recordid;
+										//结束时间
+					        			let date1 = new Date();    
+					        			//_this.dqdate开单时间
+					        			let date2 = date1.getTime() - new Date(_this.dqdate).getTime();   //时间差的毫秒数  
+					       				let leave1=date2%(8760*3600*1000);	//计算天数后剩余的毫秒数
+					        			let bztime=Math.floor(leave1/(3600*1000));//相差多少小时
 										_this.jgrecord.recordid= _this.fzxweixiuadd.recordid=_this.jgrecord.recordid;
 										_this.jgrecord.jgstatus= _this.fzxweixiuadd.status=_this.hg;
 											jQuery.ajax({
-											url: `http://localhost:8080/api/fzx/updatejg/${status}/${recordid}`,
+											url: `http://localhost:8080/api/fzx/updatejg/${status}/${bztime}/${recordid}`,
 											type: 'put',
 											dataType: 'json',
 											contentType: 'application/json',
 											success(data) {
-												
 												if(data.code == "200"){
 													jQuery.ajax({
 														url: 'http://localhost:8080/api/fzx/addjg',
