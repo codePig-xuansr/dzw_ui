@@ -32,12 +32,12 @@
 				<el-col :span="24">
 					<template>
 						<!--<el-button type="button" class="btn btn-success btn-block" id="generate-excel"><i class="fa fa-file-excel-o" aria-hidden="true"></i> 将表格转换为Excel</el-button>-->				
-						<el-table :data="vehicleInfo" style="width: 100%">
+						<el-table :data="carlist.list" style="width: 100%">
 							<el-table-column v-for="(temp,index) in stsy" :label="temp.name" align="center" :resizable="false">
 								<template slot-scope="scope">
 									<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>
-									<el-button type="primary" plain v-if="temp.value==0" @click="delOne(scope.row.teamno)">删除</el-button><br/>
-									<el-button type="primary" plain v-if="temp.value==0" @click="modify = true">修改</el-button>
+<!--									<el-button type="primary" plain v-if="temp.value==0" @click="delOne(scope.row.teamno)">删除</el-button><br/>
+-->									<el-button type="primary" plain v-if="temp.value==0" @click="queryBySid(scope.row.proid)">修改</el-button>
 								</template>
 							</el-table-column>
 						</el-table>
@@ -48,32 +48,26 @@
 			<el-dialog title="新增商品资料" :visible.sync="add" width="60%" :before-close="handleClose">
 				<div>
 					<el-form :label-position="labelPosition" :inline="true" label-width="80px" :model="formLabelAlign">
-						<el-form-item label="登记门店">
-							<el-input v-model="formLabelAlign.teamno"></el-input>
-						</el-form-item>
-						<el-form-item label="商品编码">
-							<el-input v-model="formLabelAlign.teamname"></el-input>
-						</el-form-item>
 						<el-form-item label="商品名称">
-							<el-input v-model="formLabelAlign.number"></el-input>
-						</el-form-item>
-						<el-form-item label="使用车型">
-							<el-input v-model="formLabelAlign.artname"></el-input>
+							<el-input v-model="formLabelAlign.proname"></el-input>
 						</el-form-item>
 						<el-form-item label="商品品牌">
-							<el-input v-model="formLabelAlign.sex"></el-input>
+							<el-input v-model="formLabelAlign.propp"></el-input>
+						</el-form-item>
+						<el-form-item label="商品库存">
+							<el-input v-model="formLabelAlign.pronum"></el-input>
 						</el-form-item>
 						<el-form-item label="数量单位">
-							<el-input v-model="formLabelAlign.phone"></el-input>
-						</el-form-item>
-						<el-form-item label="商品等级">
-							<el-input v-model="formLabelAlign.site"></el-input>
-						</el-form-item>
-						<el-form-item label="厂商名称">
-							<el-input v-model="formLabelAlign.logname"></el-input>
+							<el-input v-model="formLabelAlign.prodw"></el-input>
 						</el-form-item>
 						<el-form-item label="商品价格">
-							<el-input v-model="formLabelAlign.idcard"></el-input>
+							<el-input v-model="formLabelAlign.proprice"></el-input>
+						</el-form-item>
+						<el-form-item label="供应商">
+							<el-select v-model="formLabelAlign.ghid" placeholder="请选择">
+				             	<el-option label="aaa供应商" value="1"></el-option>
+				             	<el-option label="bbb供应商" value="2"></el-option>
+				          	</el-select>						
 						</el-form-item>
 					</el-form>
 				</div>
@@ -85,61 +79,60 @@
 
 			<el-dialog title="修改商品资料" :visible.sync="modify" width="60%" :before-close="handleClose">
 				<div>
-					<el-form :label-position="labelPosition" :inline="true" label-width="80px" :model="formLabelAlign">
-						<el-form-item label="登记门店">
-							<el-input v-model="formLabelAlign.teamno"></el-input>
-						</el-form-item>
+					<el-form :label-position="labelPosition" :inline="true" label-width="80px" :model="teams">
+						<template>
+						  <el-radio  v-model="teams.prostar" label="1">停用</el-radio>
+						 <el-radio v-model="teams.prostar" label="0">通过</el-radio>
+						</template><br />
 						<el-form-item label="商品编码">
-							<el-input v-model="formLabelAlign.teamname"></el-input>
+							<el-input v-model="teams.proid"></el-input>
 						</el-form-item>
 						<el-form-item label="商品名称">
-							<el-input v-model="formLabelAlign.number"></el-input>
+							<el-input v-model="teams.proname"></el-input>
 						</el-form-item>
-						<el-form-item label="使用车型">
-							<el-input v-model="formLabelAlign.artname"></el-input>
+						<el-form-item label="商品库存">
+							<el-input v-model="teams.pronum"></el-input>
 						</el-form-item>
 						<el-form-item label="商品品牌">
-							<el-input v-model="formLabelAlign.sex"></el-input>
+							<el-input v-model="teams.propp"></el-input>
 						</el-form-item>
 						<el-form-item label="数量单位">
-							<el-input v-model="formLabelAlign.phone"></el-input>
+							<el-input v-model="teams.prodw"></el-input>
 						</el-form-item>
-						<el-form-item label="商品等级">
-							<el-input v-model="formLabelAlign.site"></el-input>
-						</el-form-item>
-						<el-form-item label="厂商名称">
-							<el-input v-model="formLabelAlign.logname"></el-input>
-						</el-form-item>
+						<el-form-item label="供应商">							
+						 <el-select v-model="teams.ghid" placeholder="请选择">
+				              <el-option
+				                v-for="item in options"
+				                :key="item.value"
+				                :label="item.label"
+				                :value="item.value"
+				                :disabled="item.disabled">
+				              </el-option>
+				          </el-select>
+						</el-form-item>		
 						<el-form-item label="商品价格">
-							<el-input v-model="formLabelAlign.idcard"></el-input>
+							<el-input v-model="teams.proprice"></el-input>
 						</el-form-item>
+						
 					</el-form>
 				</div>
 				<span slot="footer" class="dialog-footer">
    				 <el-button @click="modify = false">取 消</el-button>
-   				 <el-button type="primary" @click="addall">保存</el-button>
+   				 <el-button type="primary" @click="updteam">保存</el-button>
   				</span>
 			</el-dialog>
 		</div>
 	</body>
 	<script>
+		
 		var fish = new Vue({
 			el: '#fish',
 			data: {
-				formLabelAlign: {
-					teamno: '',
-					teamname: '',
-					number: '',
-					artname: '',
-					sex: '',
-					phone: '',
-					site: '',
-					logname: '',
-					idcard: '',
-				},
+				formLabelAlign:{},
 				add: false,
 				modify:false,
 				piges: {},
+				 
 				carlist: [],
 				cominfo:{
 					recorddate:null,
@@ -148,38 +141,56 @@
 				},
 				list: [],
 				teams:{},
+				options: [{
+				          value: '1',
+				          label: '龙哥家开的',
+				
+				        }, {
+				          value: '2',
+				          label: '供货商2',
+				
+				        }, {
+				          value: '3',
+				          label: '供货商3',
+				
+				        }, {
+				          value: '4',
+				          label: '供货商4',
+				
+				        }, {
+				          value: '5',
+				          label: '供货商5',
+				
+				        }],
+				        value: '归属班组',
 				stsy: [{
-						name: '登记门店',
-						value: 'teamno'
-					}, {
 						name: '商品编码',
-						value: 'teamname'
+						value: 'proid'
 					}, {
 						name: '商品名称',
-						value: 'number'
+						value: 'proname'
 					}, {
 						name: '商品品牌',
-						value: 'sex'
+						value: 'propp'
 					},{
-						name: '使用车型',
-						value: 'artname'
-					},
-					
+						name: '商品库存',
+						value: 'pronum'
+					},					
 					{
 						name: '数量单位',
-						value: 'phone'
+						value: 'prodw'
 					},
 					{
-						name: '商品等级',
-						value: 'site'
+						name: '厂商地址',
+						value: 'ghaddress'
 					},
 					{
 						name: '厂商名称',
-						value: 'logname'
+						value: 'ghname'
 					},
 					{
 						name: '商品价格',
-						value: 'idcard'
+						value: 'proprice'
 					},
 					{
 						name: '操作',
@@ -187,15 +198,14 @@
 					}
 				],
 				vehicleInfo:[{
-					teamno:'1111',
-					teamname:'222',
-					number:'333',
-					artname:'444',
-					sex:'男',
-					phone:'1111',
-					site:'1111',
-					logname:'222',
-					idcard:'333',
+					prodw:'1111',
+					proid:'222',
+					proname:'333',
+					pronum:'444',
+					propp:'2222',
+					ghaddress:'1111',
+					ghname:'1111',
+					proprice:'222',
 					comstatus:''
 				}],
 			},
@@ -211,11 +221,12 @@
 						});
 					}
 				},
-				page(num, size) {
+				page(pageNum, pageSize) {
 					let _this = this;
-					jQuery.getJSON(`http://127.0.0.1:8080/api/team/page/${num}/${size}`, {}, function(pg) {
+					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/product/queryProduct/${pageNum}/${pageSize}`,function(pg) {
 						_this.carlist = pg;
 						_this.list = pg.list;
+						//alert(JSON.stringify(pg.list))
 					});
 				},
 				//页数改变事件
@@ -231,47 +242,48 @@
 				//添加数据
 				addall() {
 					let _this = this;
-					jQuery.ajax("http://127.0.0.1:8080/api/team/add", {
+					//alert(JSON.stringify(_this.formLabelAlign))
+					jQuery.ajax("http://127.0.0.1:8080/zzy/api/product/addProduct", {
 						type: 'post',
 						data: JSON.stringify(_this.formLabelAlign),
 						contentType: 'application/json; charset=UTF-8',
 						success(data) {
-							if(data == "ok") {
-								alert("新增成功！");
-								this.add = false;
-								location.reload();
-							} else {
+							if(data=="ok"){
 								alert("新增失败！");
+							}else{							
+								alert("新增成功！");
+								_this.add = false;
+								_this.page(1,5);
 							}
 						}
 					});
 				},
-				//修改时渲染数据到页面上
-				selteam(teamno){
-					alert(teamno);
-					let _this = this;
-					_this.s2 = true;
-					jQuery.getJSON("http://127.0.0.1:8080/api/team/pages", {
-						teamno: `${teamno}`
-					}, function(data) {
-						_this.teams = data;
-						_this.addteam=true;
+				//根据sid查询状态信息
+				queryBySid(proid){
+					//alert(proid)
+					let _this = this;	
+					_this.modify = true;
+					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/product/queryProductById/${proid}`,function(pg) {
+						_this.teams = pg;
+						var a=["龙哥家开的","供应商2","供应商3","供应商4","供应商5"];
+						_this.teams.ghid= a[pg.ghid-1];
 					});
 				},
-				
 				updteam(){
-					console.log(this.teams);
+					//console.log(this.teams);
 					let _this = this;
-					jQuery.ajax("http://127.0.0.1:8080/api/team/upd", {
-						type: 'post',
-						data: JSON.stringify(_this.teams[0]),
+					//alert(JSON.stringify(_this.teams))
+					jQuery.ajax("http://127.0.0.1:8080/zzy/api/product/modifyProduct", {
+						type: 'put',
+						data: JSON.stringify(_this.teams),
 						contentType: 'application/json;charset=UTF-8',
 						success(data) {
 							if(data == "ok") {
-								alert("修改成功！");
-								location.reload();
+								alert("修改失败！");							
 							} else {
-								alert("修改失败!");
+								alert("修改成功！");
+								_this.modify = false;
+								_this.page(1,5);
 							}
 						}
 					});

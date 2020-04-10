@@ -193,7 +193,6 @@
 					});
 				},
 				//页数改变事件
-
 				change(num) {
 					let _this = this;
 					this.page(num, _this.vehicleInfo.pageSize);
@@ -216,7 +215,7 @@
 				//修改数据
 				modifyall() {
 					let _this=this;
-					/*alert(JSON.stringify(_this.carlist))*/
+//					alert(JSON.stringify(_this.carlist))
 					jQuery.ajax("http://127.0.0.1:8080/zzy/api/kache/modifyKache/{kache}",{
 						type:'put',
 						data:JSON.stringify(_this.carlist),
