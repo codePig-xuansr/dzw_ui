@@ -28,10 +28,10 @@
 						<el-link :underline="false">维修单号</el-link>
 						<el-link type="danger" :underline="false">{{fzxweixiuadd.recordid}}</el-link>
 						<span style="margin-left: 600px;"></span>
-						<template v-if="jg!=0">
+						<template v-if="fzxweixiuadd.jiuyuanfy!=0">
 							<el-popover placement="top-start" title="温馨提示" width="200" trigger="hover">
-								<p style="color: red;"><a v-if="fy">该费用仅包含维修项目费，不包含维修工时费</a><a v-if="!fy">该费用包含维修项目费和接车费，不包含维修工时费</a></p>
-							<!--<a style="color: coral;" slot="reference">预估金额：￥<span style="color: red;">{{jg}}</span>元</a>-->
+								<p style="color: red;"><a v-if="fy">该费用是救援车的里程费用</a><a v-if="!fy">该费用是救援车的里程费用</a></p>
+							<a v-if="lc" style="color: coral; font-size: 14px; font-weight: bold;" slot="reference">救援费用：￥<span style="color: red;">{{fzxweixiuadd.jiuyuanfy}}</span>元</a>
 						  </el-popover>
 						</template>
 						<span style="margin-left: 50px;"></span>
@@ -92,6 +92,10 @@
 								<el-form-item label="联系电话：" prop="driverphone">
 									<template> <el-input v-model="fzxweixiuadd.driverphone" oninput="this.value=this.value.replace(/[^\d]/g,'')" size="small" style="width: 170px;"></el-input></template>
 								</el-form-item>-->
+								<span class="kg"></span>
+								<el-form-item v-if="lc" label="救援卡车牌号："prop="kano">
+									<template> <el-input v-model="fzxweixiuadd.kano" :disabled="true" type="text" size="small" style="width: 170px;"></el-input></template>
+								</el-form-item>
 								<span class="kg"></span>
 								<el-form-item label="施工班次：" prop="shigongbc">
 									<template>
@@ -202,6 +206,8 @@
 					guzhangyuanyin:'',
 					danjutype:'',
 					licheng:'0',
+					kano:'',
+					jiuyuanfy:'0',
 					fzxweixiuxm:[]//添加维修项目
 				},
 				jg:'0',
@@ -244,6 +250,7 @@
 							}
 							_this.addone=false;
 							_this.fzxweixiuadd.fzxweixiuxm=cd;
+							_this.fzxweixiuadd.jiuyuanfy=parseInt(_this.fzxweixiuadd.licheng) * parseInt(3);
 						}else{
 							return false;
 						}
@@ -337,6 +344,8 @@
 					_this.fy=false;
 					_this.xde=true;
 					let carno=sessionStorage.getItem("carno");
+					let carnoo=sessionStorage.getItem("carnoo");
+					_this.fzxweixiuadd.kano=carnoo;
 					jQuery.getJSON(`http://localhost:8080/api/fzx/selectAll/${carno}`,(data)=>{
 						_this.pickinfo = data;
 					});
