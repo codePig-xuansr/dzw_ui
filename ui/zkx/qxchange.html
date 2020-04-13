@@ -9,7 +9,7 @@
 	<body>
 		<div id="app">
 			<template>
-				<el-tree :data="parent" show-checkbox node-key="id" ref="tree" highlight-current :default-expanded-keys="ufs" :default-checked-keys="ufs" :props="defaultProps">
+				<el-tree accordion :data="parent" show-checkbox node-key="id" ref="tree" highlight-current :default-checked-keys="ufs" :props="defaultProps">
 				</el-tree>
 			</template>
 			<div class="buttons">
