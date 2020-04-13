@@ -16,72 +16,163 @@
 		<!--绑定vue引擎，命名：页面名字+Vm-->
 		<div id="fish">
 			<el-row>
+				  <el-col :span="24">
+					  <el-form :model="cominfo" inline="true">
+						<el-form-item label="班组名称：">
+							<el-input v-model="cominfo.recordid" placeholder="支持模糊搜索"></el-input>
+						</el-form-item>
+						<el-form-item>
+							<el-button type="success" plain @click="ck">查询</el-button>
+							<el-button type="primary" plain @click="addbz = true">添加班组</el-button>
+						<el-button type="primary" plain @click="addjg = true">添加技工</el-button>
+						</el-form-item>
+					  </el-form>
+				  </el-col>
+				</el-row>
+				
+			<el-row>				
 				<el-col :span="24">
 					<template>
-						<!--<el-button type="button" class="btn btn-success btn-block" id="generate-excel"><i class="fa fa-file-excel-o" aria-hidden="true"></i> 将表格转换为Excel</el-button>-->
-						<el-button type="primary" plain @click="add = true">添加数据</el-button>
-
-						<el-table :data="vehicleInfo" border style="width: 100%">
+						<!--<el-button type="button" class="btn btn-success btn-block" id="generate-excel"><i class="fa fa-file-excel-o" aria-hidden="true"></i> 将表格转换为Excel</el-button>-->				
+						<el-table :data="carlist.list" style="width: 100%">
 							<el-table-column v-for="(temp,index) in stsy" :label="temp.name" align="center" :resizable="false">
 								<template slot-scope="scope">
 									<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>
-									<el-button type="primary" plain v-if="temp.value==0" @click="delOne(scope.row.teamno)">删除</el-button><br/>
-									<el-button type="primary" plain v-if="temp.value==0" @click="modify = true">修改</el-button>
+									<el-button type="primary" plain v-if="temp.value==0" @click="delOne(scope.row.bzid)">删除</el-button>
+									<el-button type="primary" plain v-if="temp.value==0" @click="queryBySid(scope.row.bzid)">修改</el-button>
 								</template>
 							</el-table-column>
 						</el-table>
-						<el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="carlist.total" :page-sizes="[1,2,3,4,5]" :page-size="carlist.pageSize">
+						<el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,prev, pager, next, jumper" :total="carlist.total" :page-sizes="[1,2,3,4,5]" :page-size="carlist.pageSize">
 					</template>
 				</el-col>
 			</el-row>
-			<el-dialog title="新增班组技工" :visible.sync="add" width="60%" :before-close="handleClose">
+			<br />
+			<hr />
+			<br />
+			<el-row>				
+				<el-col :span="24">
+					<template>
+						<!--<el-button type="button" class="btn btn-success btn-block" id="generate-excel"><i class="fa fa-file-excel-o" aria-hidden="true"></i> 将表格转换为Excel</el-button>-->				
+						<el-table :data="vehicleInfo.list" style="width: 100%">
+							<el-table-column v-for="(temp,index) in stsyjg" :label="temp.name" align="center" :resizable="false">
+								<template slot-scope="scope">
+									<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>
+									<el-button type="primary" plain v-if="temp.value==0" @click="delOne(scope.row.jid)">删除</el-button><br />
+									<el-button type="primary" plain v-if="temp.value==0" @click="modifyjg=true">修改</el-button>
+								</template>
+							</el-table-column>
+						</el-table>
+						<el-pagination background prev-text="上一页" next-text="下一页" @size-change="jgsizec" @current-change="jgchange" layout="total,prev, pager, next, jumper" :total="vehicleInfo.total" :page-sizes="[1,2,3,4,5]" :page-size="carlist.pageSize">
+					</template>
+				</el-col>
+			</el-row>
+			<el-dialog title="新增班组" :visible.sync="addbz" width="30%" :before-close="handleClose">
 				<div>
-					<el-form :label-position="labelPosition" :inline="true" label-width="80px" :model="formLabelAlign">
-						<el-form-item label="班组编号">
-							<el-input v-model="formLabelAlign.teamno"></el-input>
-						</el-form-item>
+					<el-form :label-position="labelPosition"  label-width="80px" :model="formLabelAlign">
 						<el-form-item label="班组名称">
-							<el-input v-model="formLabelAlign.teamname"></el-input>
+							<el-input v-model="formLabelAlign.bzname"></el-input>
 						</el-form-item>
-						<el-form-item label="技工编号">
-							<el-input v-model="formLabelAlign.number"></el-input>
+						<el-form-item label="维修类型">
+							<el-input v-model="formLabelAlign.bztype"></el-input>
 						</el-form-item>
-						<el-form-item label="技工姓名">
-							<el-input v-model="formLabelAlign.artname"></el-input>
-						</el-form-item>
-						<el-form-item label="性别">
-							<el-input v-model="formLabelAlign.sex"></el-input>
-						</el-form-item>
-						<el-form-item label="电话">
-							<el-input v-model="formLabelAlign.phone"></el-input>
-						</el-form-item>
-						<el-form-item label="地址">
-							<el-input v-model="formLabelAlign.site"></el-input>
-						</el-form-item>
-						<el-form-item label="用户名">
-							<el-input v-model="formLabelAlign.logname"></el-input>
-						</el-form-item>
-						<el-form-item label="身份证">
-							<el-input v-model="formLabelAlign.idcard"></el-input>
-						</el-form-item>
-						<el-form-item label="星级">
-							<el-input v-model="formLabelAlign.classno"></el-input>
-						</el-form-item>
-						<el-form-item label="类型">
-							<el-input v-model="formLabelAlign.typeg"></el-input>
-						</el-form-item>
-						<el-form-item label="品牌">
-							<el-input v-model="formLabelAlign.brands"></el-input>
+						<el-form-item label="班组费用">
+							<el-input v-model="formLabelAlign.bzcost"></el-input>
 						</el-form-item>
 					</el-form>
 				</div>
 				<span slot="footer" class="dialog-footer">
-   				 <el-button @click="addteam = false">取 消</el-button>
+   				 <el-button @click="addbz = false">取 消</el-button>
    				 <el-button type="primary" @click="addall">保存</el-button>
+  				</span>
+			</el-dialog>
+			<el-dialog title="修改班组" :visible.sync="modifybz" width="30%" :before-close="handleClose">
+				<div>
+					<el-form :label-position="labelPosition" label-width="80px" :model="teams">
+						<el-form-item label="班组名称">
+							<el-input v-model="teams.bzname"></el-input>
+						</el-form-item>
+						<el-form-item label="维修类型">
+							<el-input v-model="teams.bztype"></el-input>
+						</el-form-item>
+						<el-form-item label="班组费用">
+							<el-input v-model="teams.bzcost"></el-input>
+						</el-form-item>
+					</el-form>
+				</div>
+				<span slot="footer" class="dialog-footer">
+   				 <el-button @click="modifybz = false">取 消</el-button>
+   				 <el-button type="primary" @click="modifybanzu">保存</el-button>
+  				</span>
+			</el-dialog>
+			
+			
+			<el-dialog title="新增班组技工" :visible.sync="addjg" width="60%" :before-close="handleClose">
+				<div>
+					<el-form :label-position="labelPosition" :inline="true" label-width="80px" :model="addjgvalue">
+						<el-form-item label="技工姓名">
+							<el-input v-model="addjgvalue.jname"></el-input>
+						</el-form-item>
+						<el-form-item label="性别">
+							<el-input v-model="addjgvalue.jsex"></el-input>
+						</el-form-item>
+						<el-form-item label="电话">
+							<el-input v-model="addjgvalue.jphone"></el-input>
+						</el-form-item>
+						<el-form-item label="地址">
+							<el-input v-model="addjgvalue.jaddress"></el-input>
+						</el-form-item>
+						<el-form-item label="用户名">
+							<el-input v-model="addjgvalue.truename"></el-input>
+						</el-form-item>
+						<el-form-item label="身份证">
+							<el-input v-model="addjgvalue.jidcard"></el-input>
+						</el-form-item>
+						<el-form-item label="工作时长">
+							<el-input v-model="addjgvalue.worktime"></el-input>
+						</el-form-item>
+						<el-form-item label="星级">
+							<el-select v-model="addjgvalue.sid" placeholder="请选择">
+				              <el-option
+				                v-for="item in star"
+				                :key="item.value"
+				                :label="item.label"
+				                :value="item.value"
+				                :disabled="item.disabled">
+				              </el-option>
+				          </el-select>
+						</el-form-item>
+						<el-form-item label="类型">
+							<el-select v-model="addjgvalue.depid" placeholder="请选择">
+				              <el-option
+				                v-for="item in dep"
+				                :key="item.value"
+				                :label="item.label"
+				                :value="item.value"
+				                :disabled="item.disabled">
+				              </el-option>
+				          </el-select>
+						</el-form-item>
+						<el-form-item label="归属班组">							
+						 <el-select v-model="addjgvalue.bzid" placeholder="请选择">
+				              <el-option
+				                v-for="item in options"
+				                :key="item.value"
+				                :label="item.label"
+				                :value="item.value"
+				                :disabled="item.disabled">
+				              </el-option>
+				          </el-select>
+						</el-form-item>		
+					</el-form>
+				</div>
+				<span slot="footer" class="dialog-footer">
+   				 <el-button @click="addjg = false">取 消</el-button>
+   				 <el-button type="primary" @click="addjigong">保存</el-button>
   				</span>
 			</el-dialog>
 
-			<el-dialog title="新增班组技工" :visible.sync="addteam" width="60%" :before-close="handleClose">
+			<el-dialog title="修改班组技工" :visible.sync="modifyjg" width="60%" :before-close="handleClose">
 				<div>
 					<el-form :label-position="labelPosition" :inline="true" label-width="80px" :model="formLabelAlign">
 						<el-form-item label="班组编号">
@@ -117,104 +208,107 @@
 						<el-form-item label="类型">
 							<el-input v-model="formLabelAlign.typeg"></el-input>
 						</el-form-item>
-						<el-form-item label="品牌">
-							<el-input v-model="formLabelAlign.brands"></el-input>
-						</el-form-item>
 					</el-form>
 				</div>
 				<span slot="footer" class="dialog-footer">
-   				 <el-button @click="addteam = false">取 消</el-button>
-   				 <el-button type="primary" @click="addall">保存</el-button>
+   				 <el-button @click="modifyjg = false">取 消</el-button>
+   				 <el-button type="primary" @click="">保存</el-button>
   				</span>
 			</el-dialog>
+
 		</div>
 	</body>
 	<script>
+		
 		var fish = new Vue({
 			el: '#fish',
 			data: {
-				formLabelAlign: {
-					teamno: '',
-					teamname: '',
-					number: '',
-					artname: '',
-					sex: '',
-					phone: '',
-					site: '',
-					logname: '',
-					idcard: '',
-				},
-				add: false,
-				modify:false,
+				formLabelAlign:{},
 				piges: {},
+				 addbz: false,
+				addjg: false,
+				addteam:false,
+				modifybz:false,
+				modifyjg:false,
+				addjgvalue:{},
 				carlist: [],
+				cominfo:{
+					recorddate:null,
+					status:null,
+					recordid:null,
+				},
 				list: [],
 				teams:{},
+				options: [{ value: '1',label: '维修组1',}, { value: '2',label: '维修组2', }, { value: '3',label: '维修组3',
+			}, {value: '4',label: '油漆组',}, {value: '5',label: '钣金组',}], value: '归属班组',
+			
+			dep: [{ value: '1',label: '维修部',}, { value: '2',label: '人事部', }, { value: '3',label: '客服部',
+			}, {value: '4',label: '财务部',}, {value: '5',label: '仓库部',}, {value: '6',label: '系统部',}],
+			
+			star: [{ value: '1',label: '一星技工',}, { value: '2',label: '二星技工', }, { value: '3',label: '三星技工',
+			}, {value: '4',label: '四星技工',}],
 				stsy: [{
-						name: '班组编号',
-						value: 'teamno'
+							name: '班组名称',
+						value: 'bzname'
 					}, {
-						name: '班组名称',
-						value: 'teamname'
-					}, {
-						name: '技工编号',
-						value: 'number'
-					}, {
-						name: '技工姓名',
-						value: 'artname'
-					},
+						name: '维修类型',
+						value: 'bztype'
+					}, 
 					{
-						name: '性别',
-						value: 'sex'
-					},
-					{
-						name: '电话',
-						value: 'phone'
-					},
-					{
-						name: '地址',
-						value: 'site'
-					},
-					{
-						name: '用户名',
-						value: 'logname'
-					},
-					{
-						name: '身份证',
-						value: 'idcard'
-					},
-					{
-						name: '星级',
-						value: 'classno'
-					},
-					{
-						name: '类型',
-						value: 'typeg'
-					},
-					{
-						name: '品牌',
-						value: 'brands'
+						name: '班组费用',
+						value: 'bzcost'
 					},
 					{
 						name: '操作',
 						value: '0'
 					}
 				],
+				stsyjg: [{
+						name: '技工编号',
+						value: 'jid'
+					}, {
+						name: '技工姓名',
+						value: 'jname'
+					},{
+						name: '归属班组',
+						value: 'bzname'
+					}, 
+					{
+						name: '性别',
+						value: 'jsex'
+					},
+					{
+						name: '电话',
+						value: 'jphone'
+					},
+					{
+						name: '地址',
+						value: 'jaddress'
+					},
+					{
+						name: '用户名',
+						value: 'truename'
+					},
+					{
+						name: '身份证',
+						value: 'jidcard'
+					},
+					{
+						name: '星级',
+						value: 'sname'
+					},
+					{
+						name: '类型',
+						value: 'depname'
+					},
+					
+					{
+						name: '操作',
+						value: '0'
+					}
+				],
+				
 				vehicleInfo:[{
-					teamno:'1111',
-					teamname:'222',
-					number:'333',
-					artname:'444',
-					sex:'男',
-					phone:'1111',
-					site:'1111',
-					logname:'222',
-					idcard:'333',
-					classno:'444',
-					typeg:'22',
-					brands:'111',
-					comstatus:''
-				},{
 					teamno:'1111',
 					teamname:'222',
 					number:'333',
@@ -231,22 +325,32 @@
 				}],
 			},
 			methods: {
-				delOne(teamno) {
+				//删除班组
+				delOne(bzid) {
+					alert(bzid)					
 					let _this = this;
-					if(confirm("确认删除？")) {
-						jQuery.post("http://127.0.0.1:8080/api/team/del", {
-							teamno: `${teamno}`
-						}, function(data) {
-							alert("删除成功！");
-							location.reload();
+					if(window.confirm('是否确定删除？')) {
+						$.ajax(`http://127.0.0.1:8080/zzy/api/banzu/deleteBanzu/${bzid}`, {
+							type: "delete",
+							dataType: "json",
+							success(msg) {
+								if(msg.code == "200") {
+									alert("删除成功");
+									_this.page(1,5);
+								} else {
+									alert("删除失败");
+								}
+							}
 						});
 					}
 				},
-				page(num, size) {
+				//查询班组信息
+				page(n, s) {
 					let _this = this;
-					jQuery.getJSON(`http://127.0.0.1:8080/api/team/page/${num}/${size}`, {}, function(pg) {
+					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/banzu/queryBanzuAll/${n}/${2}`,function(pg) {
 						_this.carlist = pg;
 						_this.list = pg.list;
+						//alert(JSON.stringify(pg.list))
 					});
 				},
 				//页数改变事件
@@ -259,50 +363,88 @@
 				sizec(size) {
 					this.page(1, size);
 				},
-				//添加数据
+				//查询技工信息
+				jgpage(pageNum, pageSize) {
+					let _this = this;
+					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/jigong/queryJigong/${pageNum}/${2}`,function(pg) {
+						_this.vehicleInfo = pg;
+						_this.list = pg.list;
+						//alert(JSON.stringify(pg.list))
+					});
+				},
+				//页数改变事件
+				jgchange(num) {
+					let _this = this;
+					this.jgpage(num, _this.vehicleInfo.pageSize);
+				},
+				//pageSize选择事件
+				jgsizec(size) {
+					this.jgpage(1, size);
+				},
+				//添加班组数据
 				addall() {
 					let _this = this;
-					jQuery.ajax("http://127.0.0.1:8080/api/team/add", {
+					//alert(JSON.stringify(_this.formLabelAlign))
+					jQuery.ajax("http://127.0.0.1:8080/zzy/api/banzu/addBanzu", {
 						type: 'post',
 						data: JSON.stringify(_this.formLabelAlign),
 						contentType: 'application/json; charset=UTF-8',
 						success(data) {
-							if(data == "ok") {
-								alert("新增成功！");
-								this.add = false;
-								location.reload();
-							} else {
+							if(data=="ok"){
 								alert("新增失败！");
+							}else{							
+								alert("新增成功！");
+								_this.addbz = false;
+								_this.page(1,2);
 							}
 						}
 					});
 				},
-				//修改时渲染数据到页面上
-				selteam(teamno){
-					alert(teamno);
+				//添加技工数据
+				addjigong() {
 					let _this = this;
-					_this.s2 = true;
-					jQuery.getJSON("http://127.0.0.1:8080/api/team/pages", {
-						teamno: `${teamno}`
-					}, function(data) {
-						_this.teams = data;
-						_this.addteam=true;
+					alert(JSON.stringify(_this.addjgvalue))
+					jQuery.ajax("http://127.0.0.1:8080/zzy/api/jigong/addjigong", {
+						type: 'post',
+						data: JSON.stringify(_this.addjgvalue),
+						contentType: 'application/json; charset=UTF-8',
+						success(data) {
+							if(data=="ok"){
+								alert("新增失败！");
+							}else{							
+								alert("新增成功！");
+								_this.addjg = false;
+								_this.jgpage(1,2);
+							}
+						}
 					});
 				},
-				
-				updteam(){
-					console.log(this.teams);
+				//根据sid查询班组信息
+				queryBySid(bzid){
+					//alert(bzid)
+					let _this = this;	
+					_this.modifybz = true;
+					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/banzu/queryBanzuByBid/${bzid}`,function(pg) {
+						_this.teams = pg;
+					});
+				},
+				//修改班组信息
+				modifybanzu(){
+					//console.log(this.teams);
 					let _this = this;
-					jQuery.ajax("http://127.0.0.1:8080/api/team/upd", {
-						type: 'post',
-						data: JSON.stringify(_this.teams[0]),
+					//alert(JSON.stringify(_this.teams))
+					jQuery.ajax("http://127.0.0.1:8080/zzy/api/banzu/modifyBanzu", {
+						type: 'put',
+						data: JSON.stringify(_this.teams),
 						contentType: 'application/json;charset=UTF-8',
 						success(data) {
 							if(data == "ok") {
-								alert("修改成功！");
-								location.reload();
+								alert("修改失败！");							
 							} else {
-								alert("修改失败!");
+								alert("修改成功！");
+								_this.modifybz = false;
+								_this.page(1,2);
+								_this.page(num, _this.carlist.pageSize);
 							}
 						}
 					});
@@ -311,6 +453,7 @@
 			mounted() {
 				let _this = this;
 				_this.page(1, 5);
+				_this.jgpage(1, 3);
 			}
 		});
 	</script>
