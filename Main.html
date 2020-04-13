@@ -201,10 +201,10 @@
 					}else{
 						m=myDate.getMonth()+1;
 					}
-					if(myDate.getDate()<10){
-						d="0"+(myDate.getDate());
+					if(myDate.getDate()+1<10){
+						d="0"+(myDate.getDate()+1);
 					}else{
-						d=myDate.getDate();
+						d=myDate.getDate()+1;
 					}
 				    dateTemp = m+"-"+d;
 				    _this.dateArray.push(dateTemp);
@@ -234,19 +234,32 @@
 					})
 					
 					$.getJSON(`http://127.0.0.1:8080/zkx/api/main/week`,function(res){
-						$.each(_this.dateArray, function(temp) {
-							$.each(res, function(item) {
-								if(item.sdate==temp && item.summ!=0){
-									_this.sdata.push(item.summ);
+						alert(JSON.stringify(res));
+						$.each(_this.dateArray, function(i,temp) {
+							let items={};
+							$.each(res, function(j,item) {
+								console.info(item.ddate+"==="+temp);
+								if(item.ddate==temp){
+									items=item;	
+									return;
 								}
 							});
+							if(items.ddate==temp){
+								_this.sdata.push(items.summ);
+							}else{
+								_this.sdata.push(0);
+							}
 						});
+							
+						_this.$nextTick(function() {
+							alert(_this.sdata)
+							this.drawPie('main')
+							this.drawPie2('echarts')
+						})
 					})
+					
 				}
-				this.$nextTick(function() {
-					this.drawPie('main')
-					this.drawPie2('echarts')
-				})
+				
 			},
 			computed: {
 				menuitemClasses: function() {
