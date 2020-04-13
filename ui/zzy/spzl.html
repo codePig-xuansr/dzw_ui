@@ -210,7 +210,7 @@
 				}],
 			},
 			methods: {
-				delOne(teamno) {
+/*				delOne(teamno) {
 					let _this = this;
 					if(confirm("确认删除？")) {
 						jQuery.post("http://127.0.0.1:8080/api/team/del", {
@@ -220,7 +220,7 @@
 							location.reload();
 						});
 					}
-				},
+				},*/
 				page(pageNum, pageSize) {
 					let _this = this;
 					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/product/queryProduct/${pageNum}/${pageSize}`,function(pg) {
