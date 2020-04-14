@@ -208,14 +208,22 @@
 							type: 'error'
 						});
 					} else {
-						$.getJSON(`http://127.0.0.1:8080/zkx/api/user/${_this.user}/${_this.pwd}`,function(user){
-							_this.loginUser=user;
-							_this.$message({
-								message: '登陆成功',
-								type: 'success'
-							});
-							sessionStorage.setItem("user",JSON.stringify(_this.loginUser));
-							location.href='index.html';
+						$.getJSON(`http://127.0.0.1:8080/zkx/api/user/login/${_this.user}/${_this.pwd}`,function(user){
+							if(user.code=="200"){
+								_this.loginUser=JSON.parse(user.msg);
+								_this.$message({
+									message: '登陆成功',
+									type: 'success'
+								});
+								sessionStorage.setItem("user",JSON.stringify(_this.loginUser));
+								location.href='index.html';
+							}else{
+								_this.$message({
+									message: user.msg,
+									type: 'error'
+								});
+							}
+							
 						})
 						
 					}

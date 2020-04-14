@@ -118,6 +118,7 @@
 			el: "#mainApp",
 			data() {
 				return {
+					loading:true,
 					isCollapsed: false,
 					charts: '',
 					loginUser:{},
@@ -234,7 +235,7 @@
 					})
 					
 					$.getJSON(`http://127.0.0.1:8080/zkx/api/main/week`,function(res){
-						alert(JSON.stringify(res));
+						//alert(JSON.stringify(res));
 						$.each(_this.dateArray, function(i,temp) {
 							let items={};
 							$.each(res, function(j,item) {
@@ -252,7 +253,7 @@
 						});
 							
 						_this.$nextTick(function() {
-							alert(_this.sdata)
+							//alert(_this.sdata)
 							this.drawPie('main')
 							this.drawPie2('echarts')
 						})

@@ -25,7 +25,7 @@
 				role: {},
 				parent: [],
 				uFuns: [],
-				ufs:[],
+				ufs: [],
 				datas: [{
 						fid: "1",
 						fcode: "qt",
@@ -99,7 +99,7 @@
 						fcode: "zsj004",
 						fname: "供货单位",
 						fpid: "7"
-					}, 
+					},
 					{
 						fid: "26",
 						fcode: "zsj005",
@@ -179,20 +179,22 @@
 				},
 				getCheckedKeys() {
 					console.log(this.$refs.tree.getCheckedKeys());
-				}/*,
-				setCheckedNodes(datas, ufuns) {
-					let arr = [];
-					ufuns.forEach(item => {
-						datas.forEach(temp => {
-							if(item.fid == temp.id) {
-								arr.push({
-									id: item.fid
-								})
-							}
-						})
-					})
-					this.$refs.tree.setCheckedNodes(arr);
-				}*/,
+				}
+				/*,
+								setCheckedNodes(datas, ufuns) {
+									let arr = [];
+									ufuns.forEach(item => {
+										datas.forEach(temp => {
+											if(item.fid == temp.id) {
+												arr.push({
+													id: item.fid
+												})
+											}
+										})
+									})
+									this.$refs.tree.setCheckedNodes(arr);
+								}*/
+				,
 				setCheckedKeys() {
 					this.$refs.tree.setCheckedKeys([3]);
 				},
@@ -213,28 +215,31 @@
 							}
 						})
 					});*/
-					let plist=[];
-					$.each(arry, function(i, obj){
-						plist.push({"rid":_this.role.rid,"fid":obj.id});
+					let plist = [];
+					$.each(arry, function(i, obj) {
+						plist.push({
+							"rid": _this.role.rid,
+							"fid": obj.id
+						});
 					});
-					$.ajax(`http://127.0.0.1:8080/zkx/api/pa`,{
-						type:"post",
-						dataType:"json",
+					$.ajax(`http://127.0.0.1:8080/zkx/api/pa`, {
+						type: "post",
+						dataType: "json",
 						contentType: "application/json",
-						data:JSON.stringify(plist),
-						success:res=>{
-							if(res>0){
-								 this.$message({
-					              type: 'success',
-					              message: '修改成功！'
-					           });
-							}else{
-								 this.$message({
-					              type: 'error',
-					              message: '错误！'
-					            });
+						data: JSON.stringify(plist),
+						success: res => {
+							if(res > 0) {
+								this.$message({
+									type: 'success',
+									message: '修改成功！'
+								});
+							} else {
+								this.$message({
+									type: 'error',
+									message: '错误！'
+								});
 							}
-							roleFunApp.dialogVisible666=false;
+							roleFunApp.dialogVisible666 = false;
 							$("#cnt").load("ui/zkx/roleFun.html");
 						}
 					});
@@ -243,6 +248,7 @@
 
 			},
 			mounted() {
+				roleFunApp.loading=false;
 				let _this = this;
 				this.role = JSON.parse(localStorage.getItem("urole"));
 				$.get(`http://127.0.0.1:8080/zkx/api/funs/f`, function(allfuns) {
@@ -250,7 +256,7 @@
 				})
 
 				$.get(`http://127.0.0.1:8080/zkx/api/funs/ufuns/${this.role.user}/${this.role.pwd}`, function(funs) {
-					$.each(funs, function(i,obj) {
+					$.each(funs, function(i, obj) {
 						_this.ufs.push(obj.fid);
 					});
 					_this.uFuns = funs;

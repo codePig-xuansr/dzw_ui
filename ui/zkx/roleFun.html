@@ -10,18 +10,18 @@
 		<div id="roleFunApp">
 
 			<template>
-				<el-table :data="role" style="width: 100%" max-height="500">
+				<el-table :data="role.list" style="width: 100%" max-height="500">
 					<el-table-column fixed prop="username" label="员工姓名" width="150">
 					</el-table-column>
 					<el-table-column prop="comedate" label="入职日期" width="200">
 					</el-table-column>
 					<el-table-column prop="address" label="居住地址" width="400">
 					</el-table-column>
-					<el-table-column prop="phone" label="联系电话" width="200">
-					</el-table-column>
 					<el-table-column prop="sex" label="性别" width="120">
 					</el-table-column>
-					<el-table-column prop="email" label="邮箱" width="120">
+					<el-table-column prop="depname" label="部门" width="120">
+					</el-table-column>
+					<el-table-column prop="rname" label="职位" width="120">
 					</el-table-column>
 					<el-table-column fixed="right" label="操作" width="120">
 						<template slot-scope="scope">
@@ -32,8 +32,12 @@
 					</el-table-column>
 				</el-table>
 			</template>
+			<div class="pages">
+					<el-pagination layout="prev, pager, next" @current-change="current1" @prev-click="prev1" @next-click="next1" :total="this.role.pages*10">
+					</el-pagination>
+			</div>
 			<el-dialog title="权限管理" width="400px" :visible.sync="dialogVisible666" :before-close="handleClose">
-				<div id="cnt2">
+				<div id="cnt2" v-loading="loading">
 					<div>
 						<span class="el-icon-loading"></span>正在初始化......
 					</div>
@@ -46,6 +50,7 @@
 		var roleFunApp = new Vue({
 			el: "#roleFunApp",
 			data: {
+				loading:true,
 				dialogVisible666: false,
 				checkArr: [],
 				showAllFun: false,
@@ -274,7 +279,29 @@
 				]
 			},
 			methods: {
+				/*上一页员工查询*/
+				prev1(cpage) {
+					this.client(cpage, 6);
+				},
+				/*下一页员工查询*/
+				next1(cpage) {
+					this.client(cpage, 6);
+				},
+				/*当前页员工查询*/
+				current1(cpage) {
+					this.client(cpage, 6);
+				},
+				/*员工分页查询*/
+				client(pageNum, pageSize) {
+					let _this = this;
+					_this.isShow2 = true;
+					$.getJSON(`http://127.0.0.1:8080/zkx/api/user/${pageNum}/${pageSize}`,
+						function(res) {
+							_this.role = res;
+						})
+				},
 				addqx(index,row) {
+					this.loading=true;
 					let _this = this;
 					//alert(JSON.stringify(row));
 					this.dialogVisible666 = true;
@@ -283,6 +310,7 @@
 							localStorage.setItem("urole", JSON.stringify(row));
 							$("#cnt2").load("ui/zkx/qxchange.html");
 						}, 2000);
+					
 				},
 				handleClose(done) {
 					this.$confirm('确认关闭？')
@@ -294,7 +322,7 @@
 			},
 			mounted() {
 				let _this = this;
-				$.getJSON(`http://127.0.0.1:8080/zkx/api/user`,function(data){
+				$.getJSON(`http://127.0.0.1:8080/zkx/api/user/1/6`,function(data){
 					_this.role=data;
 					console.info(JSON.stringify(_this.role));
 				})
