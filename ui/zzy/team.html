@@ -38,8 +38,8 @@
 							<el-table-column v-for="(temp,index) in stsy" :label="temp.name" align="center" :resizable="false">
 								<template slot-scope="scope">
 									<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>
-									<el-button type="primary" plain v-if="temp.value==0" @click="delOne(scope.row.bzid)">删除</el-button>
-									<el-button type="primary" plain v-if="temp.value==0" @click="queryBySid(scope.row.bzid)">修改</el-button>
+									<el-button type="text" v-if="temp.value==0" @click="delOne(scope.row.bzid)">删除</el-button>
+									<el-button type="text" v-if="temp.value==0" @click="queryBySid(scope.row.bzid)">修改</el-button>
 								</template>
 							</el-table-column>
 						</el-table>
@@ -58,8 +58,8 @@
 							<el-table-column v-for="(temp,index) in stsyjg" :label="temp.name" align="center" :resizable="false">
 								<template slot-scope="scope">
 									<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>
-									<el-button type="primary" plain v-if="temp.value==0" @click="delOne(scope.row.jid)">删除</el-button><br />
-									<el-button type="primary" plain v-if="temp.value==0" @click="modifyjg=true">修改</el-button>
+									<el-button type="text" v-if="temp.value==0" @click="delOne(scope.row.jid)">删除</el-button><br />
+									<el-button type="text" v-if="temp.value==0" @click="queryJigongByid(scope.row.jid)">修改</el-button>
 								</template>
 							</el-table-column>
 						</el-table>
@@ -174,40 +174,61 @@
 
 			<el-dialog title="修改班组技工" :visible.sync="modifyjg" width="60%" :before-close="handleClose">
 				<div>
-					<el-form :label-position="labelPosition" :inline="true" label-width="80px" :model="formLabelAlign">
-						<el-form-item label="班组编号">
-							<el-input v-model="formLabelAlign.teamno"></el-input>
-						</el-form-item>
-						<el-form-item label="班组名称">
-							<el-input v-model="formLabelAlign.teamname"></el-input>
-						</el-form-item>
-						<el-form-item label="技工编号">
-							<el-input v-model="formLabelAlign.number"></el-input>
-						</el-form-item>
+					<el-form :label-position="labelPosition" :inline="true" label-width="80px" :model="modifyjgvalue">
 						<el-form-item label="技工姓名">
-							<el-input v-model="formLabelAlign.artname"></el-input>
+							<el-input v-model="modifyjgvalue.jname"></el-input>
 						</el-form-item>
 						<el-form-item label="性别">
-							<el-input v-model="formLabelAlign.sex"></el-input>
+							<el-input v-model="modifyjgvalue.jsex"></el-input>
 						</el-form-item>
 						<el-form-item label="电话">
-							<el-input v-model="formLabelAlign.phone"></el-input>
+							<el-input v-model="modifyjgvalue.jphone"></el-input>
 						</el-form-item>
 						<el-form-item label="地址">
-							<el-input v-model="formLabelAlign.site"></el-input>
+							<el-input v-model="modifyjgvalue.jaddress"></el-input>
 						</el-form-item>
 						<el-form-item label="用户名">
-							<el-input v-model="formLabelAlign.logname"></el-input>
+							<el-input v-model="modifyjgvalue.truename"></el-input>
 						</el-form-item>
 						<el-form-item label="身份证">
-							<el-input v-model="formLabelAlign.idcard"></el-input>
+							<el-input v-model="modifyjgvalue.jidcard"></el-input>
+						</el-form-item>
+						<el-form-item label="工作时长">
+							<el-input v-model="modifyjgvalue.worktime"></el-input>
 						</el-form-item>
 						<el-form-item label="星级">
-							<el-input v-model="formLabelAlign.classno"></el-input>
+							<el-select v-model="modifyjgvalue.sid" placeholder="请选择">
+				              <el-option
+				                v-for="item in star"
+				                :key="item.value"
+				                :label="item.label"
+				                :value="item.value"
+				                :disabled="item.disabled">
+				              </el-option>
+				          </el-select>
 						</el-form-item>
 						<el-form-item label="类型">
-							<el-input v-model="formLabelAlign.typeg"></el-input>
+							<el-select v-model="modifyjgvalue.depid" placeholder="请选择">
+				              <el-option
+				                v-for="item in dep"
+				                :key="item.value"
+				                :label="item.label"
+				                :value="item.value"
+				                :disabled="item.disabled">
+				              </el-option>
+				          </el-select>
 						</el-form-item>
+						<el-form-item label="归属班组">							
+						 <el-select v-model="modifyjgvalue.bzid" placeholder="请选择">
+				              <el-option
+				                v-for="item in options"
+				                :key="item.value"
+				                :label="item.label"
+				                :value="item.value"
+				                :disabled="item.disabled">
+				              </el-option>
+				          </el-select>
+						</el-form-item>		
 					</el-form>
 				</div>
 				<span slot="footer" class="dialog-footer">
@@ -231,6 +252,7 @@
 				modifybz:false,
 				modifyjg:false,
 				addjgvalue:{},
+				modifyjgvalue:{},
 				carlist: [],
 				cominfo:{
 					recorddate:null,
@@ -419,13 +441,45 @@
 						}
 					});
 				},
-				//根据sid查询班组信息
+				//根据班组bzid查询班组信息
 				queryBySid(bzid){
 					//alert(bzid)
 					let _this = this;	
 					_this.modifybz = true;
 					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/banzu/queryBanzuByBid/${bzid}`,function(pg) {
 						_this.teams = pg;
+					});
+				},
+				
+				//根据技工jid查询技工信息
+				queryJigongByid(jid){
+					let _this = this;	
+										alert(JSON.stringify(_this.modifyjgvalue))
+
+					_this.modifyjg = true;
+					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/jigong/queryJigongById/${jid}`,function(pg) {
+						_this.modifyjgvalue = pg;
+					});
+				},
+				//修改技工信息
+				modifyjigong(){
+					//console.log(this.teams);
+					let _this = this;
+					//alert(JSON.stringify(_this.teams))
+					jQuery.ajax("", {
+						type: 'put',
+						data: JSON.stringify(_this.teams),
+						contentType: 'application/json;charset=UTF-8',
+						success(data) {
+							if(data == "ok") {
+								alert("修改失败！");							
+							} else {
+								alert("修改成功！");
+								_this.modifybz = false;
+								_this.page(1,2);
+								_this.page(num, _this.carlist.pageSize);
+							}
+						}
 					});
 				},
 				//修改班组信息

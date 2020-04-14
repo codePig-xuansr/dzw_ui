@@ -37,7 +37,7 @@
 								<template slot-scope="scope">
 									<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>
 <!--									<el-button type="primary" plain v-if="temp.value==0" @click="delOne(scope.row.teamno)">删除</el-button><br/>
--->									<el-button type="primary" plain v-if="temp.value==0" @click="queryBySid(scope.row.proid)">修改</el-button>
+-->									<el-button type="text" v-if="temp.value==0" @click="queryBySid(scope.row.proid)">修改</el-button>
 								</template>
 							</el-table-column>
 						</el-table>
