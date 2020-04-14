@@ -8,20 +8,19 @@
 
 	<body>
 		<div id="gonghuoapp" style="width: 100%;">
-
 			<el-row>
-				<el-button type="primary" @click="addfl = true">增加供货单位</el-button>
+				<!--<el-button type="primary" @click="addfl = true">增加供货单位</el-button>-->
+				<el-input v-model="ghname" placeholder="支持模糊搜索" style="width: 150px;"></el-input>
+				<el-button type="primary" @click="chaxun" plain>查询</el-button>
 				<el-button type="primary" @click="addcs = true">增加厂商</el-button>
-				<el-button type="primary" plain>查询</el-button>
 				<el-button type="primary" plain>导出</el-button>
-				<el-button type="primary" plain>照片</el-button>
+				<!--<el-button type="primary" plain>照片</el-button>
 				<el-button type="primary" plain>联系人</el-button>
-				<el-button type="primary" plain>字段设置</el-button>
+				<el-button type="primary" plain>字段设置</el-button>-->
 			</el-row>
 			<el-row>
-				<el-col :span="6">
+				<!--<el-col :span="6">
 					<div class="grid-content bg-purple">
-
 						<template>
 							<el-table :data="gonghuodanwei" style="width: 100%">
 								<el-table-column prop="name" label="供货单位" width="180">
@@ -36,73 +35,44 @@
 						</template>
 
 					</div>
-				</el-col>
-				<el-col :span="18">
+				</el-col>-->
+				<el-col>
+					<!--<el-col :span="18">-->
 					<div class="grid-content bg-purple-light">
-
-						<!--<template>
-							<el-table :data="changshang" style="width: 100%">
-								<el-table-column prop="id" label="厂商代码" width="180">
+						<template>
+							<el-table :data="gonghuo.list" style="width: 100%;margin-bottom: 20px;" row-key="id" border default-expand-all :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
+								<el-table-column prop="ghid" label="厂商代码" width="180">
 								</el-table-column>
-								<el-table-column prop="name" label="厂商名称" width="180">
+								<el-table-column prop="ghname" label="厂商名称" width="180">`````````
 								</el-table-column>
-								<el-table-column prop="address" label="地址">
+								<el-table-column prop="ghaddress" label="供货地址">
 								</el-table-column>
-								<el-table-column prop="qk" label="经营情况">
+								<el-table-column prop="ghphone" label="联系电话">
 								</el-table-column>
-								<el-table-column prop="wangzhi" label="网址">
+								<el-table-column prop="ghemail" label="邮箱">
 								</el-table-column>
-								<el-table-column prop="kaihuhang" label="开户行">
-								</el-table-column>
-								<el-table-column prop="zhanghao" label="银行账号">
-								</el-table-column>
-								<el-table-column fixed="right" label="操作" width="100">
+								<el-table-column fixed="right" label="操作" width="200px">
 									<template slot-scope="scope">
-										<el-button @click="handleClick(scope.row)" type="text" size="small">编辑</el-button>
-										<el-button type="text" size="small">删除</el-button>
+										<el-button size="small" @click="update(gonghuo.list[scope.$index].ghid)">编辑</el-button>
+										<el-button size="small" @click="del(gonghuo.list[scope.$index].ghid)">删除</el-button>
 									</template>
 								</el-table-column>
-
-							</el-table>
-						</template>-->
-
-						<template>
-							<el-table :data="tableData2" style="width: 100%;margin-bottom: 20px;" row-key="id" border default-expand-all :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
-								<el-table-column prop="id" label="厂商代码" width="180">
-								</el-table-column>
-								<el-table-column prop="name" label="厂商名称" width="180">
-								</el-table-column>
-								<el-table-column prop="address" label="地址">
-								</el-table-column>
-								<el-table-column prop="qk" label="经营情况">
+								<!--<el-table-column prop="qk" label="经营情况">
 								</el-table-column>
 								<el-table-column prop="wangzhi" label="网址">
 								</el-table-column>
 								<el-table-column prop="kaihuhang" label="开户行">
 								</el-table-column>
 								<el-table-column prop="zhanghao" label="银行账号">
-								</el-table-column>
+								</el-table-column>-->
 							</el-table>
+							<el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="gonghuo.total" :page-sizes="[3,6,9]" :page-size="gonghuo.pageSize">
 						</template>
-
-						<!--<template>
-							<label>联系人</label>
-							<el-table :data="lianxiren" style="width: 100%">
-								<el-table-column prop="name" label="联系人" width="180">
-								</el-table-column>
-								<el-table-column prop="zhiwei" label="职位" width="180">
-								</el-table-column>
-								<el-table-column prop="dianhua" label="电话">
-								</el-table-column>
-								<el-table-column prop="email" label="Email">
-								</el-table-column>
-							</el-table>
-						</template>-->
 					</div>
 				</el-col>
 			</el-row>
 
-			<el-dialog title="添加分类" :visible.sync="addfl" width="30%">
+			<!--<el-dialog title="添加分类" :visible.sync="addfl" width="30%">
 				<div>
 					<el-form label-width="80px">
 						<el-form-item label="分类编号">
@@ -117,11 +87,44 @@
    				 <el-button @click="addfl = false">取 消</el-button>
    				 <el-button type="primary">保存</el-button>
   				</span>
-			</el-dialog>
+			</el-dialog>-->
 
-			<el-dialog title="添加分类" :visible.sync="addcs" width="30%">
+			<el-dialog title="添加供货单位" :visible.sync="addcs" width="40%">
 				<div>
 					<el-form label-width="80px">
+						<el-row>
+							<el-col :span="11">
+								<el-button type="text">
+									<el-form-item label="单位名称" prop="ghname">
+										<el-input v-model="guohuoadd.ghname"></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+							<el-col :span="11" style="margin-left: 40px;">
+								<el-button type="text">
+									<el-form-item label="单位地址" prop="ghaddress">
+										<el-input v-model="guohuoadd.ghaddress"></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="11">
+								<el-button type="text">
+									<el-form-item label="联系电话" prop="ghphone">
+										<el-input v-model="guohuoadd.ghphone"></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+							<el-col :span="11" style="margin-left: 40px;">
+								<el-button type="text">
+									<el-form-item label="邮箱" prop="ghemail">
+										<el-input v-model="guohuoadd.ghemail"></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+						</el-row>
+						<!--
 						<el-form-item label="供货单位编号">
 							<el-input></el-input>
 						</el-form-item>
@@ -136,21 +139,74 @@
 						</el-form-item>
 						<el-form-item label="邮箱">
 							<el-input></el-input>
-						</el-form-item>
+						</el-form-item>-->
 					</el-form>
 				</div>
 				<span slot="footer" class="dialog-footer">
    				 <el-button @click="addcs = false">取 消</el-button>
-   				 <el-button type="primary">保存</el-button>
+   				 <el-button type="primary" @click="adddanwei">保存</el-button>
   				</span>
 			</el-dialog>
+			<el-dialog title="修改供货单位" :visible.sync="updatecs" width="40%">
+				<div>
+					<el-form label-width="80px">
+						<el-row>
+							<el-col :span="11">
+								<el-button type="text">
+									<el-form-item label="单位编号" prop="ghid">
+										<el-input v-model="guohuoadd.ghid" readonly></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="11">
+								<el-button type="text">
+									<el-form-item label="单位名称" prop="ghname">
+										<el-input v-model="guohuoadd.ghname"></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+							<el-col :span="11" style="margin-left: 40px;">
+								<el-button type="text">
+									<el-form-item label="单位地址" prop="ghaddress">
+										<el-input v-model="guohuoadd.ghaddress"></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="11">
+								<el-button type="text">
+									<el-form-item label="联系电话" prop="ghphone">
+										<el-input v-model="guohuoadd.ghphone"></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+							<el-col :span="11" style="margin-left: 40px;">
+								<el-button type="text">
+									<el-form-item label="邮箱" prop="ghemail">
+										<el-input v-model="guohuoadd.ghemail"></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+						</el-row>
+					</el-form>
+				</div>
+				<span slot="footer" class="dialog-footer">
+   				 <el-button @click="updatecs = false">取 消</el-button>
+   				 <el-button type="primary" @click="updatedanwei">保存</el-button>
+  				</span>
+			</el-dialog>
+
 		</div>
 	</body>
 	<script>
 		var gonghuoapp = new Vue({
 			el: '#gonghuoapp',
 			data: {
-				addfl: false,
+				/*addfl: false,*/
+				updatecs: false,
 				addcs: false,
 				tableData2: [{
 					id: '001',
@@ -160,75 +216,147 @@
 					wangzhi: '',
 					kaihuhang: '',
 					zhanghao: '',
-					children: [{
-						id: '1',
-						name: '王五',
-						address: '技工1',
-						qk: '1300000000',
-						wangzhi: 'wangwu.@163.com'
-					}, {
-						id: '2',
-						name: '赵公子',
-						address: '技工1',
-						qk: '1300000000',
-						wangzhi: 'zhaogongzi.@163.com'
-					}]
+					children: []
 				}],
-				tableData: [],
-				gonghuodanwei: [{
+				guohuoadd: {},
+				gonghuo: [],
+				ghname:'',
+				/*gonghuodanwei: [{
 					id: '1',
 					name: '单位1'
 				}, {
 					id: '1',
 					name: '单位1'
-				}],
-				changshang: [{
-					id: '001',
-					name: '厂商1',
-					address: '北京',
-					qk: '',
-					wangzhi: '',
-					kaihuhang: '',
-					zhanghao: '',
-					lianxiren: [{
-						id: '1',
-						name: '王五',
-						zhiwei: '技工1',
-						dianhua: '1300000000',
-						email: 'wangwu.@163.com'
-					}, {
-						id: '2',
-						name: '赵公子',
-						zhiwei: '技工1',
-						dianhua: '1300000000',
-						email: 'zhaogongzi.@163.com'
-					}]
-				}, {
-					id: '002',
-					name: '厂商2',
-					address: '北京',
-					qk: '',
-					wangzhi: '',
-					kaihuhang: '',
-					zhanghao: '',
-					lianxiren: [{
-						id: '3',
-						name: '张三',
-						zhiwei: '技工2',
-						dianhua: '1300000000',
-						email: 'zhangsan.@163.com'
-					}, {
-						id: '4',
-						name: '李四',
-						zhiwei: '技工1',
-						dianhua: '1300000000',
-						email: 'lisi.@163.com'
-					}]
-				}],
-				lianxiren: []
+				}],*/
+				changshang: []
+				/*,
+				lianxiren: []*/
 			},
 			methods: {
-
+				chaxun() {
+					let _this = this;
+					if(_this.ghname == '') {
+						_this.ghname = null;
+					}
+					_this.selectByname(_this.ghname, 1, 5);
+				},
+				adddanwei() {
+					let _this = this;
+					$.ajax({
+						url: 'http://localhost:8080/api/ljl/ghdw/gonghuodanwei/add',
+						type: 'post',
+						dataType: 'json',
+						contentType: 'application/json',
+						data: JSON.stringify(_this.guohuoadd),
+						success(data) {
+							_this.$message({
+								message: data.msg,
+								type: 'success'
+							});
+							_this.pageinfo(1, 5);
+							_this.qingkong();
+							_this.addcs = false;
+						},
+						error() {
+							alert("未知错误！");
+						}
+					});
+				},
+				selectByname(ghname, n, s) {
+					let _this = this;
+					$.getJSON(`http://localhost:8080/api/ljl/ghdw/All/danwei/byname/${ghname}/${n}/${s}`,
+						function(data) {
+							_this.gonghuo = data;
+						}
+					);
+				},
+				del(ghid) {
+					let _this = this;
+					this.$confirm('是否移除该单位?', '系统提示', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						type: 'warning'
+					}).then(() => {
+						$.ajax(`http://localhost:8080/api/ljl/ghdw/danweidel/${ghid}`, {
+							type: "delete",
+							dataType: "json",
+							success(data) {
+								_this.$message({
+									type: 'success',
+									message: data.msg
+								});
+								_this.pageinfo(1, 5);
+							}
+						});
+					}).catch(() => {
+						this.$message({
+							type: 'info',
+							message: '已取消删除'
+						});
+					});
+				},
+				updatedanwei() {
+					let _this = this;
+					$.ajax({
+						url: 'http://localhost:8080/api/ljl/ghdw/updatedanwei',
+						type: 'put',
+						dataType: 'json',
+						contentType: 'application/json',
+						data: JSON.stringify(_this.guohuoadd),
+						success(data) {
+							_this.$message({
+								message: data.msg,
+								type: 'success'
+							});
+							_this.pageinfo(1, 5);
+							_this.qingkong();
+							_this.updatecs = false;
+						},
+						error() {
+							alert("未知错误！");
+						}
+					});
+				},
+				qingkong() {
+					this.guohuoadd = {
+						ghid: '',
+						ghname: '',
+						ghaddress: '',
+						ghphone: '',
+						ghemail: ''
+					}
+				},
+				update(ghid){
+					let _this = this;
+					_this.updatecs = true;
+					$.getJSON(`http://127.0.0.1:8080/api/ljl/ghdw//gonghuo/selectByid/${ghid}`,
+						function(data) {
+							_this.guohuoadd = data;
+							//alert(data)
+						}
+					);
+				},
+				pageinfo(n, s) {
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/api/ljl/ghdw/gonghuo/All/${n}/${s}`,
+						function(data) {
+							_this.gonghuo = data;
+							//alert(data)
+						}
+					);
+				},
+				change(num) {
+					let _this = this;
+					this.pageinfo(num, _this.gonghuo.pageSize);
+				},
+				//pageSize选择事件
+				sizec(size) {
+					this.pageinfo(1, size);
+				},
+			},
+			mounted() {
+				let _this = this;
+				_this.pageinfo(1, 5);
 			}
 		});
 	</script>

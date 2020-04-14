@@ -26,29 +26,49 @@
 			<el-row>
 				<el-col :span="24">
 					<div id="tj">
-						<tr>
+						<el-form label-width="80px">
+							<!--<tr>-->
 							<!--<td>项目编码：</td>
 							<td>
 								<el-input style="width:150px" placeholder="请输入内容" v-model="weixiufuwu.fwcod"></el-input>
 							</td>
 							<br>
 							<br>-->
-							<td>项目名称：</td>
-							<el-input style="width:150px" placeholder="请输入内容" v-model="weixiufuwu.fwname"></el-input>
-							<br /><br />&nbsp;&nbsp;
 
-							<tr>
-								<td>项目类别：</td>
-								<td>
-									<template>
-										<el-select placeholder="请选择" v-model="weixiufuwu.xid">
+							<el-row>
+								<el-col :span="24">
+									<el-button type="text">
+										<el-form-item label="项目名称：" prop="fwname">
+											<el-input v-model="weixiufuwu.fwname" placeholder="请输入内容"></el-input>
+										</el-form-item>
+									</el-button>
+								</el-col>
+								<el-col :span="22">
+									<el-form-item prop="xid"><label>项目类别：</label>
+										<el-select v-model="weixiufuwu.xid" placeholder="请选择">
 											<el-option v-for="(t,i) in weixiutype" :value="t.xid">
 												{{t.xname}}
 											</el-option>
 										</el-select>
-									</template>
-								</td>
-								<br /><br />&nbsp;
+									</el-form-item>
+								</el-col>
+								<el-col :span="24">
+									<el-button type="text">
+										<el-form-item label="标准价：" prop="fwprice">
+											<el-input v-model="weixiufuwu.fwprice" placeholder="请输入内容" v-on:keyup.enter="jisuanvip" @input="jisuanvip"></el-input>
+										</el-form-item>
+									</el-button>
+								</el-col>
+								<el-col :span="24">
+									<el-button type="text">
+										<el-form-item label="vip价：" prop="vippric">
+											<el-input v-model="weixiufuwu.vipprice"></el-input>
+										</el-form-item>
+									</el-button>
+								</el-col>
+							</el-row>
+							<!--<tr>
+
 								<td>标准价：</td>
 								<td>
 									<el-input style="width:150px" placeholder="请输入内容" v-model="weixiufuwu.fwprice" v-on:keyup.enter="jisuanvip" @input="jisuanvip"></el-input>
@@ -60,7 +80,9 @@
 								<td>
 									<el-input style="width:150px" placeholder="请输入内容" v-model="weixiufuwu.vipprice"></el-input>
 								</td>
-							</tr>
+							</tr>-->
+
+						</el-form>
 					</div>
 					<br />
 					<div id="oo">
@@ -83,15 +105,15 @@
 					fwprice: '',
 					vipprice: 0
 				},
-				weixiutype:[]
+				weixiutype: []
 			},
 			methods: {
-				fh(){
+				fh() {
 					weixiu.xinzengweixiu = false;
 				},
-				jisuanvip(){
+				jisuanvip() {
 					//alert(1)
-					this.weixiufuwu.vipprice = this.weixiufuwu.fwprice*0.9;
+					this.weixiufuwu.vipprice = this.weixiufuwu.fwprice * 0.9;
 				},
 				add() {
 					let _this = this;
@@ -123,13 +145,13 @@
 				/*$.getJSON(`http://localhost:8080/api/ljl/weixiu/All/weixiuxiangmuMaxId`,
 					function(data) {
 						_this.weixiufuwu.fwcod = data + 1;*/
-						$.getJSON(`http://localhost:8080/api/ljl/weixiu/All/weixiuleibie/name`,
-							function(rs){
-								_this.weixiutype = rs;
-								//alert(JSON.stringify(_this.weixiutype))
-							}
-						);
-					/*}
+				$.getJSON(`http://localhost:8080/api/ljl/weixiu/All/weixiuleibie/name`,
+					function(rs) {
+						_this.weixiutype = rs;
+						//alert(JSON.stringify(_this.weixiutype))
+					}
+				);
+				/*}
 				);*/
 			}
 		});

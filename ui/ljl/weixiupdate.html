@@ -83,48 +83,53 @@
 			<el-row>
 				<el-col :span="24">
 					<div id="tj">
-						<tr>
-							<td>项目编码：</td>
-							<td>
-								<el-input style="width:150px" placeholder="请输入内容" v-model="weixiufuwu.fwcod" readonly></el-input>
-							</td>
-							<br>
-							<br>
-							<td>项目名称：</td>
-							<el-input style="width:150px" placeholder="请输入内容" v-model="weixiufuwu.fwname"></el-input>
-							<br /><br />&nbsp;&nbsp;
-
-							<tr>
-								<td>项目类别：</td>
-								<td>
-									<template>
-										<el-select placeholder="请选择" v-model="weixiufuwu.xid">
-											<el-option v-for="(t,i) in weixiutype" :value="t.xid">
-												{{t.xname}}
-											</el-option>
-										</el-select>
-									</template>
-								</td>
-								<br /><br />&nbsp;
-								<td>标准价：</td>
-								<td>
-									<el-input style="width:150px" placeholder="请输入内容" v-model="weixiufuwu.fwprice" v-on:keyup.enter="jisuanvip" @input="jisuanvip"></el-input>
-								</td>
-								&nbsp;&nbsp;&nbsp;&nbsp;
-								<br>
-								<br>
-								<td>vipprice价：</td>
-								<td>
-									<el-input style="width:150px" placeholder="请输入内容" v-model="weixiufuwu.vipprice" readonly></el-input>
-								</td>
-							</tr>
-					</div>
-					<br />
-					<div id="oo">
-						<el-button style="width:150px" @click="save">保存</el-button>
-						<el-button style="width:150px" @click="fh">返回</el-button>
-					</div>
-				</el-col>
+						<el-form label-width="80px">
+							<el-col :span="24">
+								<el-button type="text">
+									<el-form-item label="项目编码：" prop="fwcod">
+										<el-input v-model="weixiufuwu.fwcod" placeholder="请输入内容"></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+							<el-col :span="24">
+								<el-button type="text">
+									<el-form-item label="项目名称：" prop="fwname">
+										<el-input v-model="weixiufuwu.fwname" placeholder="请输入内容"></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+							<el-col :span="22">
+								<el-form-item prop="xid"><label>项目类别：</label>
+									<el-select v-model="weixiufuwu.xid" placeholder="请选择">
+										<el-option v-for="(t,i) in weixiutype" :value="t.xid">
+											{{t.xname}}
+										</el-option>
+									</el-select>
+								</el-form-item>
+							</el-col>
+							<el-col :span="24">
+								<el-button type="text">
+									<el-form-item label="标准价：" prop="fwprice">
+										<el-input v-model="weixiufuwu.fwprice" placeholder="请输入内容" v-on:keyup.enter="jisuanvip" @input="jisuanvip"></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+							<el-col :span="24">
+								<el-button type="text">
+									<el-form-item label="vip价：" prop="vippric">
+										<el-input v-model="weixiufuwu.vipprice"></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+			</el-row>
+			</el-form>
+			</div>
+			<br />
+			<div id="oo">
+				<el-button style="width:150px" @click="save">保存</el-button>
+				<el-button style="width:150px" @click="fh">返回</el-button>
+			</div>
+			</el-col>
 			</el-row>
 		</div>
 	</body>
@@ -140,15 +145,15 @@
 					fwprice: '',
 					vipprice: 0
 				},
-				weixiutype:[]
+				weixiutype: []
 			},
 			methods: {
-				fh(){
+				fh() {
 					weixiu.xiugaiweixiu = false;
 				},
-				jisuanvip(){
+				jisuanvip() {
 					//alert(1)
-					this.weixiufuwu.vipprice = this.weixiufuwu.fwprice*0.9;
+					this.weixiufuwu.vipprice = this.weixiufuwu.fwprice * 0.9;
 				},
 				save() {
 					let _this = this;
