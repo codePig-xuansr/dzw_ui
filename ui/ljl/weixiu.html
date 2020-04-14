@@ -17,15 +17,16 @@
 				<el-col :span="24">
 					<template>
 						<el-row>
-							<el><input type="text" v-model="xname" placeholder="请输入内容" style=" height:30px;" /></el>
+							<!--<el><input type="text" v-model="xname" placeholder="请输入内容" style=" height:30px;" /></el>-->
+							<el-input v-model="xname" placeholder="请输入内容" style="width: 150px;"></el-input>
 							<el-button type="primary" plain @click="cx()">查询</el-button>
 							<el-button type="primary" plain @click="weiliuleibiexinzeng">项目类别增加</el-button>
 							<el-button type="primary" plain @click="weixiuleibieziji">项目类别子级增加</el-button>
 							<el-button type="primary" plain @click="addwx">维修项目增加</el-button>
 							<!--<el-button type="primary" plain @click="bmxl">增加</el-button>-->
 
-							<el-button type="primary" plain>调价</el-button>
-							<el-button type="primary" plain>保存</el-button>
+							<!--<el-button type="primary" plain>调价</el-button>-->
+							<!--<el-button type="primary" plain>保存</el-button>-->
 							<el-button type="primary" plain>导出</el-button>
 						</el-row>
 						<el-row>
@@ -60,17 +61,28 @@
 					</template>
 				</el-col>
 			</el-row>
-			<el-dialog title="新增维修类别" width="850px" :visible.sync="weixiuleibie">
+			<el-dialog title="新增维修类别" width="600px" :visible.sync="weixiuleibie">
 				<el-form label-width="80px">
 					<!--<el-form-item label="项目编号：">
 						<el-input v-model="xiangmutype.xid" readonly></el-input>
 					</el-form-item>-->
-					<el-form-item label="类别名称：">
+
+					<el-row>
+						<el-col>
+							<el-button type="text">
+								<el-form-item label="类别名称" prop="xname">
+									<el-input v-model="xiangmutype.xname"></el-input>
+								</el-form-item>
+							</el-button>
+						</el-col>
+					</el-row>
+
+					<!--<el-form-item label="类别名称：">
 						<el-input v-model="xiangmutype.xname"></el-input>
-					</el-form-item>
-					<el-form-item label="父级编号：">
+					</el-form-item>-->
+					<!--<el-form-item label="父级编号：">
 						<el-input v-model="xiangmutype.xfid" readonly></el-input>
-					</el-form-item>
+					</el-form-item>-->
 				</el-form>
 				<span slot="footer" class="dialog-footer">
    				 	<el-button @click="weixiuleibie = false">取 消</el-button>
@@ -78,22 +90,41 @@
   				</span>
 			</el-dialog>
 
-			<el-dialog title="新增子级维修类别" width="850px" :visible.sync="weixiuleibiezi">
+			<el-dialog title="新增子级维修类别" width="600px" :visible.sync="weixiuleibiezi">
 				<el-form label-width="80px">
 					<!--<el-form-item label="项目编号：">
 						<el-input v-model="xiangmutype.xid" readonly></el-input>
 					</el-form-item>-->
-					<el-form-item label="类别名称：">
+
+					<el-row>
+						<el-col :span="24">
+							<el-button type="text">
+								<el-form-item label="类别名称" prop="xname">
+									<el-input v-model="xiangmutype.xname"></el-input>
+								</el-form-item>
+							</el-button>
+						</el-col>
+					<!--<el-form-item label="类别名称：">
 						<el-input v-model="xiangmutype.xname"></el-input>
-					</el-form-item>
-					<el-form-item label="父级编号：">
-						<!--<el-input v-model="xiangmutype.xfid"></el-input>-->
+					</el-form-item>-->
+						<el-col :span="21">
+							<el-form-item prop="xfid"><label>所属上级</label>
+								<el-select v-model="xiangmutype.xfid" placeholder="请选择上一级">
+									<el-option v-for="(t,i) in weixiutype" :value="t.xid">
+										{{t.xname}}
+									</el-option>
+								</el-select>
+							</el-form-item>
+						</el-col>
+					</el-row>
+					<!--<el-form-item label="父级编号：">
+						<!--<el-input v-model="xiangmutype.xfid"></el-input>
 						<el-select placeholder="请选择" v-model="xiangmutype.xfid">
 							<el-option v-for="(t,i) in weixiutype" :value="t.xid">
-								{{t.xname}}
+								<label></label>{{t.xname}}
 							</el-option>
 						</el-select>
-					</el-form-item>
+					</el-form-item>-->
 				</el-form>
 				<span slot="footer" class="dialog-footer">
    				 	<el-button @click="weixiuleibiezi = false">取 消</el-button>
@@ -101,12 +132,12 @@
   				</span>
 			</el-dialog>
 
-			<el-dialog title="新增维修项目" width="850px" :visible.sync="xinzengweixiu" :before-close="handleClose">
+			<el-dialog title="新增维修项目" width="600px" :visible.sync="xinzengweixiu" :before-close="handleClose">
 				<div id="cnt2">
 
 				</div>
 			</el-dialog>
-			<el-dialog title="修改维修项目" width="850px" :visible.sync="xiugaiweixiu" :before-close="handleClose">
+			<el-dialog title="修改维修项目" width="600px" :visible.sync="xiugaiweixiu" :before-close="handleClose">
 				<div id="cnt2">
 
 				</div>

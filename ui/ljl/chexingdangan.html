@@ -15,7 +15,8 @@
 
 					<el-row>
 						<el-button type="primary" @click="pingpaiadd" plain>增加品牌</el-button>
-						<el><input type="text" v-model="pname" placeholder="按名称或字母查询" style=" height:30px;" /></el>
+						<!--<el><input type="text" v-model="pname" placeholder="按名称或字母查询" style=" height:30px;" /></el>-->
+						<el-input v-model="pname" placeholder="按名称或字母查询" style="width: 150px;"></el-input>
 						<el-button type="primary" plain @click="cx()">查询</el-button>
 					</el-row>
 					<div class="grid-content bg-purple">
@@ -42,8 +43,9 @@
 
 					<el-row>
 						<el-button type="primary" @click="danganadd" plain>增加车型</el-button>
-						<el-button type="primary" plain>照片</el-button>
-						<el><input type="text" v-model="carname" placeholder="请输入内容" style=" height:30px;" /></el>
+						<!--<el-button type="primary" plain>照片</el-button>-->
+						<!--<el><input type="text" v-model="carname" placeholder="请输入内容" style=" height:30px;" /></el>-->
+						<el-input v-model="carname" placeholder="请输入内容" style="width: 150px;"></el-input>
 						<el-button type="primary" plain @click="chaxundangan()">查询</el-button>
 					</el-row>
 					<div class="grid-content bg-purple-light">
@@ -83,12 +85,28 @@
 						<!--<el-form-item label="品牌编号：">
 							<el-input v-model="ping.pid" readonly></el-input>
 						</el-form-item>-->
-						<el-form-item label="品牌名称：">
+						<el-row>
+							<el-col>
+								<el-button type="text">
+									<el-form-item label="品牌名称" prop="pname">
+										<el-input v-model="ping.pname"></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+							<el-col>
+								<el-button type="text">
+									<el-form-item label="品牌首字母" prop="pzimu">
+										<el-input v-model="ping.pzimu"></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+						</el-row>
+						<!--<el-form-item label="品牌名称">
 							<el-input v-model="ping.pname"></el-input>
 						</el-form-item>
-						<el-form-item label="品牌开头字母：">
+						<el-form-item label="品牌首字母">
 							<el-input v-model="ping.pzimu"></el-input>
-						</el-form-item>
+						</el-form-item>-->
 					</el-form>
 					<span slot="footer" class="dialog-footer">
    				 	<el-button @click="pingpaixinzeng = false">取 消</el-button>
@@ -100,15 +118,39 @@
 			<el-dialog title="修改品牌" width="850px" :visible.sync="pingpaixiugai">
 				<div id="cnt2">
 					<el-form label-width="80px">
-						<el-form-item label="品牌编号：">
+						<el-row>
+							<el-col>
+								<el-button type="text">
+									<el-form-item label="品牌编号" prop="pid">
+										<el-input v-model="ping.pid" readonly></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+							<el-col>
+								<el-button type="text">
+									<el-form-item label="品牌名称" prop="pname">
+										<el-input v-model="ping.pname"></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+							<el-col>
+								<el-button type="text">
+									<el-form-item label="品牌首字母" prop="pzimu">
+										<el-input v-model="ping.pzimu"></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+						</el-row>
+						<!--
+						<el-form-item label="品牌编号">
 							<el-input v-model="ping.pid" readonly></el-input>
 						</el-form-item>
-						<el-form-item label="品牌名称：">
+						<el-form-item label="品牌名称">
 							<el-input v-model="ping.pname"></el-input>
 						</el-form-item>
-						<el-form-item label="品牌开头字母：">
+						<el-form-item label="品牌首字母">
 							<el-input v-model="ping.pzimu"></el-input>
-						</el-form-item>
+						</el-form-item>-->
 					</el-form>
 					<span slot="footer" class="dialog-footer">
    				 	<el-button @click="pingpaixiugai = false">取 消</el-button>
@@ -123,35 +165,67 @@
 						<!--<el-form-item label="车牌编号：">
 						<el-input v-model="cardangan.danganid" readonly></el-input>
 					</el-form-item>-->
-						<el-form-item label="车辆名称：">
-							<el-input v-model="cardangan.carname"></el-input>
-						</el-form-item>
-						<el-form-item label="参考价格：">
-							<el-input v-model="cardangan.cankaoprice"></el-input>
-						</el-form-item>
-						<el-form-item label="车辆年款：">
-							<el-input v-model="cardangan.carniankuan"></el-input>
-						</el-form-item>
-						<el-form-item label="功率：">
-							<el-input v-model="cardangan.gonglv"></el-input>
-						</el-form-item>
-						<el-form-item label="进口国家：">
-							<el-input v-model="cardangan.jinkouguochan"></el-input>
-						</el-form-item>
-						<el-form-item label="车牌品牌：">
-							<el-select placeholder="请选择" v-model="cardangan.carid">
-								<el-option v-for="(t,i) in addpingpaai" :value="t.pid">
-									{{t.pname}}
-								</el-option>
-							</el-select>
-						</el-form-item>
-						<el-form-item label="发动机型号：">
-							<el-select placeholder="请选择" v-model="cardangan.fadongjiid">
-								<el-option v-for="(t,i) in addfadongji" :value="t.fadongjiid">
-									{{t.fadongjiname}}
-								</el-option>
-							</el-select>
-						</el-form-item>
+						<el-row>
+							<el-col :span="10">
+								<el-button type="text">
+									<el-form-item label="车辆名称" prop="carname">
+										<el-input v-model="cardangan.carname"></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="10">
+								<el-button type="text">
+									<el-form-item label="参考价格" prop="cankaoprice">
+										<el-input v-model="cardangan.cankaoprice"></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+							<el-col :span="10" style="margin-left: 40px;">
+								<el-button type="text">
+									<el-form-item label="车辆年款" prop="carniankuan">
+										<el-input v-model="cardangan.carniankuan"></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="10">
+								<el-button type="text">
+									<el-form-item label="功率" prop="gonglv">
+										<el-input v-model="cardangan.gonglv"></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+							<el-col :span="10" style="margin-left: 40px;">
+								<el-button type="text">
+									<el-form-item label="进口国家" prop="jinkouguochan">
+										<el-input v-model="cardangan.jinkouguochan"></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="11">
+								<el-form-item prop="xid"><label>车牌品牌</label>
+									<el-select v-model="cardangan.carid" placeholder="请选择">
+										<el-option v-for="(t,i) in addpingpaai" :value="t.pid">
+											{{t.pname}}
+										</el-option>
+									</el-select>
+								</el-form-item>
+							</el-col>
+							<el-col :span="12">
+								<el-form-item prop="xid"><label>发动机型号</label>
+									<el-select v-model="cardangan.fadongjiid" placeholder="请选择">
+										<el-option v-for="(t,i) in addfadongji" :value="t.fadongjiid">
+											{{t.fadongjiname}}
+										</el-option>
+									</el-select>
+								</el-form-item>
+							</el-col>
+						</el-row>
 
 					</el-form>
 					<span slot="footer" class="dialog-footer">
@@ -164,38 +238,106 @@
 			<el-dialog title="车型更新" width="850px" :visible.sync="danganxiugai">
 				<div id="cnt2">
 					<el-form label-width="80px">
-						<el-form-item label="车牌编号：">
+						<el-row>
+							<el-col :span="10">
+								<el-button type="text">
+									<el-form-item label="车牌编号" prop="danganid">
+										<el-input v-model="cardangan.danganid" readonly></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+							<el-col :span="10" style="margin-left: 40px;">
+								<el-button type="text">
+									<el-form-item label="参考价格" prop="cankaoprice">
+										<el-input v-model="cardangan.cankaoprice"></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="10">
+								<el-button type="text">
+									<el-form-item label="车辆名称" prop="carname">
+										<el-input v-model="cardangan.carname"></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+							<el-col :span="10" style="margin-left: 40px;">
+								<el-button type="text">
+									<el-form-item label="车辆年款" prop="carniankuan">
+										<el-input v-model="cardangan.carniankuan"></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="10">
+								<el-button type="text">
+									<el-form-item label="功率" prop="gonglv">
+										<el-input v-model="cardangan.gonglv"></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+							<el-col :span="10" style="margin-left: 40px;">
+								<el-button type="text">
+									<el-form-item label="进口国家" prop="jinkouguochan">
+										<el-input v-model="cardangan.jinkouguochan"></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="11">
+								<el-form-item prop="xid"><label>车牌品牌</label>
+									<el-select v-model="cardangan.carid" placeholder="请选择">
+										<el-option v-for="(t,i) in addpingpaai" :value="t.pid">
+											{{t.pname}}
+										</el-option>
+									</el-select>
+								</el-form-item>
+							</el-col>
+							<el-col :span="12">
+								<el-form-item prop="xid"><label>发动机型号</label>
+									<el-select v-model="cardangan.fadongjiid" placeholder="请选择">
+										<el-option v-for="(t,i) in addfadongji" :value="t.fadongjiid">
+											{{t.fadongjiname}}
+										</el-option>
+									</el-select>
+								</el-form-item>
+							</el-col>
+						</el-row>
+						<!--<el-form-item label="车牌编号：">
 							<el-input v-model="cardangan.danganid" readonly></el-input>
-						</el-form-item>
-						<el-form-item label="车辆名称：">
+						</el-form-item>-->
+						<!--<el-form-item label="车辆名称">
 							<el-input v-model="cardangan.carname"></el-input>
 						</el-form-item>
-						<el-form-item label="参考价格：">
+						<el-form-item label="参考价格">
 							<el-input v-model="cardangan.cankaoprice"></el-input>
 						</el-form-item>
-						<el-form-item label="车辆年款：">
+						<el-form-item label="车辆年款">
 							<el-input v-model="cardangan.carniankuan"></el-input>
-						</el-form-item>
-						<el-form-item label="功率：">
+						</el-form-item>-->
+						<!--<el-form-item label="功率">
 							<el-input v-model="cardangan.gonglv"></el-input>
 						</el-form-item>
-						<el-form-item label="进口国家：">
+						<el-form-item label="进口国家">
 							<el-input v-model="cardangan.jinkouguochan"></el-input>
-						</el-form-item>
-						<el-form-item label="车牌品牌：">
+						</el-form-item>-->
+						<!--<el-form-item label="车牌品牌">
 							<el-select placeholder="请选择" v-model="cardangan.carid">
 								<el-option v-for="(t,i) in addpingpaai" :value="t.pid">
 									{{t.pname}}
 								</el-option>
 							</el-select>
 						</el-form-item>
-						<el-form-item label="发动机型号：">
+						<el-form-item label="发动机型号">
 							<el-select placeholder="请选择" v-model="cardangan.fadongjiid">
 								<el-option v-for="(t,i) in addfadongji" :value="t.fadongjiid">
 									{{t.fadongjiname}}
 								</el-option>
 							</el-select>
-						</el-form-item>
+						</el-form-item>-->
 
 					</el-form>
 					<span slot="footer" class="dialog-footer">
@@ -230,7 +372,7 @@
 				addpingpaai: [],
 				addfadongji: [],
 				pname: '',
-				carname:'',
+				carname: '',
 				pingpai: [],
 				chexing: [],
 				danganxiugai: false,
@@ -246,7 +388,7 @@
 					}
 					_this.Chexingchaxun(_this.carname, 1, 5);
 				},
-				Chexingchaxun(carname, n, s){
+				Chexingchaxun(carname, n, s) {
 					let _this = this;
 					$.getJSON(`http://localhost:8080/api/ljl/dangan/All/chexing/byname/${carname}/${n}/${s}`,
 						function(data) {

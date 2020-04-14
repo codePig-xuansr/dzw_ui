@@ -126,7 +126,8 @@
 						<el-row>
 							<!--<el><label>分类编号</label><input type="text" v-model="fadongji.fadongjiid" placeholder="请输入内容" style=" height:30px;" /></el>-->
 
-							<el><label>分类名称</label><input type="text" v-model="fadongjiname" placeholder="按名称查询" style=" height:30px;" /></el>
+							<!--<el><label>分类名称</label><input type="text" v-model="fadongjiname" placeholder="按名称查询" style=" height:30px;" /></el>-->
+							<el-input v-model="fadongjiname" placeholder="支持模糊搜索" style="width: 150px;"></el-input>
 							<el-button type="primary" plain @click="cx">查询</el-button>
 
 							<el-button type="primary" plain @click="bmxl">增加</el-button>
@@ -154,17 +155,31 @@
 				</el-col>
 			</el-row>
 			<el-dialog title="新增发动机品牌" width="700px" :visible.sync="xinzengfadongji">
-				<el-form label-width="80px">
+				<!--<el-form label-width="80px">-->
 					<!--<el-form-item label="发动机编号：">
 						<el-input v-model="fadongji.fadongjiid" readonly></el-input>
 					</el-form-item>-->
-					<el-form-item label="发动机名称：">
+					<!--<el-form-item label="发动机名称：">
 						<el-input v-model="fadongji.fadongjiname"></el-input>
 				</el-form>
 				<span slot="footer" class="dialog-footer">
    				 			<el-button @click="qx">取 消</el-button>
    				 			<el-button type="primary" @click="add">保存</el-button>
-  						</span>
+  						</span>-->
+  				<el-form :model="fadongji" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+						<el-row>
+							<el-col >
+								<el-button type="text">
+									<el-form-item label="发动机名称：" prop="fadongjiname">
+										<el-input v-model="fadongji.fadongjiname"></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
+						</el-row>
+						<el-form-item>
+   				 			<el-button @click="qx">取 消</el-button>
+   				 			<el-button type="primary" @click="add">保存</el-button>
+						</el-form-item>
 			</el-dialog>
 
 			<el-dialog title="修改发动机信息" width="700px" :visible.sync="xiugaifadongji">
