@@ -333,11 +333,21 @@
 									dataType: 'json',
 									contentType: 'application/json',
 									data: JSON.stringify(_this.fzxweixiuadd),
-									success() {
+									success(data) {
+										if(data.code == "200"){
 											_this.$message({
 												type: 'success',
 												message: '新增成功!'
 											});
+											let kano= _this.fzxweixiuadd.kano;
+											jQuery.ajax({
+														url: `http://localhost:8080/api/fzx/updatekc/${kano}`,
+														type: 'put',
+														dataType: 'json',
+														contentType: 'application/json',
+												});
+										}
+											
 										//重新加载页面
 										indexVm.toUrl('ui/fzx/maintenanceOrder.html');
 									},
