@@ -20,13 +20,13 @@
 				<el-col :span="24">
 					<template>
 						<!--<el-button type="button" class="btn btn-success btn-block" id="generate-excel"><i class="fa fa-file-excel-o" aria-hidden="true"></i> 将表格转换为Excel</el-button>-->
-							<el-button type="primary" plain @click="add = true">添加数据</el-button>						
+							<el-button type="primary" plain @click="addBanzu">添加数据</el-button>						
 						<el-table :data="vehicleInfo.list" border style="width: 100%">
 							<el-table-column v-for="(temp,index) in stsy" :label="temp.name" align="center" :resizable="false">
 								<template slot-scope="scope">
 									<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>
 									<el-button type="text" v-if="temp.value==0" @click="delOne(scope.row.kaid)">删除</el-button>
-									<el-button type="text" plain v-if="temp.value==0" @click="queryBySid(scope.row.kaid)">修改</el-button>									
+									<el-button type="text" v-if="temp.value==0" @click="queryBySid(scope.row.kaid)">修改</el-button>									
 								</template>
 							</el-table-column>
 						</el-table>
@@ -51,13 +51,16 @@
 						</el-form-item>-->
 						<el-form-item label="归属班组">							
 						 <el-select v-model="formLabelAlign.bzid" placeholder="请选择">
-				              <el-option
+				              <!--<el-option
 				                v-for="item in options"
 				                :key="item.value"
 				                :label="item.label"
 				                :value="item.value"
 				                :disabled="item.disabled">
-				              </el-option>
+				              </el-option>-->
+				              <el-option v-for="(t,i) in queryBanzuListValue" :value="t.bzid">
+											{{t.bzname}}
+										</el-option>
 				          </el-select>
 						</el-form-item>					
 					</el-form>
@@ -116,6 +119,7 @@
 				},
 				add: false,
 				modify: false,
+				queryBanzuListValue:{},
 				piges: {},
 				options: [{
 				          value: '1',
@@ -165,6 +169,12 @@
 				vehicleInfo:[],
 			},
 			methods: {
+				addBanzu(){
+					let _this = this;
+					_this.add = true;
+					_this.queryBanzuList();
+
+				},
 				//删除方法
 				delOne(kaid) {
 					//alert(kaid)					
@@ -184,12 +194,23 @@
 						});
 					}
 				},
+				//分页查询数据
 				page(pageNum, pageSize) {
 					let _this = this;
 					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/kache/queryKache/${pageNum}/${pageSize}`, function(pg) {
 						_this.vehicleInfo = pg;
 						_this.list = pg.list;
 						/*alert(JSON.stringify(pg.list))*/
+					});
+				},
+				//下拉框查询班组
+				queryBanzuList() {
+					let _this = this;
+					//alert(1)
+					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/banzu/queryBanzuList`, function(pg) {
+						_this.queryBanzuListValue = pg;
+/*						_this.list = pg.list;*/
+						//alert(JSON.stringify(_this.queryBanzuListValue))
 					});
 				},
 				//页数改变事件
@@ -203,13 +224,13 @@
 				},
 				//根据sid查询状态信息
 				queryBySid(kaid){
-					alert(kaid)
+					//alert(kaid)
 					let _this = this;	
 					_this.modify = true;
 					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/kache/queryKacheByid/${kaid}`,function(pg) {
 						_this.carlist = pg;
-						var a=["维修组1","维修组2","维修组3","油漆组","钣金组"];
-						_this. carlist.bzid= a[pg.bzid-1];
+						/*var a=["维修组1","维修组2","维修组3","油漆组","钣金组"];
+						_this. carlist.bzid= a[pg.bzid-1];*/
 					});
 				},
 				//修改数据
@@ -233,7 +254,7 @@
 				},
 				//添加数据
 				addall() {
-					let _this=this;
+					let _this=this;					
 					/*alert(JSON.stringify(_this.formLabelAlign))*/
 					jQuery.ajax("http://127.0.0.1:8080/zzy/api/kache/addkache",{
 						type:'post',
