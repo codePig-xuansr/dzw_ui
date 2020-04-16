@@ -25,7 +25,6 @@
 		<div id="weixiuadd">
 			<el-row>
 				<el-col :span="24">
-					<div id="tj">
 						<el-form label-width="80px">
 							<!--<tr>-->
 							<!--<td>项目编码：</td>
@@ -36,15 +35,15 @@
 							<br>-->
 
 							<el-row>
-								<el-col :span="24">
+								<el-col :span="12">
 									<el-button type="text">
-										<el-form-item label="项目名称：" prop="fwname">
+										<el-form-item label="项目名称" prop="fwname">
 											<el-input v-model="weixiufuwu.fwname" placeholder="请输入内容"></el-input>
 										</el-form-item>
 									</el-button>
 								</el-col>
-								<el-col :span="22">
-									<el-form-item prop="xid"><label>项目类别：</label>
+								<el-col :span="11">
+									<el-form-item prop="xid" label="项目类别" style="margin-left: 40px;margin-top: 14px;">
 										<el-select v-model="weixiufuwu.xid" placeholder="请选择">
 											<el-option v-for="(t,i) in weixiutype" :value="t.xid">
 												{{t.xname}}
@@ -52,16 +51,18 @@
 										</el-select>
 									</el-form-item>
 								</el-col>
-								<el-col :span="24">
+							</el-row>
+							<el-row>
+								<el-col :span="12">
 									<el-button type="text">
-										<el-form-item label="标准价：" prop="fwprice">
+										<el-form-item label="标准价" prop="fwprice">
 											<el-input v-model="weixiufuwu.fwprice" placeholder="请输入内容" v-on:keyup.enter="jisuanvip" @input="jisuanvip"></el-input>
 										</el-form-item>
 									</el-button>
 								</el-col>
-								<el-col :span="24">
+								<el-col :span="12">
 									<el-button type="text">
-										<el-form-item label="vip价：" prop="vippric">
+										<el-form-item label="vip价" prop="vippric">
 											<el-input v-model="weixiufuwu.vipprice"></el-input>
 										</el-form-item>
 									</el-button>
@@ -83,8 +84,6 @@
 							</tr>-->
 
 						</el-form>
-					</div>
-					<br />
 					<div id="oo">
 						<el-button style="width:150px" @click="add">保存</el-button>
 						<el-button style="width:150px" @click="fh">返回</el-button>
