@@ -133,13 +133,6 @@
 						</el-form-item>
 						<el-form-item label="星级">
 							<el-select v-model="addjgvalue.sid" placeholder="请选择">
-				              <!--<el-option
-				                v-for="item in star"
-				                :key="item.value"
-				                :label="item.label"
-				                :value="item.value"
-				                :disabled="item.disabled">
-				              </el-option>-->
 				               <el-option v-for="(t,i) in queryStarListValue" :value="t.sid">
 											{{t.sname}}
 										</el-option>
@@ -158,16 +151,9 @@
 						</el-form-item>
 						<el-form-item label="归属班组">							
 						 <el-select v-model="addjgvalue.bzid" placeholder="请选择">
-				              <!--<el-option
-				                v-for="item in options"
-				                :key="item.value"
-				                :label="item.label"
-				                :value="item.value"
-				                :disabled="item.disabled">
-				              </el-option>-->
-				              <el-option v-for="(t,i) in queryBanzuListValue" :value="t.bzid">
-											{{t.bzname}}
-										</el-option>
+				             <el-option v-for="(t,i) in queryBanzuListValue" :value="t.bzid">
+								{{t.bzname}}
+						</el-option>
 				          </el-select>
 						</el-form-item>		
 					</el-form>
@@ -354,8 +340,6 @@
 					let _this = this;
 					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/banzu/queryBanzuList`, function(pg) {
 						_this.queryBanzuListValue = pg;
-/*						_this.list = pg.list;*/
-						//alert(JSON.stringify(_this.queryBanzuListValue))
 					});
 				},
 				//下拉框查询星级状态
@@ -363,8 +347,6 @@
 					let _this = this;
 					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/class1/queryStarList`, function(pg) {
 						_this.queryStarListValue = pg;
-/*						_this.list = pg.list;*/
-						//alert(JSON.stringify(_this.queryBanzuListValue))
 					});
 				},
 				//删除技工
