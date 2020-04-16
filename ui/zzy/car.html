@@ -74,7 +74,7 @@
 						</div>
 					</el-col>
 				</el-row>
-				<el-dialog title="新增等级" :visible.sync="add" width="30%" :before-close="handleClose">
+				<el-dialog title="新增外勤车辆" :visible.sync="add" width="30%" :before-close="handleClose">
 				<div>
 					<el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
 						<el-form-item label="车牌号">
@@ -87,11 +87,16 @@
 							<el-input v-model="formLabelAlign.katype"></el-input>
 						</el-form-item>
 						<el-form-item label="归属班组">							
-						 <el-select v-model="formLabelAlign.bzid" placeholder="请选择">
-				              <el-option v-for="(t,i) in queryBanzuListValue" :value="t.bzid">
-											{{t.bzname}}
-										</el-option>
-				          </el-select>
+						 <template>
+							  <el-select v-model="formLabelAlign.bzid" placeholder="请选择" style="width:340px">
+							    <el-option
+							      v-for="t in queryBanzuListValue"
+							      :key="t.bzid"
+							      :label="t.bzname"
+							      :value="t.bzid">
+							    </el-option>
+							  </el-select>
+							</template>
 						</el-form-item>					
 					</el-form>
 				</div>
@@ -101,7 +106,7 @@
   				</span>
 			</el-dialog>
 			
-			<el-dialog title="修改等级" :visible.sync="modify" width="30%" :before-close="handleClose">
+			<el-dialog title="修改外勤车辆" :visible.sync="modify" width="30%" :before-close="handleClose">
 				<div>
 					<el-form :label-position="labelPosition" label-width="80px" :model="carlist">
 						<el-form-item label="车牌号">
@@ -117,11 +122,16 @@
 							<el-input v-model="carlist.kalc"></el-input>
 						</el-form-item>
 						<el-form-item label="归属班组">							
-						 <el-select v-model="carlist.bzid" placeholder="请选择">
-				              <el-option v-for="(t,i) in queryBanzuListValue" :value="t.bzid">
-											{{t.bzname}}
-										</el-option>
-				          </el-select>
+						 <template>
+							  <el-select v-model="carlist.bzid" placeholder="请选择" style="width:340px">
+							    <el-option
+							      v-for="t in queryBanzuListValue"
+							      :key="t.bzid"
+							      :label="t.bzname"
+							      :value="t.bzid">
+							    </el-option>
+							  </el-select>
+							</template>
 				          </el-select>
 						</el-form-item>		
 					</el-form>
@@ -209,6 +219,7 @@
 				activeName: 'first',
 				add: false,
 				modify: false,
+				labelPosition:'right',
 				queryBanzuListValue:{},
 				piges: {},
 				carlist: [],

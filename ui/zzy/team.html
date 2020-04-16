@@ -132,11 +132,16 @@
 							<el-input v-model="addjgvalue.worktime"></el-input>
 						</el-form-item>
 						<el-form-item label="星级">
-							<el-select v-model="addjgvalue.sid" placeholder="请选择">
-				               <el-option v-for="(t,i) in queryStarListValue" :value="t.sid">
-											{{t.sname}}
-										</el-option>
-				          </el-select>
+										<template>
+							  <el-select v-model="addjgvalue.sid" placeholder="请选择" >
+							    <el-option
+							      v-for="t in queryStarListValue"
+							      :key="t.sid"
+							      :label="t.sname"
+							      :value="t.sid">
+							    </el-option>
+							  </el-select>
+							</template>
 						</el-form-item>
 						<el-form-item label="类型">
 							<el-select v-model="addjgvalue.depid" placeholder="请选择">
@@ -149,12 +154,17 @@
 				              </el-option>
 				          </el-select>
 						</el-form-item>
-						<el-form-item label="归属班组">							
-						 <el-select v-model="addjgvalue.bzid" placeholder="请选择">
-				             <el-option v-for="(t,i) in queryBanzuListValue" :value="t.bzid">
-								{{t.bzname}}
-						</el-option>
-				          </el-select>
+						<el-form-item label="归属班组">													 
+						<template>
+							  <el-select v-model="addjgvalue.bzid" placeholder="请选择">
+							    <el-option
+							      v-for="t in queryBanzuListValue"
+							      :key="t.bzid"
+							      :label="t.bzname"
+							      :value="t.bzid">
+							    </el-option>
+							  </el-select>
+						</template>
 						</el-form-item>		
 					</el-form>
 				</div>
@@ -189,11 +199,16 @@
 							<el-input v-model="modifyjgvalue.worktime"></el-input>
 						</el-form-item>
 						<el-form-item label="星级">
-							<el-select v-model="modifyjgvalue.sid" placeholder="请选择">
-				               <el-option v-for="(t,i) in queryStarListValue" :value="t.sid">
-											{{t.sname}}
-										</el-option>
-				          </el-select>
+							<template>
+							  <el-select v-model="modifyjgvalue.sid" placeholder="请选择" >
+							    <el-option
+							      v-for="t in queryStarListValue"
+							      :key="t.sid"
+							      :label="t.sname"
+							      :value="t.sid">
+							    </el-option>
+							  </el-select>
+							</template>
 						</el-form-item>
 						<el-form-item label="类型">
 							<el-select v-model="modifyjgvalue.depid" placeholder="请选择">
@@ -207,11 +222,16 @@
 				          </el-select>
 						</el-form-item>
 						<el-form-item label="归属班组">							
-						 <el-select v-model="modifyjgvalue.bzid" placeholder="请选择">
-				                <el-option v-for="(t,i) in queryBanzuListValue" :value="t.bzid">
-											{{t.bzname}}
-										</el-option>
-				          </el-select>
+						 <template>
+							  <el-select v-model="modifyjgvalue.bzid" placeholder="请选择">
+							    <el-option
+							      v-for="t in queryBanzuListValue"
+							      :key="t.bzid"
+							      :label="t.bzname"
+							      :value="t.bzid">
+							    </el-option>
+							  </el-select>
+						</template>
 						</el-form-item>		
 					</el-form>
 				</div>
@@ -230,6 +250,7 @@
 			data: {
 				formLabelAlign:{},
 				piges: {},
+				labelPosition:'right',
 				 addbz: false,
 				addjg: false,
 				addteam:false,

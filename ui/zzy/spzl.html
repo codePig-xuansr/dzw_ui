@@ -64,13 +64,16 @@
 							<el-input v-model="formLabelAlign.proprice"></el-input>
 						</el-form-item>
 						<el-form-item label="供应商">
-							<el-select v-model="formLabelAlign.ghid" placeholder="请选择">
-				             	<!--<el-option label="aaa供应商" value="1"></el-option>
-				             	<el-option label="bbb供应商" value="2"></el-option>-->
-				             	<el-option v-for="(t,i) in queryGonghuoListValue" :value="t.ghid">
-											{{t.ghname}}
-										</el-option>
-				          	</el-select>						
+							<template>
+							  <el-select v-model="formLabelAlign.ghid" placeholder="请选择">
+							    <el-option
+							      v-for="t in queryGonghuoListValue"
+							      :key="t.ghid"
+							      :label="t.ghname"
+							      :value="t.ghid">
+							    </el-option>
+							  </el-select>
+							</template>						
 						</el-form-item>
 					</el-form>
 				</div>
@@ -102,19 +105,17 @@
 						<el-form-item label="数量单位">
 							<el-input v-model="teams.prodw"></el-input>
 						</el-form-item>
-						<el-form-item label="供应商">							
-						 <el-select v-model="teams.ghid" placeholder="请选择">
-				              <!--<el-option
-				                v-for="item in options"
-				                :key="item.value"
-				                :label="item.label"
-				                :value="item.value"
-				                :disabled="item.disabled">
-				              </el-option>-->
-				              <el-option v-for="(t,i) in queryGonghuoListValue" :value="t.ghid">
-											{{t.ghname}}
-										</el-option>
-				          </el-select>
+						<el-form-item label="供应商">													
+						 <template>
+							  <el-select v-model="teams.ghid" placeholder="请选择">
+							    <el-option
+							      v-for="t in queryGonghuoListValue"
+							      :key="t.ghid"
+							      :label="t.ghname"
+							      :value="t.ghid">
+							    </el-option>
+							  </el-select>
+							</template>
 						</el-form-item>		
 						<el-form-item label="商品价格">
 							<el-input v-model="teams.proprice"></el-input>
@@ -147,28 +148,6 @@
 				},
 				list: [],
 				teams:{},
-				options: [{
-				          value: '1',
-				          label: '龙哥家开的',
-				
-				        }, {
-				          value: '2',
-				          label: '供货商2',
-				
-				        }, {
-				          value: '3',
-				          label: '供货商3',
-				
-				        }, {
-				          value: '4',
-				          label: '供货商4',
-				
-				        }, {
-				          value: '5',
-				          label: '供货商5',
-				
-				        }],
-				        value: '归属班组',
 				stsy: [{
 						name: '商品编码',
 						value: 'proid'
