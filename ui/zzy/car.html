@@ -429,32 +429,31 @@
 								_this.page(1,3);
 								_this.queryKacheByStaro(1, 3);
 								_this.queryKacheByStarqq(1, 3);
+								_this.queryKacheByStarc(1,3);
 							}
 						}
 					});
 				},
 				//修改状态
-				modifyKahceStarEqo() {
-					//alert(kaid)
+				
+				modifyKahceStarEqo(kaid) {
+					alert(kaid)
 					let _this=this;
-					//alert(JSON.stringify(_this.vehicleInfo4))
+					//alert(JSON.stringify(kaid)
 					if(window.confirm('是否确定收车？')) {
-					jQuery.ajax("http://127.0.0.1:8080/zzy/api/kache/modifyKahceStar/${kache}",{
-						type:'put',
-						data:JSON.stringify(_this.vehicleInfo4),
-						contentType: 'application/json; charset=UTF-8',
-						success(data){
-							if(data=="ok"){
+						$.getJSON(`http://127.0.0.1:8080/zzy/api/kache/modifyKahceStarEqo/${kaid}`, function(date) {
+							if(date=="ok"){
 								alert("收车失败！");
-							}else{							
+							}else{
 								alert("收车成功！");
 								_this.modify = false;
 								_this.page(1,3);
 								_this.queryKacheByStaro(1, 3);
 								_this.queryKacheByStarqq(1, 3);
+								_this.queryKacheByStarc(1,3);
 							}
-						}
-					});
+						
+					});						
 					}
 				},
 				//添加数据
