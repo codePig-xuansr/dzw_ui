@@ -133,13 +133,16 @@
 						</el-form-item>
 						<el-form-item label="星级">
 							<el-select v-model="addjgvalue.sid" placeholder="请选择">
-				              <el-option
+				              <!--<el-option
 				                v-for="item in star"
 				                :key="item.value"
 				                :label="item.label"
 				                :value="item.value"
 				                :disabled="item.disabled">
-				              </el-option>
+				              </el-option>-->
+				               <el-option v-for="(t,i) in queryStarListValue" :value="t.sid">
+											{{t.sname}}
+										</el-option>
 				          </el-select>
 						</el-form-item>
 						<el-form-item label="类型">
@@ -201,13 +204,9 @@
 						</el-form-item>
 						<el-form-item label="星级">
 							<el-select v-model="modifyjgvalue.sid" placeholder="请选择">
-				              <el-option
-				                v-for="item in star"
-				                :key="item.value"
-				                :label="item.label"
-				                :value="item.value"
-				                :disabled="item.disabled">
-				              </el-option>
+				               <el-option v-for="(t,i) in queryStarListValue" :value="t.sid">
+											{{t.sname}}
+										</el-option>
 				          </el-select>
 						</el-form-item>
 						<el-form-item label="类型">
@@ -223,13 +222,9 @@
 						</el-form-item>
 						<el-form-item label="归属班组">							
 						 <el-select v-model="modifyjgvalue.bzid" placeholder="请选择">
-				              <el-option
-				                v-for="item in options"
-				                :key="item.value"
-				                :label="item.label"
-				                :value="item.value"
-				                :disabled="item.disabled">
-				              </el-option>
+				                <el-option v-for="(t,i) in queryBanzuListValue" :value="t.bzid">
+											{{t.bzname}}
+										</el-option>
 				          </el-select>
 						</el-form-item>		
 					</el-form>
@@ -256,6 +251,7 @@
 				modifyjg:false,
 				addjgvalue:{},
 				queryBanzuListValue:{},
+				queryStarListValue:{},
 				modifyjgvalue:{},
 				carlist: [],
 				cominfo:{
@@ -265,14 +261,9 @@
 				},
 				list: [],
 				teams:{},
-				options: [{ value: '1',label: '维修组1',}, { value: '2',label: '维修组2', }, { value: '3',label: '维修组3',
-			}, {value: '4',label: '油漆组',}, {value: '5',label: '钣金组',}], value: '归属班组',
-			
 			dep: [{ value: '1',label: '维修部',}, { value: '2',label: '人事部', }, { value: '3',label: '客服部',
 			}, {value: '4',label: '财务部',}, {value: '5',label: '仓库部',}, {value: '6',label: '系统部',}],
 			
-			star: [{ value: '1',label: '一星技工',}, { value: '2',label: '二星技工', }, { value: '3',label: '三星技工',
-			}, {value: '4',label: '四星技工',}],
 				stsy: [{
 							name: '班组名称',
 						value: 'bzname'
@@ -356,13 +347,22 @@
 					let _this = this;
 					_this.addjg = true;
 					_this.queryBanzuList();
+					_this.queryStarList();
 				},
 				//下拉框查询班组
 				queryBanzuList() {
 					let _this = this;
-					//alert(1)
 					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/banzu/queryBanzuList`, function(pg) {
 						_this.queryBanzuListValue = pg;
+/*						_this.list = pg.list;*/
+						//alert(JSON.stringify(_this.queryBanzuListValue))
+					});
+				},
+				//下拉框查询星级状态
+				queryStarList() {
+					let _this = this;
+					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/class1/queryStarList`, function(pg) {
+						_this.queryStarListValue = pg;
 /*						_this.list = pg.list;*/
 						//alert(JSON.stringify(_this.queryBanzuListValue))
 					});
@@ -493,8 +493,8 @@
 				//根据技工jid查询技工信息
 				queryJigongByid(jid){
 					let _this = this;	
-										alert(JSON.stringify(_this.modifyjgvalue))
-
+					_this.queryBanzuList();
+					_this.queryStarList();
 					_this.modifyjg = true;
 					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/jigong/queryJigongById/${jid}`,function(pg) {
 						_this.modifyjgvalue = pg;
