@@ -3,38 +3,78 @@
 
 	<head>
 		<meta charset="UTF-8">
-		<title>外勤车辆1</title>
+		<title></title>
+
 		<style>
-			/* 请为你的每个页面设置一个内边距 */
+			.el-row {
+				margin-bottom: 20px;
+				&:last-child {
+					margin-bottom: 0;
+				}
+			}
 			
-			#fish {
-				padding-left: 5px;
+			.el-col {
+				border-radius: 4px;
+			}
+			
+			.bg-purple-dark {
+				background: #FAF8F6;
+			}
+			
+			.bg-purple {
+				background: #FAF8F6;
+			}
+			
+			.bg-purple-light {
+				background: #FAF8F6;
+			}
+			
+			.grid-content {
+				border-radius: 4px;
+				min-height: 36px;
+			}
+			
+			.row-bg {
+				padding: 10px 0;
+				background-color: #FAF8F6;
 			}
 		</style>
 	</head>
 
 	<body>
-		<!--绑定vue引擎，命名：页面名字+Vm-->
-		<div id="fish">
+		<div id="cheVm">
+
 			<el-row>
-				<el-col :span="24">
-					<template>
-						<!--<el-button type="button" class="btn btn-success btn-block" id="generate-excel"><i class="fa fa-file-excel-o" aria-hidden="true"></i> 将表格转换为Excel</el-button>-->
-							<el-button type="primary" plain @click="add = true">添加数据</el-button>						
+				<el-col :span="12">
+					<div class="grid-content bg-purple">
+						<h1 style="margin-left: 10px;">       外勤车辆信息</h1>
+					</div>
+				</el-col>
+				<p></p>
+				<h></h>
+				
+				<el-button type="primary" plain @click="addBanzu">添加外勤车辆</el-button>
+				
+				
+				<el-row>
+					<el-col :span="24">
+						<div class="grid-content bg-purple-dark">
+							<template>				
 						<el-table :data="vehicleInfo.list" border style="width: 100%">
 							<el-table-column v-for="(temp,index) in stsy" :label="temp.name" align="center" :resizable="false">
 								<template slot-scope="scope">
-									<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>
+								<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>
 									<el-button type="text" v-if="temp.value==0" @click="delOne(scope.row.kaid)">删除</el-button>
-									<el-button type="text" plain v-if="temp.value==0" @click="queryBySid(scope.row.kaid)">修改</el-button>									
+									<el-button type="text" v-if="temp.value==0" @click="queryBySid(scope.row.kaid)">修改</el-button>									
 								</template>
 							</el-table-column>
 						</el-table>
 						<el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="vehicleInfo.total" :page-sizes="[1,2,3,4,5]" :page-size="vehicleInfo.pageSize">
-					</template>			
-				</el-col>
-			</el-row>
-			<el-dialog title="新增等级" :visible.sync="add" width="30%" :before-close="handleClose">
+						</template>
+						</div>
+					</el-col>
+				</el-row>
+				<el-dialog title="新增外勤车辆" :visible.sync="add" width="30%" :before-close="handleClose">
 				<div>
 					<el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
 						<el-form-item label="车牌号">
@@ -46,19 +86,17 @@
 						<el-form-item label="车型">
 							<el-input v-model="formLabelAlign.katype"></el-input>
 						</el-form-item>
-						<!--<el-form-item label="当前里程">
-							<el-input v-model="formLabelAlign.kalc"></el-input>
-						</el-form-item>-->
 						<el-form-item label="归属班组">							
-						 <el-select v-model="formLabelAlign.bzid" placeholder="请选择">
-				              <el-option
-				                v-for="item in options"
-				                :key="item.value"
-				                :label="item.label"
-				                :value="item.value"
-				                :disabled="item.disabled">
-				              </el-option>
-				          </el-select>
+						 <template>
+							  <el-select v-model="formLabelAlign.bzid" placeholder="请选择" style="width:340px">
+							    <el-option
+							      v-for="t in queryBanzuListValue"
+							      :key="t.bzid"
+							      :label="t.bzname"
+							      :value="t.bzid">
+							    </el-option>
+							  </el-select>
+							</template>
 						</el-form-item>					
 					</el-form>
 				</div>
@@ -68,7 +106,7 @@
   				</span>
 			</el-dialog>
 			
-			<el-dialog title="修改等级" :visible.sync="modify" width="30%" :before-close="handleClose">
+			<el-dialog title="修改外勤车辆" :visible.sync="modify" width="30%" :before-close="handleClose">
 				<div>
 					<el-form :label-position="labelPosition" label-width="80px" :model="carlist">
 						<el-form-item label="车牌号">
@@ -84,14 +122,16 @@
 							<el-input v-model="carlist.kalc"></el-input>
 						</el-form-item>
 						<el-form-item label="归属班组">							
-						 <el-select v-model="carlist.bzid" placeholder="请选择">
-				              <el-option
-				                v-for="item in options"
-				                :key="item.value"
-				                :label="item.label"
-				                :value="item.value"
-				                :disabled="item.disabled">
-				              </el-option>
+						 <template>
+							  <el-select v-model="carlist.bzid" placeholder="请选择" style="width:340px">
+							    <el-option
+							      v-for="t in queryBanzuListValue"
+							      :key="t.bzid"
+							      :label="t.bzname"
+							      :value="t.bzid">
+							    </el-option>
+							  </el-select>
+							</template>
 				          </el-select>
 						</el-form-item>		
 					</el-form>
@@ -101,11 +141,73 @@
    				 <el-button type="primary" @click="modifyall">保存</el-button>
   				</span>
 			</el-dialog>
+				<template>
+					<el-tabs v-model="activeName" type="border-card">
+						<el-tab-pane label="空闲车辆信息" name="first">
+							<el-row>
+								<el-col :span="24">
+									<div class="grid-content bg-purple-dark">
+										<template>
+											<el-table :data="vehicleInfo2.list" border style="width: 100%">
+							<el-table-column v-for="(temp,index) in stsy2" :label="temp.name" align="center" :resizable="false">
+								<template slot-scope="scope">
+								<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>
+									<!--<el-button type="text" v-if="temp.value==0" @click="delOne(scope.row.kaid)">删除</el-button>
+									<el-button type="text" v-if="temp.value==0" @click="queryBySid(scope.row.kaid)">修改</el-button>									-->
+								</template>
+							</el-table-column>
+						</el-table>
+						<el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec2" @current-change="change2" layout="total,sizes,prev, pager, next, jumper" :total="vehicleInfo2.total" :page-sizes="[1,2,3,4,5]" :page-size="vehicleInfo2.pageSize">
+									</template>									
+									</div>
+								</el-col>
+							</el-row>
+						</el-tab-pane>
+						<el-tab-pane label="救援中的车辆" name="second">
+							<el-row>
+								<el-col :span="24">
+									<div class="grid-content bg-purple-dark">
+										<template>
+											<el-table :data="vehicleInfo3.list" border style="width: 100%">
+							<el-table-column v-for="(temp,index) in stsy3" :label="temp.name" align="center" :resizable="false">
+								<template slot-scope="scope">
+								<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>							
+								</template>
+							</el-table-column>
+						</el-table>
+						<el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec3" @current-change="change3" layout="total,sizes,prev, pager, next, jumper" :total="vehicleInfo3.total" :page-sizes="[1,2,3,4,5]" :page-size="vehicleInfo3.pageSize">
+										</template>
+										
+									</div>
+								</el-col>
+							</el-row>
+						</el-tab-pane>
+						<el-tab-pane label="待收车" name="second22">
+							<el-row>
+								<el-col :span="24">
+									<div class="grid-content bg-purple-dark">
+										<template>
+											<el-table :data="vehicleInfo4.list" border style="width: 100%">
+							<el-table-column v-for="(temp,index) in stsy4" :label="temp.name" align="center" :resizable="false">
+								<template slot-scope="scope">
+								<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>
+									<el-button type="text" v-if="temp.value==0" @click="modifyKahceStarEqo(scope.row.kaid)">收车</el-button>									
+								</template>
+							</el-table-column>
+						</el-table>
+						<el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec4" @current-change="change4" layout="total,sizes,prev, pager, next, jumper" :total="vehicleInfo4.total" :page-sizes="[1,2,3,4,5]" :page-size="vehicleInfo4.pageSize">
+										</template>
+										
+									</div>
+								</el-col>
+							</el-row>
+						</el-tab-pane>
+				</template>
 		</div>
 	</body>
 	<script>
-		var fish = new Vue({
-			el: '#fish',
+		var cheVm = new Vue({
+			el: '#cheVm',
 			data: {
 				formLabelAlign:{
 					kano:'',
@@ -114,31 +216,12 @@
 					/*kalc:'',*/
 					bzid:'',
 				},
+				activeName: 'first',
 				add: false,
 				modify: false,
+				labelPosition:'right',
+				queryBanzuListValue:{},
 				piges: {},
-				options: [{
-				          value: '1',
-				          label: '维修组1',
-				
-				        }, {
-				          value: '2',
-				          label: '维修组2',
-				
-				        }, {
-				          value: '3',
-				          label: '维修组3',
-				
-				        }, {
-				          value: '4',
-				          label: '油漆组',
-				
-				        }, {
-				          value: '5',
-				          label: '钣金组',
-				
-				        }],
-				        value: '归属班组',
 				carlist: [],
 				list: [],
 				stsy: [{
@@ -162,9 +245,73 @@
 					name: '操作',
 					value: '0'
 				}],
+				stsy2: [{
+					name: '车牌号',
+					value: 'kano'
+				}, {
+					name: '品牌',
+					value: 'kapp'
+				}, {
+					name: '车型',
+					value: 'katype'
+				}, {
+					name: '当前里程',
+					value: 'kalc'
+				},
+				{
+					name: '归属班组',
+					value: 'bzname'
+				}],
+				stsy3: [{
+					name: '车牌号',
+					value: 'kano'
+				}, {
+					name: '品牌',
+					value: 'kapp'
+				}, {
+					name: '车型',
+					value: 'katype'
+				}, {
+					name: '当前里程',
+					value: 'kalc'
+				},
+				{
+					name: '归属班组',
+					value: 'bzname'
+				}],
+				stsy4: [{
+					name: '车牌号',
+					value: 'kano'
+				}, {
+					name: '品牌',
+					value: 'kapp'
+				}, {
+					name: '车型',
+					value: 'katype'
+				}, {
+					name: '当前里程',
+					value: 'kalc'
+				},
+				{
+					name: '归属班组',
+					value: 'bzname'
+				},
+				{
+					name: '操作',
+					value: '0'
+				}],
 				vehicleInfo:[],
+				vehicleInfo2:[],
+				vehicleInfo3:[],
+				vehicleInfo4:[],
 			},
 			methods: {
+				addBanzu(){
+					let _this = this;
+					_this.add = true;
+					_this.queryBanzuList();
+
+				},
 				//删除方法
 				delOne(kaid) {
 					//alert(kaid)					
@@ -184,6 +331,15 @@
 						});
 					}
 				},
+				//下拉框查询班组
+				queryBanzuList() {
+					let _this = this;
+					//alert(1)
+					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/banzu/queryBanzuList`, function(pg) {
+						_this.queryBanzuListValue = pg;
+					});
+				},
+				//分页查询数据
 				page(pageNum, pageSize) {
 					let _this = this;
 					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/kache/queryKache/${pageNum}/${pageSize}`, function(pg) {
@@ -192,6 +348,7 @@
 						/*alert(JSON.stringify(pg.list))*/
 					});
 				},
+				
 				//页数改变事件
 				change(num) {
 					let _this = this;
@@ -201,18 +358,72 @@
 				sizec(size) {
 					this.page(1, size);
 				},
-				//根据sid查询状态信息
-				queryBySid(kaid){
-					alert(kaid)
-					let _this = this;	
-					_this.modify = true;
-					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/kache/queryKacheByid/${kaid}`,function(pg) {
-						_this.carlist = pg;
-						var a=["维修组1","维修组2","维修组3","油漆组","钣金组"];
-						_this. carlist.bzid= a[pg.bzid-1];
+				//分页查询卡车状态为0
+				queryKacheByStaro(pageNum, pageSize) {
+					let _this = this;
+					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/kache/queryKacheByStaro/${pageNum}/${pageSize}`, function(pg) {
+						_this.vehicleInfo2 = pg;
+						_this.list = pg.list;
+						//alert(JSON.stringify(pg.list))
 					});
 				},
-				//修改数据
+				
+				//页数改变事件
+				change2(num) {
+					let _this = this;
+					this.queryKacheByStaro(num, _this.vehicleInfo2.pageSize);
+				},
+				//pageSize选择事件
+				sizec2(size) {
+					this.queryKacheByStaro(1, size);
+				},
+				//分页查询卡车状态为1
+				queryKacheByStarqq(pageNum, pageSize) {
+					let _this = this;
+					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/kache/queryKacheByStarl/${pageNum}/${pageSize}`, function(pg) {
+						_this.vehicleInfo3 = pg;
+						_this.list = pg.list;
+						//alert(JSON.stringify(pg.list))
+					});
+				},				
+				//页数改变事件
+				change3(num) {
+					let _this = this;
+					this.queryKacheByStarqq(num, _this.vehicleInfo3.pageSize);
+				},
+				//pageSize选择事件
+				sizec3(size) {
+					this.queryKacheByStarqq(1, size);
+				},
+				//分页查询卡车状态为1
+				queryKacheByStarc(pageNum, pageSize) {
+					let _this = this;
+					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/kache/queryKacheByStarc/${pageNum}/${pageSize}`, function(pg) {
+						_this.vehicleInfo4 = pg;
+						_this.list = pg.list;
+						//alert(JSON.stringify(pg.list))
+					});
+				},				
+				//页数改变事件
+				change4(num) {
+					let _this = this;
+					this.queryKacheByStarqq(num, _this.vehicleInfo4.pageSize);
+				},
+				//pageSize选择事件
+				sizec4(size) {
+					this.queryKacheByStarc(1, size);
+				},
+				//根据sid查询状态信息
+				queryBySid(kaid){
+					//alert(kaid)
+					let _this = this;	
+					_this.modify = true;
+					_this.queryBanzuList();
+					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/kache/queryKacheByid/${kaid}`,function(pg) {
+						_this.carlist = pg;
+					});
+				},
+				//修改数据 
 				modifyall() {
 					let _this=this;
 //					alert(JSON.stringify(_this.carlist))
@@ -226,14 +437,39 @@
 							}else{							
 								alert("修改成功！");
 								_this.modify = false;
-								_this.page(1,5);
+								_this.page(1,3);
+								_this.queryKacheByStaro(1, 3);
+								_this.queryKacheByStarqq(1, 3);
+								_this.queryKacheByStarc(1,3);
 							}
 						}
 					});
 				},
+				//修改状态
+				
+				modifyKahceStarEqo(kaid) {
+					alert(kaid)
+					let _this=this;
+					//alert(JSON.stringify(kaid)
+					if(window.confirm('是否确定收车？')) {
+						$.getJSON(`http://127.0.0.1:8080/zzy/api/kache/modifyKahceStarEqo/${kaid}`, function(date) {
+							if(date=="ok"){
+								alert("收车失败！");
+							}else{
+								alert("收车成功！");
+								_this.modify = false;
+								_this.page(1,3);
+								_this.queryKacheByStaro(1, 3);
+								_this.queryKacheByStarqq(1, 3);
+								_this.queryKacheByStarc(1,3);
+							}
+						
+					});						
+					}
+				},
 				//添加数据
 				addall() {
-					let _this=this;
+					let _this=this;					
 					/*alert(JSON.stringify(_this.formLabelAlign))*/
 					jQuery.ajax("http://127.0.0.1:8080/zzy/api/kache/addkache",{
 						type:'post',
@@ -254,8 +490,10 @@
 				}
 			},
 			mounted() {
-				let _this = this;
-				_this.page(1, 5);
+				this.page(1, 3);
+				this.queryKacheByStaro(1, 3);
+				this.queryKacheByStarqq(1, 3);
+				this.queryKacheByStarc(1, 3);
 			}
 		});
 	</script>

@@ -24,7 +24,7 @@
 						<el-form-item>
 							<el-button type="success" plain @click="ck">查询</el-button>
 							<el-button type="primary" plain @click="addbz = true">添加班组</el-button>
-						<el-button type="primary" plain @click="addjg = true">添加技工</el-button>
+						<el-button type="primary" plain @click="SelectValue">添加技工</el-button>
 						</el-form-item>
 					  </el-form>
 				  </el-col>
@@ -58,7 +58,7 @@
 							<el-table-column v-for="(temp,index) in stsyjg" :label="temp.name" align="center" :resizable="false">
 								<template slot-scope="scope">
 									<span v-if="temp.value!=0">{{scope.row[temp.value]}}</span>
-									<el-button type="text" v-if="temp.value==0" @click="delOne(scope.row.jid)">删除</el-button><br />
+									<el-button type="text" v-if="temp.value==0" @click="delJigong(scope.row.jid)">删除</el-button><br />
 									<el-button type="text" v-if="temp.value==0" @click="queryJigongByid(scope.row.jid)">修改</el-button>
 								</template>
 							</el-table-column>
@@ -132,15 +132,16 @@
 							<el-input v-model="addjgvalue.worktime"></el-input>
 						</el-form-item>
 						<el-form-item label="星级">
-							<el-select v-model="addjgvalue.sid" placeholder="请选择">
-				              <el-option
-				                v-for="item in star"
-				                :key="item.value"
-				                :label="item.label"
-				                :value="item.value"
-				                :disabled="item.disabled">
-				              </el-option>
-				          </el-select>
+										<template>
+							  <el-select v-model="addjgvalue.sid" placeholder="请选择" >
+							    <el-option
+							      v-for="t in queryStarListValue"
+							      :key="t.sid"
+							      :label="t.sname"
+							      :value="t.sid">
+							    </el-option>
+							  </el-select>
+							</template>
 						</el-form-item>
 						<el-form-item label="类型">
 							<el-select v-model="addjgvalue.depid" placeholder="请选择">
@@ -153,16 +154,17 @@
 				              </el-option>
 				          </el-select>
 						</el-form-item>
-						<el-form-item label="归属班组">							
-						 <el-select v-model="addjgvalue.bzid" placeholder="请选择">
-				              <el-option
-				                v-for="item in options"
-				                :key="item.value"
-				                :label="item.label"
-				                :value="item.value"
-				                :disabled="item.disabled">
-				              </el-option>
-				          </el-select>
+						<el-form-item label="归属班组">													 
+						<template>
+							  <el-select v-model="addjgvalue.bzid" placeholder="请选择">
+							    <el-option
+							      v-for="t in queryBanzuListValue"
+							      :key="t.bzid"
+							      :label="t.bzname"
+							      :value="t.bzid">
+							    </el-option>
+							  </el-select>
+						</template>
 						</el-form-item>		
 					</el-form>
 				</div>
@@ -197,15 +199,16 @@
 							<el-input v-model="modifyjgvalue.worktime"></el-input>
 						</el-form-item>
 						<el-form-item label="星级">
-							<el-select v-model="modifyjgvalue.sid" placeholder="请选择">
-				              <el-option
-				                v-for="item in star"
-				                :key="item.value"
-				                :label="item.label"
-				                :value="item.value"
-				                :disabled="item.disabled">
-				              </el-option>
-				          </el-select>
+							<template>
+							  <el-select v-model="modifyjgvalue.sid" placeholder="请选择" >
+							    <el-option
+							      v-for="t in queryStarListValue"
+							      :key="t.sid"
+							      :label="t.sname"
+							      :value="t.sid">
+							    </el-option>
+							  </el-select>
+							</template>
 						</el-form-item>
 						<el-form-item label="类型">
 							<el-select v-model="modifyjgvalue.depid" placeholder="请选择">
@@ -219,21 +222,22 @@
 				          </el-select>
 						</el-form-item>
 						<el-form-item label="归属班组">							
-						 <el-select v-model="modifyjgvalue.bzid" placeholder="请选择">
-				              <el-option
-				                v-for="item in options"
-				                :key="item.value"
-				                :label="item.label"
-				                :value="item.value"
-				                :disabled="item.disabled">
-				              </el-option>
-				          </el-select>
+						 <template>
+							  <el-select v-model="modifyjgvalue.bzid" placeholder="请选择">
+							    <el-option
+							      v-for="t in queryBanzuListValue"
+							      :key="t.bzid"
+							      :label="t.bzname"
+							      :value="t.bzid">
+							    </el-option>
+							  </el-select>
+						</template>
 						</el-form-item>		
 					</el-form>
 				</div>
 				<span slot="footer" class="dialog-footer">
    				 <el-button @click="modifyjg = false">取 消</el-button>
-   				 <el-button type="primary" @click="">保存</el-button>
+   				 <el-button type="primary" @click="modifyjigong">保存</el-button>
   				</span>
 			</el-dialog>
 
@@ -246,12 +250,15 @@
 			data: {
 				formLabelAlign:{},
 				piges: {},
+				labelPosition:'right',
 				 addbz: false,
 				addjg: false,
 				addteam:false,
 				modifybz:false,
 				modifyjg:false,
 				addjgvalue:{},
+				queryBanzuListValue:{},
+				queryStarListValue:{},
 				modifyjgvalue:{},
 				carlist: [],
 				cominfo:{
@@ -261,14 +268,9 @@
 				},
 				list: [],
 				teams:{},
-				options: [{ value: '1',label: '维修组1',}, { value: '2',label: '维修组2', }, { value: '3',label: '维修组3',
-			}, {value: '4',label: '油漆组',}, {value: '5',label: '钣金组',}], value: '归属班组',
-			
 			dep: [{ value: '1',label: '维修部',}, { value: '2',label: '人事部', }, { value: '3',label: '客服部',
 			}, {value: '4',label: '财务部',}, {value: '5',label: '仓库部',}, {value: '6',label: '系统部',}],
 			
-			star: [{ value: '1',label: '一星技工',}, { value: '2',label: '二星技工', }, { value: '3',label: '三星技工',
-			}, {value: '4',label: '四星技工',}],
 				stsy: [{
 							name: '班组名称',
 						value: 'bzname'
@@ -347,6 +349,46 @@
 				}],
 			},
 			methods: {
+				//查询班组信息
+				SelectValue(){
+					let _this = this;
+					_this.addjg = true;
+					_this.queryBanzuList();
+					_this.queryStarList();
+				},
+				//下拉框查询班组
+				queryBanzuList() {
+					let _this = this;
+					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/banzu/queryBanzuList`, function(pg) {
+						_this.queryBanzuListValue = pg;
+					});
+				},
+				//下拉框查询星级状态
+				queryStarList() {
+					let _this = this;
+					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/class1/queryStarList`, function(pg) {
+						_this.queryStarListValue = pg;
+					});
+				},
+				//删除技工
+				delJigong(jid) {
+					//alert(jid)					
+					let _this = this;
+					if(window.confirm('是否确定删除？')) {
+						$.ajax(`http://127.0.0.1:8080/zzy/api/jigong/deleteJigong/${jid}`, {
+							type: "delete",
+							dataType: "json",
+							success(msg) {
+								if(msg.code == "200") {
+									alert("删除成功");
+									_this.jgpage(1,5);
+								} else {
+									alert("删除失败");
+								}
+							}
+						});
+					}
+				},
 				//删除班组
 				delOne(bzid) {
 					alert(bzid)					
@@ -454,8 +496,8 @@
 				//根据技工jid查询技工信息
 				queryJigongByid(jid){
 					let _this = this;	
-										alert(JSON.stringify(_this.modifyjgvalue))
-
+					_this.queryBanzuList();
+					_this.queryStarList();
 					_this.modifyjg = true;
 					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/jigong/queryJigongById/${jid}`,function(pg) {
 						_this.modifyjgvalue = pg;
@@ -463,21 +505,21 @@
 				},
 				//修改技工信息
 				modifyjigong(){
-					//console.log(this.teams);
+					//console.log(this.modifyjgvalue);
 					let _this = this;
-					//alert(JSON.stringify(_this.teams))
-					jQuery.ajax("", {
+					//alert(JSON.stringify(_this.modifyjgvalue))
+					jQuery.ajax("http://127.0.0.1:8080/zzy/api/jigong/modifyJigong", {
 						type: 'put',
-						data: JSON.stringify(_this.teams),
+						data: JSON.stringify(_this.modifyjgvalue),
 						contentType: 'application/json;charset=UTF-8',
 						success(data) {
 							if(data == "ok") {
 								alert("修改失败！");							
 							} else {
 								alert("修改成功！");
-								_this.modifybz = false;
-								_this.page(1,2);
-								_this.page(num, _this.carlist.pageSize);
+								_this.modifyjg = false;
+								_this.jgpage(1,2);
+								
 							}
 						}
 					});

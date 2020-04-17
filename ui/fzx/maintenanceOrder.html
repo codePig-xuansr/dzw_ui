@@ -62,7 +62,7 @@
 								<el-form-item label="服务顾问" prop="fuwugw">
 									<template>
 										<el-select v-model="fzxweixiuadd.fuwugw" placeholder="请选择" size="small" style="width: 120px;">
-										  <el-option v-for="(temp,index) in cs" :label="temp.name" :value="temp.name" :key="temp.name"></el-option>
+										  <el-option v-for="(temp,index) in cs" :label="temp.username" :value="temp.username" :key="temp.username"></el-option>
 										</el-select>
 									  </template>
 								</el-form-item>
@@ -147,9 +147,31 @@
 												</el-row>
 											</template>
 										</el-tab-pane>
-										<!--<el-tab-pane label="结算信息">
-											
-										</el-tab-pane>-->
+										<el-tab-pane label="结算信息">
+											<el-row>
+												  <el-col :span="24">
+													  <template>
+														  <el-table :data="jsxx" border empty-text="请先添加维修项目">
+															<el-table-column label="项目总价" :align="'center'" >
+																	<template slot-scope="scope">
+																	<span>{{jg}}</span>
+																  </template>
+															</el-table-column>
+															<el-table-column label="人工工时费" :align="'center'" >
+																	<template slot-scope="scope">
+																	<span>{{gsf}}</span>
+																  </template>
+															</el-table-column>
+															<el-table-column label="救援费用" :align="'center'" >
+																	<template slot-scope="scope">
+																	<span>{{fzxweixiuadd.jiuyuanfy}}</span>
+																  </template>
+															</el-table-column>
+														  </el-table>
+													  </template>
+												  </el-col>
+												</el-row>
+										</el-tab-pane>
 									  </el-tabs>
 								</el-form-item>
 							  </el-form>
@@ -189,7 +211,7 @@
 				addone:false,
 				adds:false,
 				pickinfo:{},
-				cs:[{name:'包组长'},{name:'刘来钱'},{name:'花生奶'},{name:'黄渤'},{name:'郭建'}],
+				cs:[],
 				dj:[{name:'商业单据'},{name:'金融单据'}],
 				bs:[],
 				ms:[{name:'项目编码',values:'fwcod'},{name:'项目名称',values:'fwname'},{name:'优惠前单价',values:'fwprice'},{name:'优惠后单价',values:'vipprice'},{name:'故障描述',values:'guzhanginfo'},{name:'故障原因',values:'guzhangyuanyin'},{name:'维修班组',values:'bzid'},{name:'操作',values:'0'}],
@@ -211,6 +233,8 @@
 					fzxweixiuxm:[]//添加维修项目
 				},
 				jg:'0',
+				gsf:'0',
+				jsxx:[{}],
 				//表单基础验证
 				rus2:{
 					yewutype:[{required: true, message:'请选择业务类别', trigger: 'change'}],
@@ -245,12 +269,16 @@
 								cd[i].guzhangyuanyin = oneVm.minfo.guzhangyuanyin;
 								cd[i].bzname = oneVm.minfo.bzname;
 								cd[i].bzid = oneVm.minfo.bzid;
-								//计算价格
+								cd[i].bzcost = oneVm.minfo.bzcost;
+								//计算项目总价格
 								_this.jg = parseInt(_this.jg) + parseInt(cd[i].fwprice);
 							}
 							_this.addone=false;
 							_this.fzxweixiuadd.fzxweixiuxm=cd;
+							//救援费用
 							_this.fzxweixiuadd.jiuyuanfy=parseInt(_this.fzxweixiuadd.licheng) * parseInt(3);
+							//工时费
+							_this.gsf=sessionStorage.getItem("gsf");
 						}else{
 							return false;
 						}
@@ -305,11 +333,21 @@
 									dataType: 'json',
 									contentType: 'application/json',
 									data: JSON.stringify(_this.fzxweixiuadd),
-									success() {
+									success(data) {
+										if(data.code == "200"){
 											_this.$message({
 												type: 'success',
 												message: '新增成功!'
 											});
+											let kano= _this.fzxweixiuadd.kano;
+											jQuery.ajax({
+														url: `http://localhost:8080/api/fzx/updatekc/${kano}`,
+														type: 'put',
+														dataType: 'json',
+														contentType: 'application/json',
+												});
+										}
+											
 										//重新加载页面
 										indexVm.toUrl('ui/fzx/maintenanceOrder.html');
 									},
@@ -332,6 +370,9 @@
 				_this.fzxweixiuadd.recordid = new Date().getTime();
 				jQuery.getJSON('http://localhost:8080/api/fzx/selectFwlb',(data)=>{
 						_this.bs = data;
+				});
+				jQuery.getJSON('http://localhost:8080/api/fzx/selectgw',(data)=>{
+						_this.cs = data;
 				});
 
 

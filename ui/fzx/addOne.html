@@ -35,9 +35,9 @@
 					</el-form-item>
 					<el-form-item prop="bzid" label="维修班组">
 						<template>
-							<el-select v-model="minfo.bzid">
+							<el-select v-model="minfo.bzid" @change="selectGet">
 								<el-option-group v-for="(temp,index) in ar" :label=`${temp.bzname}${k}${temp.bzcost}元小时`>
-								  <el-option :lable="temp.bzid" :value="temp.bzid"></el-option>
+								  <el-option :lable="temp.bzcost" :value="temp.bzid"></el-option>
 								</el-option-group>
 							</el-select>
 						</template>
@@ -86,7 +86,17 @@
 			methods:{
 				open(){
 					orderVm.adds=true;
-				}
+				},
+				selectGet(val){
+			    	//传进来的val是select组件选中的value值，也就是一个fruitEnName
+			      	var obj = {}
+			      	obj = this.ar.find(function(item){
+			        return item.bzid === val
+			      })
+			      //obj 就是被选中的那个对象，也就能拿到label值了。
+			      var gsf=obj.bzcost+"元小时";
+			      sessionStorage.setItem("gsf",gsf);
+			    }
 			}
 		});
 	</script>
