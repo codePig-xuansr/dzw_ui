@@ -10,10 +10,10 @@
 		<br />
 <div id="app" >
 		<template>
-		 <el-input type="text" style="width: 300px;margin-left: 0px;" placeholder="根据姓名模糊查询" v-model="empname" maxlength="10" show-word-limit>
+		 <el-input type="text" style="width: 300px;margin-left: 0px;" placeholder="根据姓名模糊查询" v-model="username" >
 	</template>
 	&nbsp;&nbsp;&nbsp;
-	 <el-button type="primary"  plain   @click="page(1,3)">查询</el-button>
+	 <el-button type="primary"  plain   @click="page(1,3,username)">查询</el-button>
         <br />
         <br />
         
@@ -57,6 +57,7 @@
 	<script>var app = new Vue({
 			el: '#app',
 			data: {
+				username:'',
 				formLabelAlign:{
 					user:{
 						
@@ -194,9 +195,12 @@
 				/* formatRole: function(row, column) {
                 return row.ud_status == '1' ? "维修部" : row.ud_status == '2' ? "人事部": row.ud_status == '3' ? "客服部": row.ud_status == '4' ? "财务部": row.ud_status == '5' ? "仓库部": row.ud_status == '6' ? "系统部";
             },*/
-				page(n,s) {
+				page(n,s,name) {
 					let _this = this;
-					jQuery.getJSON(`http://127.0.0.1:8080/zxp/api/txl/queryTxlAll/${n}/${s}`,function(pg) {
+						if(name==""){
+						name=null;
+					}
+					jQuery.getJSON(`http://127.0.0.1:8080/zxp/api/txl/queryTxlAll/${n}/${s}/${name}`,function(pg) {
 						_this.vehicleInfo = pg;
 						_this.list = pg.list;
 					});
@@ -205,10 +209,11 @@
 
 				change(num) {
 					let _this = this;
-					this.page(num, _this.vehicleInfo.pageSize);
+					this.page(num, _this.vehicleInfo.pageSize,_this.username);
 				},
 				//pageSize选择事件
 				sizec(size) {
+					let _this=this;
 					this.page(1, size);
 				},
 				//添加数据
@@ -288,7 +293,7 @@
 			},
 			mounted() {
 				let _this = this;
-				_this.page(1, 3);
+				_this.page(1, 3,null);
 			}
 		});
 	</script>
