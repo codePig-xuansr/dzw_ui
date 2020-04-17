@@ -17,11 +17,12 @@
 		<el-input type="text" style="width: 300px;" placeholder="根据姓名模糊查询" v-model="empname" maxlength="10" show-word-limit>
 
 	</template>
-	<el-button icon="el-icon-search" circle @click="page(1,3)"></el-button>
-	 <el-button type="primary" round @click="tianjializhi">添加离职</el-button>
+	<el-button type="primary" plain @click="page(1,3)">查询</el-button>
+	 <el-button type="primary"  plain  @click="add = true">添加离职</el-button>
+	  <el-button type="primary" plain   @click="dcbb">导出</el-button>
 	<br />
 	<br />
-	<template id="a2">
+	<!--<template id="a2">
 		<el-table :data="vehicleInfo" height="300" border style="width: 77%;margin-left: 150px;">
 			<el-table-column prop="departmentname" label="部门" width="100">
 				<el-input v-model="vehicleInfo.departmentname"></el-input>
@@ -50,7 +51,7 @@
 				<template slot-scope="temp">
 					<!--<el-popover placement="top-start" title="标题：回滚" width="200" trigger="hover" content="恢复此员工的职位！" style="color: red;">
 						<el-button slot="reference" style="background-color: cyan;" @click="open(temp.row.empid)">回滚</el-button>
-					</el-popover>-->
+					</el-popover>
 
 					<el-button type="primary"   @click="modify = true">查看</el-button>
 								<el-button type="primary"    @click="delOne(vehicleInfo.list[scope.$index].uid)" style="position: relative;float: 50px;">删除</el-button>
@@ -58,12 +59,51 @@
 				</template>
 			</el-table-column>
 		</el-table>
-	</template>
+	</template>-->
 	<!--
 		查询员工信息
     -->
     
-	<el-dialog title="此员工资料信息如下:" :visible.sync="dialogVisiblee" width="68%" :before-close="handleClose" style="margin-top: -90px;">
+    
+    <el-row >
+				<el-col :span="24">
+				<template>
+    <el-table      :data="vehicleInfo.list"    >
+     					<el-table-column  label="部门" style="color:#B3D8FF ;">
+							<template slot-scope="temp">
+									{{temp.row.user.depid  |changSex}}
+							</template>
+						</el-table-column>
+						<el-table-column prop="rid" label="职位" style="color:#B3D8FF ;">
+							<template slot-scope="temp">
+									{{temp.row.user.rid  |changSex2}}
+							</template>
+						</el-table-column>
+						<el-table-column prop="user.uid" label="员工编号" style="color:#B3D8FF ;">
+						</el-table-column>
+						<el-table-column prop="user.username" label="姓名" style="color:#B3D8FF ;">
+						</el-table-column>
+						<el-table-column prop="user.sex" label="性别" style="color:#B3D8FF ;">
+						</el-table-column>
+						<el-table-column prop="leave.leavedate" label="离职日期" style="color:#B3D8FF ;">
+						</el-table-column>
+						<el-table-column prop="leave.content" label="离职原因" style="color:#B3D8FF ;">
+						</el-table-column>
+						<el-table-column label="操作" style="color:#B3D8FF ;"  width="175">
+							<template slot-scope="scope">
+								<el-button  type="text"   @click="updateUser(vehicleInfo.list[scope.$index].user.uid)">回滚</el-button>
+							</template>
+						</el-table-column>
+    </el-table>
+  </template>
+  <el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="vehicleInfo.total" :page-sizes="[1,2,3,4,5]" :page-size="vehicleInfo.pageSize">
+  </el-col>	
+			</el-row>
+    
+    
+    
+    
+	<!--<el-dialog title="此员工资料信息如下:" :visible.sync="dialogVisiblee" width="68%" :before-close="handleClose" style="margin-top: -90px;">
 		<el-divider></el-divider>
 员工编号：
 		<el-input type="text" style="width: 200px;" placeholder=""  v-model="empVo.empid" maxlength="20" show-word-limit/>&nbsp;&nbsp;&nbsp;  
@@ -162,223 +202,284 @@
 			<el-pagination v-if="pageInfo.total!=0" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[3, 6, 9]" :page-size="pageInfo.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.total">
 			</el-pagination>
 		</div>
-	</template>
+	</template>-->
+	
+	
+	
+	
+	<el-dialog title="添加离职" :visible.sync="add" width="72%" :before-close="handleClose">
+		员工姓名：
+		<el-input type="text" style="width: 200px;" placeholder="" id="rname" maxlength="20" v-model="formLabelAlign.username" />&nbsp;&nbsp;&nbsp; 
+		离职原因：
+		<el-input type="text" style="width: 200px;" placeholder="" id="rname" maxlength="20" v-model="formLabelAlign.content" />&nbsp;&nbsp;&nbsp; 
+		<br />
+		<br />
+		<span slot="footer" class="dialog-footer" style="position: relative;left: -400px;">
+   				 <el-button @click="add = false">取 消</el-button>
+   				 <el-button type="primary" @click="addall">保存</el-button>
+  				</span>
+			</el-dialog>
 </div>
 	</body>
 	<script>var app = new Vue({
-	el: "#app",
-	data: {
-		//employee:{},
-		empVo:{},
-		suiji:"",
-		visible: false,
-		currentPage: 1,
-		pageInfo: [],
-		empname: "",
-		currentPage1: 5,
-		currentPage2: 5,
-		currentPage3: 5,
-		currentPage4: 4,
-		dialogVisible: false,
-		dialogVisiblee:false,
-		employee:  
-        {
-          
-        },record:{
-    		empid:"",
-    		dimissionid:"",
-    		dimissiontime:"",
-    		dimissioncause:"",   				
-    	},
-      
-		value: '',
-		pickerOptions: {
-			shortcuts: [{
-				text: '今天',
-				onClick(picker) {
-					picker.$emit('pick', new Date());
-				}
-			}, {
-				text: '昨天',
-				onClick(picker) {
-					const date = new Date();
-					date.setTime(date.getTime() - 3600 * 1000 * 24);
-					picker.$emit('pick', date);
-				}
-			}, {
-				text: '一周前',
-				onClick(picker) {
-					const date = new Date();
-					date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-					picker.$emit('pick', date);
-				}
-			}]
-		},
-		value1: '',
-		value2: '',
-		value3: '',
-		vehicleInfo:[{
-					departmentname:'财务部',
-					empid:'1',
-					postname:'经理',
-					empname:'张三',
-					empsex:'男',
-					dimissiontime:'2020年3月9日',
-					dimissioncause:'另谋他就'
+			el: '#app',
+			data: {
+				formLabelAlign:{
+					user:{
+						
+					},
+					leave:{}
+				},
+				add: false,
+				modify:false,
+				piges: {},
+				carlist: [],
+				list: [],
+				vehicleInfo:[],
+				stsy: [{
+					name: '员工编号',
+					value: 'uid'
 				},{
-				departmentname:'财务部',
-					empid:'1',
-					postname:'员工',
-					empname:'李四',
-					empsex:'男',
-						dimissiontime:'2020年3月9日',
-					dimissioncause:'工资太低'
+					name: '部门',
+					value: 'depid'
+				}, {
+					name: '职位',
+					value: 'rid'
+				}, {
+					name: '员工姓名',
+					value: 'username'
+				}, {
+					name: '性别',
+					value: 'sex'
+				}, {
+					name: '居住地址',
+					value: 'address'
+				}, {
+					name: '入职时间',
+					value: 'comedate'
+				}, {
+					name: '操作',
+					value: '0'
 				}],
+        options: [{
+          value: '1',
+          label: '维修部',
 
-	},
-	methods: {
-		handleSizeChange(size) {
+        }, {
+          value: '2',
+          label: '人事部',
 
-			this.pageSize = size;
+        }, {
+          value: '3',
+          label: '客服部',
 
-			this.page(this.currentPage, this.pageSize);
-		},
-		handleCurrentChange(currentPage) {
-			this.currentPage = currentPage;
+        }, {
+          value: '4',
+          label: '财务部',
 
-			this.page(this.currentPage, this.pageInfo.pageSize);
-		},
-		handleClose(done) {
-			this.$confirm('确认关闭？')
-				.then(_ => {
-					done();
-				})
-				.catch(_ => {});
-		},
-		page(p, s) {
-			let _this = this;
-			jQuery.getJSON(`http://127.0.0.1:8080/api/dimissions/dim/${p}/${s}/${_this.empname}`, function(list) {
+        }, {
+          value: '5',
+          label: '仓库部',
 
-				_this.pageInfo = list;
-			})
+        }, {
+          value: '6',
+          label: '系统部',
 
-		},
-		open(empid) {
-			let _this=this;
-			
-			this.$confirm('此操作将此员工恢复职位, 是否继续?', '提示', {
-				confirmButtonText: '确定',
-				cancelButtonText: '取消',
-				type: 'warning'
-			}).then(() => {
-				jQuery.ajax(`http://127.0.0.1:8080/api/dimissions/dimi/${empid}`,{
-						type:'delete',
+        }],
+        value: '员工部门'
+      ,
+        options1: [{
+          value: '1',
+          label: '总经理',
+
+        }, {
+          value: '2',
+          label: '前台经理',
+
+        }, {
+          value: '3',
+          label: '售后经理',
+
+        }, {
+          value: '4',
+          label: '仓库管理员',
+
+        }, {
+          value: '5',
+          label: '人事经理',
+
+        }, {
+          value: '6',
+          label: '前台顾问',
+
+        }],
+        value1: '员工职位'
+			}
+			,filters: {
+     changSex(val) {
+					var a=["维修部","人事部","客服部","财务部","仓库部","系统部"];
+					return  a[val-1];
+				},changSex2(val) {
+					var a=["总经理","前台经理","售后经理","仓库管理员","人事经理","前台顾问"];
+					return  a[val-1];
+				}
+   },
+			methods: { 
+				stringToDate(dateStr,separator){
+     if(!separator){
+            separator="-";
+     }
+     var dateArr = dateStr.split(separator);
+     var year = parseInt(dateArr[0]);
+     var month;                     
+     if(dateArr[1].indexOf("0") == 0){
+         month = parseInt(dateArr[1].substring(1));
+     }else{
+          month = parseInt(dateArr[1]);
+     }
+     var day = parseInt(dateArr[2]);
+     var date = new Date(year,month -1,day);
+     return date;
+ },
+				delOne(uid) {
+					let _this = this;
+					if(window.confirm('是否确定删除？')) {
+						$.ajax(`http://localhost:8080/zxp/api/user/delete/${uid}`, {
+							type: "delete",
+							dataType: "json",
+							success(msg) {
+								if(msg.code == "200") {
+									alert("删除成功");
+									_this.page(1, 3);
+								} else {
+									alert("删除失败");
+								}
+							}
+						});
+					} 
+				},
+				/* formatRole: function(row, column) {
+                return row.ud_status == '1' ? "维修部" : row.ud_status == '2' ? "人事部": row.ud_status == '3' ? "客服部": row.ud_status == '4' ? "财务部": row.ud_status == '5' ? "仓库部": row.ud_status == '6' ? "系统部";
+            },*/
+				page(n,s) {
+					let _this = this;
+					jQuery.getJSON(`http://127.0.0.1:8080/zxp/api/leave/queryLeaAll/${n}/${s}`,function(pg) {
+						_this.vehicleInfo = pg;
+						_this.list = pg.list;
+					});
+				},
+				//页数改变事件
+
+				change(num) {
+					let _this = this;
+					this.page(num, _this.vehicleInfo.pageSize);
+				},
+				//pageSize选择事件
+				sizec(size) {
+					this.page(1, size);
+				},
+				//添加数据
+				addall() {
+					let _this=this;
+					jQuery.ajax("http://127.0.0.1:8080/zxp/api/leave/add",{
+						type:'post',
+						data:JSON.stringify(_this.formLabelAlign),
+						contentType: 'application/json; charset=UTF-8',
 						success(data){
-							if(data.code=="200"){
-								
+							if(data=="ok"){
+								alert("新增失败！");
+							}else{							
+								alert("新增成功！");
+									_this.add = false;
+									_this.page(1, 3);
+							}
+						}
+					});
+				},updatea(uid) {
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/zxp/api/user/selectByIdt/${uid}`,
+						function(data) {
+							_this. formLabelAlign= data;
+						}
+					);
+				},dcbb(){
+					$.getJSON(`http://127.0.0.1:8080/zxp/api/leave/daochukhzl`,
+						function(data) {
+							if(data.code == "200") {
+								alert(data.msg);
+							} else {
+								alert(data.msg);
+							}
+						}
+					);
+				},
+				updates() {
+					let _this = this;
+					$.ajax("http://localhost:8080/zxp/api/user/updatetxl", {
+						type: "put",
+						contentType: "application/json",
+						data: JSON.stringify(_this.formLabelAlign),
+						dataType: "json",
+						success(msg) {
+							if(msg.code == "200") {
+								alert('保存成功');
+									_this. modify= false;
+									_this.page(1, 3);
+							} else {
+								alert('保存失败');
+							}
+						}
+					});
+				},update(uid) {
+					let _this = this;
+					_this.modify = true;
+					var a=["维修部","人事部","客服部","财务部","仓库部","系统部"];
+					var aa=["总经理","前台经理","售后经理","仓库管理员","人事经理","前台顾问"];
+					$.getJSON(`http://127.0.0.1:8080/zxp/api/user/selectById/${uid}`,
+						function(data) {
+							_this. formLabelAlign= data;
+							_this. formLabelAlign.depid= a[data.depid-1];
+							_this. formLabelAlign.rid= aa[data.rid-1];
+						}
+					);
+				},
+				updates() {
+					let _this = this;
+					$.ajax("http://localhost:8080/zxp/api/user/update", {
+						type: "put",
+						contentType: "application/json",
+						data: JSON.stringify(_this.formLabelAlign),
+						dataType: "json",
+						success(msg) {
+							if(msg.code == "200") {
+								alert('保存成功');
+									_this. modify= false;
+									_this.page(1, 3);
+							} else {
+								alert('保存失败');
+							}
+						}
+					});
+				},
+				updateUser(uid) {
+					let _this=this;
+					if(window.confirm('是否确定回滚？')) {
+						$.getJSON(`http://127.0.0.1:8080/zxp/api/leave/modifyUser/${uid}`, function(date) {
+							if(date=="ok"){
+								alert("回滚失败！");
+							}else{
+								alert("回滚成功！");
 								_this.page(1,3);
-								
 							}
-						}
-					})
-				this.$message({
-					type: 'success',
-					message: '恢复成功!'
-				});
-			}).catch(() => {
-				this.$message({
-					type: 'info',
-					message: '已取消删除'
-				});
-			});
-		},openn(empid) {
-			let _this=this;
-			
-			this.$confirm('此操作将删除此员工所有信息, 是否继续?', '提示', {
-				confirmButtonText: '确定',
-				cancelButtonText: '取消',
-				type: 'warning'
-			}).then(() => {
-				jQuery.ajax(`http://127.0.0.1:8080/api/dimissions/dimission/${empid}`,{
-						type:'delete',
-						success(data){
-							if(data.code=="200"){
-								
-								_this.page(1,3);
-							}
-						}
-					})
-				jQuery.ajax(`http://127.0.0.1:8080/api/dimissions/dimi/${empid}`,{
-						type:'delete',
-						success(data){
-							if(data.code=="200"){
-								
-								_this.page(1,3);
-								
-							}
-						}
-					})
-				this.$message({
-					type: 'success',
-					message: '删除成功!'
-				});
-			}).catch(() => {
-				this.$message({
-					type: 'info',
-					message: '已取消删除'
-				});
-			});
-		},showName(){
-    				let _this=this;
-    				jQuery.getJSON(`http://127.0.0.1:8080/api/dimissions/dimission`,function(list){
-    					
-    					_this.employee=list;
-    				})
-    				
-   		 },add(){
-    			let _this=this;
-  					_this.dialogVisible = false
-  				
-  				_this.record.dimissionid=_this.suiji;
-   			    jQuery.ajax(`http://127.0.0.1:8080/api/dimissions/dimission`,{
-					  	type:'post',
-					  	dataType:'json',
-					  	contentType:'application/json',
-						data:JSON.stringify(_this.record),
-						success(data){
-							if(data.code=="200"){
-								alert("离职成功！")
-								
-								_this.page(1,3)
-							}
-						}
-					  	
-					  })
-
-    		},tianjializhi(){
-    			
-    			let _this=this;
-    			_this.suiji=Math.round(Math.random()*10000); 
-    			_this.dialogVisible = true;
-    		},chaxun(empid){
-    			let _this=this;  			
-    			_this.dialogVisiblee = true;
-    			jQuery.getJSON(`http://127.0.0.1:8080/api/dimissions/dimission/${empid}`,function(data){
-    					
-    					_this.empVo=data;
-    					
-    				})
-    			
-    		}
-
-	},
-	mounted() {
-		let _this = this;
-		
-		_this.page(1, 3);
-		_this.showName();
-	}
-
-})</script>
+						
+					});	
+					}}
+			},
+			mounted() {
+				let _this = this;
+				_this.page(1, 3);
+			}
+		});
+	</script>
 </html>
 	

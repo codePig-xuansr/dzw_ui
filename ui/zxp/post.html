@@ -17,12 +17,14 @@
 
 	<body>
 		<div id="app">
-			<span style="position: relative;left: -40px;">岗位编码：</span><el-input type="text" style="width: 200px;position: relative;left: -30px;" placeholder="请输入岗位编码" v-model="vehicleInfo.rid" maxlength="10" show-word-limit class="pid" :disabled="edit" >
-			</el-input>
-			<span style="position: relative;left: -20px;">岗位名称：</span><el-input type="text" style="width: 200px;position: relative;left: -20px;" placeholder="请输入岗位名称" v-model="vehicleInfo.rname" maxlength="10" show-word-limit class="pname">
-			</el-input>
-			<el-button type="primary" @click="add">添加</el-button>
-			 <el-button type="primary"  @click="xiu">保存</el-button>
+			<div class="row" style="margin-top: 20px;">
+	&nbsp;&nbsp;
+	</el-input>
+	<el-input type="text" style="width: 300px;margin-left: -50px;" placeholder="按岗位名查询" maxlength="10" v-model="empname" show-word-limit>
+	</el-input>
+		<el-button type="primary"  plain  @click="page(1,3)">查询</el-button>
+	 <el-button type="primary"  plain @click="add = true">添加岗位</el-button>
+	</div>
   
 			<br />
 			<br />
@@ -42,69 +44,60 @@
 				
 				</el-col>-->
 				
-				<el-row style="position: relative;left: 270px;">
-				<el-col :span="12">
+				<el-row >
+				<el-col :span="24">
 				<template>
-    <el-table    :default-sort="{prop: 'pdate', order: 'descending'}"  :data="vehicleInfo.list"   stripe style="width: 100%"  border :row-class-name="tableRowClassName" >
-      <el-table-column prop="rid" label="序号"  width="190">	
+    <el-table      :data="vehicleInfo.list"    >
+      <el-table-column prop="rid" label="序号"  >	
 						</el-table-column>
-						<el-table-column prop="rname" label="岗位名称"   width="190">
+						<el-table-column prop="rname" label="岗位名称"   >
 						</el-table-column>
-						<el-table-column label="操作"   width="190">
+						<el-table-column label="操作"   >
 							<template slot-scope="scope">
-								<el-button type="primary"   @click="modify = true">编辑</el-button>
-								<el-button type="primary"    @click="delOne(vehicleInfo.list[scope.$index].uid)" style="position: relative;float: 50px;">删除</el-button>
+								<el-button type="text"   @click="update(vehicleInfo.list[scope.$index].rid)">编辑</el-button>
+								<el-button type="text"    @click="delOne(vehicleInfo.list[scope.$index].rid)" style="position: relative;float: 50px;">删除</el-button>
 							</template>
+								</el-table-column>
     </el-table>
   </template>
   <el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="vehicleInfo.total" :page-sizes="[1,2,3,4,5]" :page-size="vehicleInfo.pageSize">
   </el-col>	
 			</el-row>
 
+<el-dialog title="添加岗位" :visible.sync="add" width="72%" :before-close="handleClose">
+		岗位名称：
+		<el-input type="text" style="width: 200px;" placeholder="" id="rname" maxlength="20" v-model="formLabelAlign.rname" />&nbsp;&nbsp;&nbsp; 
+		<br />
+		<br />
+		<span slot="footer" class="dialog-footer" style="position: relative;left: -400px;">
+   				 <el-button @click="add = false">取 消</el-button>
+   				 <el-button type="primary" @click="addall">保存</el-button>
+  				</span>
+			</el-dialog>
 
-				<!--<el-row>
-				<el-col :span="24">
-			<el-table :default-sort="{prop: 'pdate', order: 'descending'}" :data="vehicleInfo.list" border :row-class-name="tableRowClassName" border style="width: 25%;height: 50%;" >
-						<el-table-column prop="rid" label="序号" style="color:#B3D8FF ;">	
-						</el-table-column>
-						<el-table-column prop="rname" label="岗位名称" style="color:#B3D8FF ;">
-						</el-table-column>
-						<el-table-column label="操作" style="color:#B3D8FF ;" >
-							<template slot-scope="scope">
-								<el-button type="primary"   @click="modify = true">编辑</el-button>
-								<el-button type="primary"    @click="delOne(vehicleInfo.list[scope.$index].uid)" style="position: relative;float: 50px;">删除</el-button>
-							</template>
-						</el-table-column>
-						
-					</el-table>
-					<el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="vehicleInfo.total" :page-sizes="[1,2,3,4,5]" :page-size="vehicleInfo.pageSize">
-			</el-col>	
-			</el-row>-->
-			<!--<template id="a1">
-				<el-table  :data="vehicleInfo" style="border: lightgray solid 1px;position: relative;left:400px;width: 35%" max-height="500" align="center" :resizable="false">
-					
-					<el-table-column prop="postid"   label="岗位编码" width="120">
-						 <el-input v-model="vehicleInfo.postid"></el-input>
-					</el-table-column>
-					<el-table-column prop="postname"   label="岗位名称" width="120">
-						 <el-input v-model="vehicleInfo.postname"></el-input>
-					</el-table-column>
-					
-					
-					
-					<el-table-column fixed="right" label="操作" width="120">
-						
-						<template slot-scope="temp">
-							<el-button @click="del(temp.row.postid)" type="text" size="small">
-								移除
-							</el-button>
-							<el-button @click="cha(temp.row.postid)" type="text"  size="small">
-								编辑
-							</el-button>
-						</template>
-					</el-table-column>
-				</el-table>
-			</template>-->
+
+
+
+
+
+<el-dialog title="职工信息修改" :visible.sync="modify" width="72%" :before-close="handleClose">
+		缩写：
+		<el-input type="text" style="width: 200px;" placeholder=""  maxlength="20" v-model="formLabelAlign.rcode" />&nbsp;&nbsp;&nbsp; 
+		岗位名称：
+		<el-input type="text" style="width: 200px;" placeholder="" id="address" maxlength="20" v-model="formLabelAlign.rname" />&nbsp;&nbsp;&nbsp;
+		<br />
+		<br />
+		创建人：
+		<el-input type="text" style="width: 200px;" placeholder=""  maxlength="20" v-model="formLabelAlign.createby" />&nbsp;&nbsp;&nbsp; 
+		<span style="position: relative;left: 15px;">创建时间：&nbsp;</span>
+	<el-date-picker v-model="formLabelAlign.createdate" type="date" placeholder="请选择入职日期" id="rtime" style="width: 200px;margin-left: 10px;">
+	</el-date-picker>&nbsp;&nbsp;&nbsp; 
+		<span slot="footer" class="dialog-footer" style="position: relative;left: -400px;">
+   				 <el-button @click="update = false">取 消</el-button>
+   				 <el-button type="primary" @click="updates">保存</el-button>
+  				</span>
+			</el-dialog>
+
 		</div>
 	</body>
 	
@@ -136,25 +129,28 @@ formLabelAlign:{
 				}],
 	},
 	methods: {
-				/*delOne(classno) {
+				delOne(rid) {
 					let _this = this;
-					if(confirm("确认删除？")) {
-						jQuery.post("http://127.0.0.1:8080/api/class1/del", {
-							classno: `${classno}`
-						}, function(data) {
-							alert("删除成功！");
-							location.reload();
+					if(window.confirm('是否确定删除？')) {
+						$.ajax(`http://localhost:8080/zxp/api/role/delete/${rid}`, {
+							type: "delete",
+							dataType: "json",
+							success(msg) {
+								if(msg.code == "200") {
+									alert("删除成功");
+									_this.page(1, 3);
+								} else {
+									alert("删除失败");
+								}
+							}
 						});
-					}
-				},*/
-				
+					} 
+				},
 				page(n,s) {
 					let _this = this;
 					jQuery.getJSON(`http://127.0.0.1:8080/zxp/api/role/queryRoleAll/${n}/${s}`,function(pg) {
 						_this.vehicleInfo = pg;
-
 						_this.list = pg.list;
-						
 					});
 				},
 				//页数改变事件
@@ -170,7 +166,7 @@ formLabelAlign:{
 				//添加数据
 				addall() {
 					let _this=this;
-					jQuery.ajax("http://127.0.0.1:8080/zzy/api/class1/addStar/{star}",{
+					jQuery.ajax("http://127.0.0.1:8080/zxp/api/role/add",{
 						type:'post',
 						data:JSON.stringify(_this.formLabelAlign),
 						contentType: 'application/json; charset=UTF-8',
@@ -179,8 +175,34 @@ formLabelAlign:{
 								alert("新增失败！");
 							}else{							
 								alert("新增成功！");
-									this.add = false;
-								location.reload();
+									_this.add = false;
+									_this.page(1, 3);
+							}
+						}
+					});
+				},update(rid) {
+					let _this = this;
+					_this.modify = true;
+					$.getJSON(`http://127.0.0.1:8080/zxp/api/role/selectById/${rid}`,
+						function(data) {
+							_this. formLabelAlign= data;
+						}
+					);
+				},
+				updates() {
+					let _this = this;
+					$.ajax("http://localhost:8080/zxp/api/role/update", {
+						type: "put",
+						contentType: "application/json",
+						data: JSON.stringify(_this.formLabelAlign),
+						dataType: "json",
+						success(msg) {
+							if(msg.code == "200") {
+								alert('保存成功');
+									_this. modify= false;
+									_this.page(1, 3);
+							} else {
+								alert('保存失败');
 							}
 						}
 					});
