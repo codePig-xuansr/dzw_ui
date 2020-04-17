@@ -104,16 +104,22 @@
 								</el-form-item>
 							</el-button>
 						</el-col>
-					<!--<el-form-item label="类别名称：">
+						<!--<el-form-item label="类别名称：">
 						<el-input v-model="xiangmutype.xname"></el-input>
 					</el-form-item>-->
 						<el-col :span="21">
 							<el-form-item prop="xfid"><label>所属上级</label>
-								<el-select v-model="xiangmutype.xfid" placeholder="请选择上一级">
+								<template>
+									<el-select v-model="xiangmutype.xfid"  placeholder="请选择上一级">
+										<el-option v-for="(t,i) in weixiutype" :key="t.xid" :label="t.xname" :value="t.xid">
+										</el-option>
+									</el-select>
+								</template>
+								<!--<el-select v-model="xiangmutype.xfid" placeholder="请选择上一级">
 									<el-option v-for="(t,i) in weixiutype" :value="t.xid">
 										{{t.xname}}
 									</el-option>
-								</el-select>
+								</el-select>-->
 							</el-form-item>
 						</el-col>
 					</el-row>
@@ -148,6 +154,7 @@
 		var weixiu = new Vue({
 			el: '#weixiu',
 			data: {
+				ufs:[],
 				xiangmutype: {
 					xid: 0,
 					xname: '',
@@ -353,6 +360,7 @@
 					let _this = this;
 					$.getJSON(`http://localhost:8080/api/ljl/weixiu/All/type`,
 						function(rs) {
+							_this.ufs=rs.list;
 							//_this.weixiutype = rs.list;
 							//alert(JSON.stringify(_this.datas))
 							//alert(JSON.stringify(rs.list))

@@ -99,11 +99,17 @@
 						</el-col>
 						<el-col :span="11">
 							<el-form-item prop="xid" label="项目类别" style="margin-left: 40px;margin-top: 14px;">
-								<el-select v-model="weixiufuwu.xid" placeholder="请选择">
+								<template>
+									<el-select v-model="weixiufuwu.xid" placeholder="请选择">
+										<el-option v-for="(t,i) in weixiutype" :key="t.xid" :label="t.xname" :value="t.xid">
+										</el-option>
+									</el-select>
+								</template>
+								<!--<el-select v-model="weixiufuwu.xid" placeholder="请选择">
 									<el-option v-for="(t,i) in weixiutype" :value="t.xid">
 										{{t.xname}}
 									</el-option>
-								</el-select>
+								</el-select>-->
 							</el-form-item>
 						</el-col>
 						<el-col :span="13">
