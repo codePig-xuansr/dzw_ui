@@ -46,12 +46,12 @@
 						<el-form-item label="等级名称">
 							<el-input v-model="formLabelAlign.sname"></el-input>
 						</el-form-item>
-						<el-form-item label="提成权重">
+						<el-form-item label="工时费">
 							<el-input v-model="formLabelAlign.ticheng"></el-input>
 						</el-form-item>
-						<el-form-item label="时长">
+						<!--<el-form-item label="时长">
 							<el-input v-model="formLabelAlign.worktime"></el-input>
-						</el-form-item>
+						</el-form-item>-->
 					</el-form>
 				</div>
 				<span slot="footer" class="dialog-footer">
@@ -69,12 +69,12 @@
 						<el-form-item label="等级名称">
 							<el-input v-model="carlist.sname"></el-input>
 						</el-form-item>
-						<el-form-item label="提成权重">
+						<el-form-item label="工时费">
 							<el-input v-model="carlist.ticheng"></el-input>
 						</el-form-item>
-						<el-form-item label="时长">
+						<!--<el-form-item label="时长">
 							<el-input v-model="carlist.worktime"></el-input>
-						</el-form-item>
+						</el-form-item>-->
 					</el-form>
 				</div>
 				<span slot="footer" class="dialog-footer">
@@ -109,11 +109,8 @@
 					name: '等级名称',
 					value: 'sname'
 				}, {
-					name: '提成权重',
+					name: '工时费/小时',
 					value: 'ticheng'
-				}, {
-					name: '时长',
-					value: 'worktime'
 				}, {
 					name: '操作',
 					value: '0'
