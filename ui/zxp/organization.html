@@ -32,7 +32,46 @@
 	
 	
 	
-			
+			<el-dialog title="部门" :visible.sync="isShow2" style="width: 50%;margin-left: 400px;">
+						<template>
+							<el-table :data="queryBanzuListValue.list" border style="width: 100%">
+								<el-table-column fixed prop="depid" label="部门id">
+								</el-table-column>
+								<el-table-column prop="depname" label="部门名称">
+								</el-table-column>
+								<el-table-column label="操作">
+									<template slot-scope="scope">
+										<el-button @click="check(scope.row)" type="text" size="small">选择</el-button>
+									</template>
+								</el-table-column>
+							</el-table>
+						</template>
+						<div class="page">
+							<el-pagination layout="prev, pager, next" @current-change="current1" @prev-click="prev1" @next-click="next1" :total="this.vehicleInfo.pages*10">
+							</el-pagination>
+						</div>
+					</el-dialog>
+					
+					<el-dialog title="职位" :visible.sync="isShow3" style="width: 50%;margin-left: 400px;">
+						<template>
+							<el-table :data="queryStarListValue.list" border style="width: 100%">
+								<el-table-column fixed prop="rid" label="职位id">
+								</el-table-column>
+								<el-table-column prop="rname" label="职位名称">
+								</el-table-column>
+								<el-table-column label="操作">
+									<template slot-scope="scope">
+										<el-button @click="check2(scope.row)" type="text" size="small">选择</el-button>
+									</template>
+								</el-table-column>
+							</el-table>
+						</template>
+						<div class="page">
+							<el-pagination layout="prev, pager, next" @current-change="current2" @prev-click="prev2" @next-click="next2" :total="this.vehicleInfo.pages*10">
+							</el-pagination>
+						</div>
+					</el-dialog>
+					
 			<el-row>
 				<el-col :span="24">
 			<el-table  :data="vehicleInfo.list"   >
@@ -71,8 +110,67 @@
 	
 	   
        		
-   <el-dialog title="添加员工入职信息" :visible.sync="addd" width="72%" :before-close="handleClose">
-   	<span style="position: relative;left: -63px;">员工编号：</span><el-input type="text" style="width: 200px;margin-left: -60px;" placeholder="" id="uid" maxlength="20" v-model="formLabelAlign.user.uid"/>&nbsp;&nbsp;&nbsp;
+   <el-dialog title="添加员工入职信息" :visible.sync="addd" width="72%" :before-close="handleClose" >
+   	<span style="position: relative;left: -63px;">员工编号：</span><el-input type="text" style="width: 200px;margin-left: -60px;" placeholder="" id="uid" maxlength="20" v-model="finduid.uid" :disabled="true" />&nbsp;&nbsp;&nbsp;
+   	员工姓名：<el-input type="text" style="width: 200px;" placeholder="" id="name" maxlength="20" v-model="user.username" />&nbsp;&nbsp;&nbsp;
+	员工性别：
+	<template>
+  <el-radio v-model="user.sex" label="男">男</el-radio>
+  <el-radio v-model="user.sex" label="女">女</el-radio>
+</template>
+		<br /><br />
+		<span style="position: relative;left: 5px;">登录账号：&nbsp;</span>
+		<el-input type="text" style="width: 200px;" placeholder=""  maxlength="20" v-model="user.user" />&nbsp;&nbsp;&nbsp; 
+		登录密码：
+		<el-input type="password" style="width: 200px;" placeholder=""  maxlength="20" v-model="user.pwd" />&nbsp;&nbsp;&nbsp; 
+		居住地址：
+		<el-input type="text" style="width: 200px;" placeholder="" id="address" maxlength="20" v-model="user.address" />&nbsp;&nbsp;&nbsp; 
+		<br /><br />
+		<span style="position: relative;">入职时间：&nbsp;</span>
+	<el-date-picker v-model="user.comedate" type="date" placeholder="请选择入职日期" id="rtime" style="width: 200px;">
+	</el-date-picker>&nbsp; &nbsp;
+	<el-button type="text" @click="queryBanzuList(1,3)" style="width: 200px;">员工部门：
+									<el-input v-model="depname"></el-input>
+								</el-button>
+          &nbsp;&nbsp;&nbsp; 
+		<el-button type="text" @click="queryStarList(1,3)" style="width: 200px;margin-left: 130px;position: relative;left: -60px;">员工职位：
+									<el-input v-model="rname"></el-input>
+								</el-button>
+          </el-select>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 
+		<br /><br />
+		<!--联系方式：
+		<el-input type="text" style="width: 200px;" placeholder=""  maxlength="20" v-model="formLabelAlign.phone" />&nbsp;&nbsp;&nbsp; 
+		邮箱地址：
+		<el-input type="text" style="width: 200px;" placeholder="" id="address" maxlength="20" v-model="formLabelAlign.email" />&nbsp;&nbsp;&nbsp; -->
+			<!--<el-button type="primary" @click="addAddress">添加明细</el-button>-->
+		<!--<table class="table table-bordered table-hover">
+									<thead>
+										<tr style="background-color:#EBEBEB">
+											<th>序号</th>
+											<th>电子邮箱</th>
+											<th>联系方式</th>
+											<th>操作</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr v-for="(temp,index) in formLabelAlign.txl">
+											<td>{{index+1}}</td>
+											<td><input v-model="temp.phone" type="text" /></td>
+											<td><input v-model="temp.email" type="text" /></td>
+											<td><span @click="removeAddress(index)" class="glyphicon glyphicon-remove"></span></td>
+										</tr>
+									</tbody>
+								</table>-->
+		<br />
+		<br />
+		<span slot="footer" class="dialog-footer" style="position: relative;left: -400px;">
+   				 <el-button @click="add = false">取 消</el-button>
+   				 <el-button type="primary" @click="addall">保存</el-button>
+  				</span>
+			</el-dialog>
+
+	<el-dialog title="职工信息修改" :visible.sync="modify" width="72%" :before-close="handleClose">
+				<span style="position: relative;left: -63px;">员工编号：</span><el-input type="text" style="width: 200px;margin-left: -60px;" placeholder="" id="uid" maxlength="20" v-model="formLabelAlign.user.uid"/>&nbsp;&nbsp;&nbsp;
    	员工姓名：<el-input type="text" style="width: 200px;" placeholder="" id="name" maxlength="20" v-model="formLabelAlign.user.username" />&nbsp;&nbsp;&nbsp;
 	员工性别：
 	<template>
@@ -87,33 +185,23 @@
 		居住地址：
 		<el-input type="text" style="width: 200px;" placeholder="" id="address" maxlength="20" v-model="formLabelAlign.user.address" />&nbsp;&nbsp;&nbsp; 
 		<br /><br />
-		<span style="position: relative;left: 15px;">入职时间：&nbsp;</span>
-	<el-date-picker v-model="formLabelAlign.user.comedate" type="date" placeholder="请选择入职日期" id="rtime" style="width: 200px;margin-left: 10px;">
-	</el-date-picker>&nbsp; &nbsp; 员工部门：
-		 <el-select v-model="formLabelAlign.user.depid" placeholder="请选择">
-              <el-option
-               v-for="t in queryBanzuListValue"
-							      :key="t.depid"
-							      :label="t.depname"
-							      :value="t.depid">
-              </el-option>
-          </el-select>
+		<span style="position: relative;">入职时间：&nbsp;</span>
+	<el-date-picker v-model="formLabelAlign.user.comedate" type="date" placeholder="请选择入职日期" id="rtime" style="width: 200px;">
+	</el-date-picker>&nbsp; &nbsp;
+	<el-button type="text" @click="queryBanzuList(1,3)" style="width: 200px;">员工部门：
+								<el-input v-model="formLabelAlign.department.depname"></el-input>
+								</el-button>
           &nbsp;&nbsp;&nbsp; 
-		员工职位：
-		 <el-select v-model="formLabelAlign.user.rid" placeholder="请选择">
-              <el-option
-               v-for="t in queryStarListValue"
-							      :key="t.rid"
-							      :label="t.rname"
-							      :value="t.rid">
-              </el-option>
+		<el-button type="text" @click="queryStarList(1,3)" style="width: 200px;margin-left: 130px;position: relative;left: -60px;">员工职位：
+									<el-input v-model="formLabelAlign.role.rname"></el-input>
+								</el-button>
           </el-select>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 
 		<br /><br />
 		<!--联系方式：
 		<el-input type="text" style="width: 200px;" placeholder=""  maxlength="20" v-model="formLabelAlign.phone" />&nbsp;&nbsp;&nbsp; 
 		邮箱地址：
 		<el-input type="text" style="width: 200px;" placeholder="" id="address" maxlength="20" v-model="formLabelAlign.email" />&nbsp;&nbsp;&nbsp; -->
-			<el-button type="primary" @click="addAddress">添加明细</el-button>
+			<!--<el-button type="primary" @click="addAddress">添加明细</el-button>
 		<table class="table table-bordered table-hover">
 									<thead>
 										<tr style="background-color:#EBEBEB">
@@ -131,58 +219,7 @@
 											<td><span @click="removeAddress(index)" class="glyphicon glyphicon-remove"></span></td>
 										</tr>
 									</tbody>
-								</table>
-		<br />
-		<br />
-		<span slot="footer" class="dialog-footer" style="position: relative;left: -400px;">
-   				 <el-button @click="add = false">取 消</el-button>
-   				 <el-button type="primary" @click="addall">保存</el-button>
-  				</span>
-			</el-dialog>
-
-	<el-dialog title="职工信息修改" :visible.sync="modify" width="72%" :before-close="handleClose">
-				<span style="position: relative;left: -63px;">员工编号：</span><el-input type="text" style="width: 200px;margin-left: -60px;" placeholder="" id="uid" maxlength="20" v-model="formLabelAlign.uid"/>&nbsp;&nbsp;&nbsp;
-   	员工姓名：<el-input type="text" style="width: 200px;" placeholder="" id="name" maxlength="20" v-model="formLabelAlign.username" />&nbsp;&nbsp;&nbsp;
-	员工性别：
-	<template>
-  <el-radio v-model="formLabelAlign.sex" label="男">男</el-radio>
-  <el-radio v-model="formLabelAlign.sex" label="女">女</el-radio>
-</template>
-		<br /><br />
-		<span style="position: relative;left: 5px;">登录账号：&nbsp;</span>
-		<el-input type="text" style="width: 200px;" placeholder=""  maxlength="20" v-model="formLabelAlign.user" />&nbsp;&nbsp;&nbsp; 
-		登录密码：
-		<el-input type="password" style="width: 200px;" placeholder=""  maxlength="20" v-model="formLabelAlign.pwd" />&nbsp;&nbsp;&nbsp; 
-		居住地址：
-		<el-input type="text" style="width: 200px;" placeholder="" id="address" maxlength="20" v-model="formLabelAlign.address" />&nbsp;&nbsp;&nbsp; 
-		<br /><br />
-		<span style="position: relative;left: 15px;">入职时间：&nbsp;</span>
-	<el-date-picker v-model="formLabelAlign.comedate" type="date" placeholder="请选择入职日期" id="rtime" style="width: 200px;margin-left: 10px;">
-	</el-date-picker>&nbsp; &nbsp; 员工部门：
-		 <el-select v-model="formLabelAlign.user.depid" placeholder="请选择">
-              <el-option
-               v-for="t in queryBanzuListValue"
-							      :key="t.depid"
-							      :label="t.depname"
-							      :value="t.depid">
-              </el-option>
-          </el-select>
-          &nbsp;&nbsp;&nbsp; 
-		员工职位：
-		 <el-select v-model="formLabelAlign.user.rid" placeholder="请选择">
-              <el-option
-               v-for="t in queryStarListValue"
-							      :key="t.rid"
-							      :label="t.rname"
-							      :value="t.rid">
-              </el-option>
-          </el-select>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 
-		<br /><br />
-		联系方式：
-		<el-input type="text" style="width: 200px;" placeholder=""  maxlength="20" v-model="formLabelAlign.phone" />&nbsp;&nbsp;&nbsp; 
-		邮箱地址：
-		<el-input type="text" style="width: 200px;" placeholder="" id="address" maxlength="20" v-model="formLabelAlign.email" />&nbsp;&nbsp;&nbsp;
-		<el-input type="text" style="width: 200px;" placeholder="" id="ustatus" maxlength="20" v-model="formLabelAlign.ustatus"  />
+								</table>-->
 		<br />
 		<br />
 		<span slot="footer" class="dialog-footer" style="position: relative;left: -400px;">
@@ -197,6 +234,21 @@
 			el: '#app',
 			data: {
 				username:'',
+				depname:'',
+				rname:'',
+				user:{
+					uid:'',
+					depid:'',
+					rid:'',
+					username:'',
+					address:'',
+					comedate:'',
+					user:'',
+					pwd:'',
+					phone:'',
+					email:'',
+					sex: '',
+				},
 				formLabelAlign:{
 					/*uid:'',
 					depid:'',
@@ -212,12 +264,20 @@
 					ustatus:'',*/
 					user:{
 						
+					},role:{
+						
+					},
+					department:{
+						
 					},
 					txl:[]
 				},
 				ad:[{
 					
 				}],
+				fadongjis: {},
+				isShow2: false,
+				isShow3: false,
 				queryBanzuListValue:{},
 				queryStarListValue:{},
 				modify:false,
@@ -226,6 +286,7 @@
 				list: [],
 				addd:false,
 				vehicleInfo:[],
+				finduid:{},
 				stsy: [{
 					name: '员工编号',
 					value: 'uid'
@@ -330,20 +391,59 @@
      var day = parseInt(dateArr[2]);
      var date = new Date(year,month -1,day);
      return date;
+ },find(){
+					let _this = this;
+					jQuery.getJSON(`http://127.0.0.1:8080/zxp/api/user/finduid`, function(pg) {
+						_this.finduid = pg;
+					});
  },	add(){
 					let _this = this;
 					_this.addd= true;
-					_this.queryBanzuList();
-					_this.queryStarList();
-				},queryBanzuList() {
+					_this.find();
+					
+				},prev1(cpage) {
+					this.queryBanzuList(cpage, 3);
+				},
+				/*下一页发动机查询*/
+				next1(cpage) {
+					this.queryBanzuList(cpage, 3);
+				},
+				/*当前页发动机查询*/
+				current1(cpage) {
+					this.queryBanzuList(cpage, 3);
+				},
+				/*选择发动机后回填数据*/
+				check(row) {
+					this.depname = row.depname;
+					this.isShow2 = false;
+					this.user.deprid=row.depid;
+				},queryBanzuList(n, s) {
 					let _this = this;
-					jQuery.getJSON(`http://127.0.0.1:8080/zxp/api/user/queryDepartment`, function(pg) {
+					_this.isShow2 = true;
+					jQuery.getJSON(`http://127.0.0.1:8080/zxp/api/user/queryDepartment/${n}/${s}`, function(pg) {
 						_this.queryBanzuListValue = pg;
 					});
+				},prev2(cpage) {
+					this.queryStarList(cpage, 3);
 				},
-				queryStarList() {
+				/*下一页发动机查询*/
+				next2(cpage) {
+					this.queryStarList(cpage, 3);
+				},
+				/*当前页发动机查询*/
+				current2(cpage) {
+					this.queryStarList(cpage, 3);
+				},
+				/*选择发动机后回填数据*/
+				check2(row) {
+					this.rname = row.rname;
+					this.isShow3 = false;
+					this.user.rid=row.rid;
+				},
+				queryStarList(n, s) {
 					let _this = this;
-					jQuery.getJSON(`http://127.0.0.1:8080/zxp/api/user/queryRole`, function(pg) {
+					_this.isShow3 = true;
+					jQuery.getJSON(`http://127.0.0.1:8080/zxp/api/user/queryRole/${n}/${s}`, function(pg) {
 						_this.queryStarListValue = pg;
 					});
 				},
@@ -382,13 +482,14 @@
 					jQuery.getJSON(`http://127.0.0.1:8080/zxp/api/user/queryUserAll/${n}/${s}/${name}`,function(pg) {
 						_this.vehicleInfo = pg;
 						_this.list = pg.list;
+						
 					});
 				},
 				//页数改变事件
 
 				change(num) {
 					let _this = this;
-					this.page(num, _this.vehicleInfo.pageSize);
+					this.page(num, _this.vehicleInfo.pageSize,_this.username);
 				},
 				//pageSize选择事件
 				sizec(size) {
@@ -397,7 +498,8 @@
 				//添加数据
 				addall() {
 					let _this=this;
-					jQuery.ajax("http://127.0.0.1:8080/zxp/api/user/add",{
+					alert(JSON.stringify(_this.user));
+					jQuery.ajax("http://127.0.0.1:8080/zxp/api/user/add1",{
 						type:'post',
 						data:JSON.stringify(_this.formLabelAlign),
 						contentType: 'application/json; charset=UTF-8',
@@ -407,7 +509,7 @@
 							}else{							
 								alert("新增成功！");
 									_this.add = false;
-									_this.page(1, 3);
+									_this.page(1, 3,null);
 							}
 						}
 					});
@@ -440,8 +542,6 @@
 				},update(uid) {
 					let _this = this;
 					_this.modify = true;
-						_this.queryBanzuList();
-					_this.queryStarList();
 					$.getJSON(`http://127.0.0.1:8080/zxp/api/user/selectById/${uid}`,
 						function(data) {
 							_this. formLabelAlign= data;
@@ -459,7 +559,7 @@
 							if(msg.code == "200") {
 								alert('保存成功');
 									_this. modify= false;
-									_this.page(1, 3);
+									_this.page(1, 3,null);
 							} else {
 								alert('保存失败');
 							}
