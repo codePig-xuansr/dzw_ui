@@ -41,7 +41,12 @@
 										</p>
 							</template>	
 						</el-table-column>
-						<el-table-column prop="txl.email" label="邮箱" style="color:#B3D8FF ;">
+						<el-table-column prop="txl" label="邮箱" style="color:#B3D8FF ;">
+							<template slot-scope="temp">
+								<p v-for="(temp2,i) in temp.row.txl">
+									{{temp2.email}}
+										</p>
+							</template>	
 						</el-table-column>
     </el-table>
   <el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="vehicleInfo.total" :page-sizes="[1,2,3,4,5]" :page-size="vehicleInfo.pages" >
