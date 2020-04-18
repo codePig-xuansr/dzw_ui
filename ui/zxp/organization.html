@@ -34,6 +34,7 @@
 	
 			<el-dialog title="部门" :visible.sync="isShow2" style="width: 50%;margin-left: 400px;">
 						<template>
+							
 							<el-table :data="queryBanzuListValue.list" border style="width: 100%">
 								<el-table-column fixed prop="depid" label="部门id">
 								</el-table-column>
@@ -250,18 +251,6 @@
 					sex: '',
 				},
 				formLabelAlign:{
-					/*uid:'',
-					depid:'',
-					rid:'',
-					username:'',
-					address:'',
-					comedate:'',
-					user:'',
-					pwd:'',
-					phone:'',
-					email:'',
-					sex: '',
-					ustatus:'',*/
 					user:{
 						
 					},role:{
@@ -269,8 +258,7 @@
 					},
 					department:{
 						
-					},
-					txl:[]
+					}
 				},
 				ad:[{
 					
@@ -416,7 +404,9 @@
 				check(row) {
 					this.depname = row.depname;
 					this.isShow2 = false;
-					this.user.deprid=row.depid;
+					this.user.depid=row.depid;
+					this.formLabelAlign.department.depname=row.depname;
+					this.formLabelAlign.department.depid=row.depid;
 				},queryBanzuList(n, s) {
 					let _this = this;
 					_this.isShow2 = true;
@@ -439,6 +429,8 @@
 					this.rname = row.rname;
 					this.isShow3 = false;
 					this.user.rid=row.rid;
+					this.formLabelAlign.role.rname=row.rname;
+					this.formLabelAlign.role.rid=row.rid;
 				},
 				queryStarList(n, s) {
 					let _this = this;
@@ -498,17 +490,17 @@
 				//添加数据
 				addall() {
 					let _this=this;
-					alert(JSON.stringify(_this.user));
-					jQuery.ajax("http://127.0.0.1:8080/zxp/api/user/add1",{
+					_this.user.uid=_this.finduid.uid;
+			jQuery.ajax("http://127.0.0.1:8080/zxp/api/user/add1",{
 						type:'post',
-						data:JSON.stringify(_this.formLabelAlign),
+					data:JSON.stringify(_this.user),
 						contentType: 'application/json; charset=UTF-8',
 						success(data){
 							if(data=="ok"){
 								alert("新增失败！");
 							}else{							
 								alert("新增成功！");
-									_this.add = false;
+									_this.addd = false;
 									_this.page(1, 3,null);
 							}
 						}
@@ -521,25 +513,7 @@
 						}
 					);
 				},
-				updates() {
-					let _this = this;
-					alert(JSON.stringify(_this.formLabelAlign));
-					$.ajax("http://localhost:8080/zxp/api/user/updatetxl", {
-						type: "put",
-						contentType: "application/json",
-						data: JSON.stringify(_this.formLabelAlign),
-						dataType: "json",
-						success(msg) {
-							if(msg.code == "200") {
-								alert('保存成功');
-									_this. modify= false;
-									_this.page(1, 3);
-							} else {
-								alert('保存失败');
-							}
-						}
-					});
-				},update(uid) {
+				update(uid) {
 					let _this = this;
 					_this.modify = true;
 					$.getJSON(`http://127.0.0.1:8080/zxp/api/user/selectById/${uid}`,
@@ -550,6 +524,8 @@
 				},
 				updates() {
 					let _this = this;
+					_this. formLabelAlign.user.rid=_this. formLabelAlign.role.rid;
+					_this. formLabelAlign.user.depid=_this. formLabelAlign.department.depid;
 					$.ajax("http://localhost:8080/zxp/api/user/update", {
 						type: "put",
 						contentType: "application/json",

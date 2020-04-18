@@ -18,52 +18,42 @@
 
 	</template>
 	<el-button type="primary" plain @click="page(1,3,name)">查询</el-button>
-	 <el-button type="primary"  plain  @click="add = true">添加离职</el-button>
+	 <el-button type="primary"  plain  @click="add">添加离职</el-button>
 	  <el-button type="primary" plain   @click="dcbb">导出</el-button>
 	<br />
 	<br />
-	<!--<template id="a2">
-		<el-table :data="vehicleInfo" height="300" border style="width: 77%;margin-left: 150px;">
-			<el-table-column prop="departmentname" label="部门" width="100">
-				<el-input v-model="vehicleInfo.departmentname"></el-input>
-			</el-table-column>
-			<el-table-column prop="empid" label="员工编号" width="100">
-				<el-input v-model="vehicleInfo.empid"></el-input>
-			</el-table-column>
-
-			<el-table-column prop="empname" label="员工姓名" width="100">
-				<el-input v-model="vehicleInfo.empname"></el-input>
-			</el-table-column>
-			<el-table-column prop="empsex" label="性别" width="100">
-				<el-input v-model="vehicleInfo.empsex"></el-input>
-			</el-table-column>
-			<el-table-column prop="postname" label="员工职位" width="100">
-				<el-input v-model="vehicleInfo.postname"></el-input>
-			</el-table-column>
-			<el-table-column prop="dimissiontime" label="离职日期" width="100">
-				<el-input v-model="vehicleInfo.dimissiontime"></el-input>
-			</el-table-column>
-			<el-table-column prop="dimissioncause" label="离职原因" width="100">
-				<el-input v-model="vehicleInfo.dimissioncause"></el-input>
-			</el-table-column>
-
-			<el-table-column label="操作" width="180">
-				<template slot-scope="temp">
-					<!--<el-popover placement="top-start" title="标题：回滚" width="200" trigger="hover" content="恢复此员工的职位！" style="color: red;">
-						<el-button slot="reference" style="background-color: cyan;" @click="open(temp.row.empid)">回滚</el-button>
-					</el-popover>
-
-					<el-button type="primary"   @click="modify = true">查看</el-button>
-								<el-button type="primary"    @click="delOne(vehicleInfo.list[scope.$index].uid)" style="position: relative;float: 50px;">删除</el-button>
-
-				</template>
-			</el-table-column>
-		</el-table>
-	</template>-->
-	<!--
-		查询员工信息
-    -->
-    
+<el-dialog title="离职登记" :visible.sync="isShow2" style="width: 70%;margin-left: 400px;">
+						<template>
+							<div style="margin-left: -80px;">
+								<el-button type="text"  style="width: 200px;">员工姓名：
+									<el-input v-model="username"></el-input>
+							</el-button>
+							<br />
+								<el-button type="text"  style="width: 200px;">离职原因：
+									<el-input v-model="leave.content"></el-input>
+								</el-button>
+								<br />
+								<el-button type="primary" @click="addall" style="margin-left: 150px;">保存</el-button>
+							</div>
+							<el-table :data="user.list" border style="width: 100%">
+								<el-table-column fixed prop="uid" label="员工编号">
+								</el-table-column>
+								<el-table-column prop="username" label="员工姓名">
+								</el-table-column>
+								<el-table-column prop="sex" label="性别">
+								</el-table-column>
+								<el-table-column label="操作">
+									<template slot-scope="scope">
+										<el-button @click="check(scope.row)" type="text" size="small">选择</el-button>
+									</template>
+								</el-table-column>
+							</el-table>
+						</template>
+						<div class="page">
+							<el-pagination layout="prev, pager, next" @current-change="current1" @prev-click="prev1" @next-click="next1" :total="this.vehicleInfo.queryBanzuList">
+							</el-pagination>
+						</div>
+					</el-dialog>    
     
     <el-row >
 				<el-col :span="24">
@@ -207,7 +197,7 @@
 	
 	
 	
-	<el-dialog title="添加离职" :visible.sync="add" width="72%" :before-close="handleClose">
+	<!--<el-dialog title="添加离职" :visible.sync="add" width="72%" :before-close="handleClose">
 		员工姓名：
 		<el-input type="text" style="width: 200px;" placeholder="" id="rname" maxlength="20" v-model="formLabelAlign.username" />&nbsp;&nbsp;&nbsp; 
 		离职原因：
@@ -218,20 +208,29 @@
    				 <el-button @click="add = false">取 消</el-button>
    				 <el-button type="primary" @click="addall">保存</el-button>
   				</span>
-			</el-dialog>
+			</el-dialog>-->
 </div>
 	</body>
 	<script>var app = new Vue({
 			el: '#app',
 			data: {
 				name:'',
+				username:'',
+				content:'',
+				user:{
+					
+				},leave:{
+						
+				},
 				formLabelAlign:{
 					user:{
 						
 					},
-					leave:{}
+					leave:{
+						
+					}
 				},
-				add: false,
+				isShow2: false,
 				modify:false,
 				piges: {},
 				carlist: [],
@@ -358,6 +357,30 @@
 							}
 						});
 					} 
+				},	add(){
+					let _this = this;
+					_this.isShow2= true;
+					_this.queryBanzuList(1,3);
+					
+				},prev1(cpage) {
+					this.queryBanzuList(cpage, 3);
+				},
+				/*下一页发动机查询*/
+				next1(cpage) {
+					this.queryBanzuList(cpage, 3);
+				},
+				/*当前页发动机查询*/
+				current1(cpage) {
+					this.queryBanzuList(cpage, 3);
+				},
+				/*选择发动机后回填数据*/
+				check(row) {
+					this.username = row.username;
+				},queryBanzuList(n, s) {
+					let _this = this;
+					jQuery.getJSON(`http://127.0.0.1:8080/zxp/api/leave/findUser/${n}/${s}`, function(pg) {
+						_this.user = pg;
+					});
 				},
 				/* formatRole: function(row, column) {
                 return row.ud_status == '1' ? "维修部" : row.ud_status == '2' ? "人事部": row.ud_status == '3' ? "客服部": row.ud_status == '4' ? "财务部": row.ud_status == '5' ? "仓库部": row.ud_status == '6' ? "系统部";
@@ -385,6 +408,8 @@
 				//添加数据
 				addall() {
 					let _this=this;
+					_this.formLabelAlign.username=_this.username;
+					_this.formLabelAlign.content=_this.leave.content;
 					jQuery.ajax("http://127.0.0.1:8080/zxp/api/leave/add",{
 						type:'post',
 						data:JSON.stringify(_this.formLabelAlign),
@@ -394,8 +419,8 @@
 								alert("新增失败！");
 							}else{							
 								alert("新增成功！");
-									_this.add = false;
-									_this.page(1, 3);
+									_this.isShow2 = false;
+									_this.page(1, 3,null);
 							}
 						}
 					});
@@ -473,7 +498,7 @@
 								alert("回滚失败！");
 							}else{
 								alert("回滚成功！");
-								_this.page(1,3);
+								_this.page(1,3,null);
 							}
 						
 					});	
