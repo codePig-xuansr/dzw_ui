@@ -262,7 +262,6 @@
 					recordid: "",
 					jsstatus: "1"
 				},
-				jsmoney: "",
 				vip: {
 					vipcode: "",
 					vipdiscount: "",
@@ -273,6 +272,7 @@
 				vippwd: "",
 				check: 0,
 				pageInfo: {},
+				jsmoney: "",
 				rgfei: "",
 				xmfei: "",
 				fw: [],
@@ -428,21 +428,19 @@
 								/*人工费*/
 								let sumren = row.bzcost * row.bztime;
 								_this.rgfei = sumren;
-								if(row.jsstatus == 0) {
-									/*共消费*/
-									let sum = sumfw + sumren + row.jiuyuanfy;
-									/*回填数据*/
-									row.jsmoney = sum;
-									_this.jsmoney = row.jsmoney;
-									let price = {};
-									price["bztime"] = row.bztime;
-									price["bzcost"] = row.bzcost;
-									price["jiuyuanfy"] = row.jiuyuanfy;
-									price["rgfei"] = sumren;
-									price["xmfei"] = sumfw;
-									price["sum"] = sum;
-									_this.prices.push(price);
-								}
+								/*共消费*/
+								let sum = sumfw + sumren + row.jiuyuanfy;
+								/*回填数据*/
+								row.jsmoney = sum;
+								_this.jsmoney = row.jsmoney;
+								let price = {};
+								price["bztime"] = row.bztime;
+								price["bzcost"] = row.bzcost;
+								price["jiuyuanfy"] = row.jiuyuanfy;
+								price["rgfei"] = sumren;
+								price["xmfei"] = sumfw;
+								price["sum"] = sum;
+								_this.prices.push(price);
 							})
 					}
 				},
