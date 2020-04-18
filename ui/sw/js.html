@@ -182,12 +182,28 @@
 								<small class="font-bold">销售单号:{{props.row.recordid}}</small>
 								<h5 class="font-bold">客户名：{{props.row.kname}}&nbsp;&nbsp;<span v-if="props.row.jsstatus==1">客户级别：{{viptype}} 客户折扣：{{vipdiscount}}</span></h5>
 								<p class="font-bold">车牌号码&nbsp;&nbsp;&nbsp;&nbsp;{{props.row.carno}}</p>
-								<p class="font-bold">救援费:{{props.row.jiuyuanfy}}</p>
+								<p>
+									<el-table :data="prices" style="">
+										<el-table-column label="救援费" prop="jiuyuanfy">
+										</el-table-column>
+										<el-table-column label="该小组维修工时费" prop="bzcost">
+										</el-table-column>
+										<el-table-column label="当前消耗工时" prop="bztime">
+										</el-table-column>
+										<el-table-column label="人工费" prop="rgfei">
+										</el-table-column>
+										<el-table-column label="维修项目总消费" prop="xmfei">
+										</el-table-column>
+										<el-table-column label="共消费" prop="sum">
+										</el-table-column>
+									</el-table>
+								</p>
+								<!--	<p class="font-bold">救援费:{{props.row.jiuyuanfy}}</p>
 								<p class="font-bold">该小组维修 工时费:{{props.row.bzcost}}</p>
 								<p class="font-bold">当前消耗工时:&nbsp;&nbsp;&nbsp;{{props.row.bztime}}</p>
 								<p class="font-bold">人工费:&nbsp;&nbsp;&nbsp;{{rgfei}}</p>
 								<p class="font-bold">维修项目总消费:&nbsp;&nbsp;&nbsp;{{xmfei}}</p>
-								<p class="font-bold">共消费&nbsp;&nbsp;&nbsp;{{props.row.jsmoney}}</p>
+								<p class="font-bold">共消费&nbsp;&nbsp;&nbsp;{{props.row.jsmoney}}</p>-->
 								<p style="color: #999999; size: 5px;">计算方式：(人工费(小组工时费×共消耗工时)+维修业务费用+救援费)<span v-if="props.row.jsstatus==1">×会员折扣</span></p>
 								<p>
 									<el-table :data="fw" style="">
@@ -236,6 +252,7 @@
 			el: '#JsVm',
 			data: {
 				radio: "",
+				prices: [],
 				jsrecord: {
 					recordid: "",
 					jstype: "",
@@ -387,6 +404,7 @@
 						let _this = this;
 						this.jsrecord.recordid = row.recordid;
 						this.weixiu.recordid = row.recordid;
+						this.prices=[];
 						if(row.jsstatus == 1) {
 							_this.viptype = "不是会员";
 							_this.vipdiscount = "0";
@@ -412,10 +430,18 @@
 								_this.rgfei = sumren;
 								if(row.jsstatus == 0) {
 									/*共消费*/
-									let sum = sumfw + sumren+row.jiuyuanfy;
+									let sum = sumfw + sumren + row.jiuyuanfy;
 									/*回填数据*/
 									row.jsmoney = sum;
 									_this.jsmoney = row.jsmoney;
+									let price={};
+									price["bztime"]=row.bztime;
+									price["bzcost"]=row.bzcost;
+									price["jiuyuanfy"]=row.jiuyuanfy;
+									price["rgfei"]=sumren;
+									price["xmfei"]=sumfw;
+									price["sum"]=sum;
+									_this.prices.push(price);
 								}
 							})
 					}
