@@ -432,7 +432,9 @@
 								let sum = sumfw + sumren + row.jiuyuanfy;
 								/*回填数据*/
 								row.jsmoney = sum;
-								_this.jsmoney = row.jsmoney;
+								if(row.jsstatus == 0) {
+									_this.jsmoney = row.jsmoney;
+								}
 								let price = {};
 								price["bztime"] = row.bztime;
 								price["bzcost"] = row.bzcost;
