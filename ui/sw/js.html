@@ -179,18 +179,18 @@
 							<el-button type="text" @click="isShow1 = true">费用明细</el-button>
 							<el-dialog title="提示" :visible.sync="isShow1" width="30%" :before-close="handleClose">
 								<h4 class="modal-title">费用明细</h4>
-								<small class="font-bold">销售单号:{{props.row.recordid}}</small>
+								<h5 class="font-bold">销售单号:{{props.row.recordid}}</h5>
 								<h5 class="font-bold">客户名：{{props.row.kname}}&nbsp;&nbsp;<span v-if="props.row.jsstatus==1">客户级别：{{viptype}} 客户折扣：{{vipdiscount}}</span></h5>
 								<p class="font-bold">车牌号码&nbsp;&nbsp;&nbsp;&nbsp;{{props.row.carno}}</p>
 								<p>
 									<el-table :data="prices" style="">
-										<el-table-column label="救援费" prop="jiuyuanfy">
-										</el-table-column>
 										<el-table-column label="该小组维修工时费" prop="bzcost">
 										</el-table-column>
 										<el-table-column label="当前消耗工时" prop="bztime">
 										</el-table-column>
 										<el-table-column label="人工费" prop="rgfei">
+										</el-table-column>
+										<el-table-column label="救援费" prop="jiuyuanfy">
 										</el-table-column>
 										<el-table-column label="维修项目总消费" prop="xmfei">
 										</el-table-column>
@@ -404,7 +404,7 @@
 						let _this = this;
 						this.jsrecord.recordid = row.recordid;
 						this.weixiu.recordid = row.recordid;
-						this.prices=[];
+						this.prices = [];
 						if(row.jsstatus == 1) {
 							_this.viptype = "不是会员";
 							_this.vipdiscount = "0";
@@ -434,13 +434,13 @@
 									/*回填数据*/
 									row.jsmoney = sum;
 									_this.jsmoney = row.jsmoney;
-									let price={};
-									price["bztime"]=row.bztime;
-									price["bzcost"]=row.bzcost;
-									price["jiuyuanfy"]=row.jiuyuanfy;
-									price["rgfei"]=sumren;
-									price["xmfei"]=sumfw;
-									price["sum"]=sum;
+									let price = {};
+									price["bztime"] = row.bztime;
+									price["bzcost"] = row.bzcost;
+									price["jiuyuanfy"] = row.jiuyuanfy;
+									price["rgfei"] = sumren;
+									price["xmfei"] = sumfw;
+									price["sum"] = sum;
 									_this.prices.push(price);
 								}
 							})
