@@ -19,10 +19,10 @@
 				  <el-col :span="24">
 					  <el-form :model="cominfo" inline="true">
 						<el-form-item label="商品名称：">
-							<el-input v-model="cominfo.recordid" placeholder="支持模糊搜索"></el-input>
+							<el-input type="text" v-model="proname" placeholder="支持模糊搜索"></el-input>
 						</el-form-item>
 						<el-form-item>
-							<el-button type="success" plain @click="ck">查询</el-button>
+							<el-button type="success" plain @click="page(1,5,proname)">查询</el-button>
 							<el-button type="primary" plain @click="addSpzl">添加数据</el-button>
 						</el-form-item>
 					  </el-form>
@@ -136,6 +136,7 @@
 			el: '#fish',
 			data: {
 				formLabelAlign:{},
+				proname:'',
 				add: false,
 				modify:false,
 				piges: {},
@@ -195,6 +196,7 @@
 				}],
 			},
 			methods: {
+				//page(1, 5,null)
 				addSpzl(){
 					let _this = this;
 					_this.add = true;
@@ -209,9 +211,12 @@
 						//alert(JSON.stringify(_this.queryBanzuListValue))
 					});
 				},
-				page(pageNum, pageSize) {
+				page(pageNum, pageSize,proname) {
 					let _this = this;
-					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/product/queryProduct/${pageNum}/${pageSize}`,function(pg) {
+						if(proname==""){
+						proname=null;
+					}
+					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/product/queryProductName/${pageNum}/${pageSize}/${proname}`,function(pg) {
 						_this.carlist = pg;
 						_this.list = pg.list;
 						//alert(JSON.stringify(pg.list))
@@ -221,7 +226,7 @@
 
 				change(num) {
 					let _this = this;
-					this.page(num, _this.carlist.pageSize);
+					this.page(num, _this.carlist.pageSize,_this.proname);
 				},
 				//pageSize选择事件
 				sizec(size) {
@@ -278,7 +283,7 @@
 			},
 			mounted() {
 				let _this = this;
-				_this.page(1, 5);
+				_this.page(1, 5,null);
 			}
 		});
 	</script>
