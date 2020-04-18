@@ -431,8 +431,8 @@
 								/*共消费*/
 								let sum = sumfw + sumren + row.jiuyuanfy;
 								/*回填数据*/
-								row.jsmoney = sum;
 								if(row.jsstatus == 0) {
+									row.jsmoney = sum;
 									_this.jsmoney = row.jsmoney;
 								}
 								let price = {};
@@ -441,7 +441,12 @@
 								price["jiuyuanfy"] = row.jiuyuanfy;
 								price["rgfei"] = sumren;
 								price["xmfei"] = sumfw;
-								price["sum"] = sum;
+								if(row.jsstatus == 0) {
+									price["sum"] = sum;
+								}
+								if(row.jsstatus == 1) {
+									price["sum"] = row.jsmoney;
+								}
 								_this.prices.push(price);
 							})
 					}
