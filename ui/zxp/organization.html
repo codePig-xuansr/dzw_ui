@@ -75,18 +75,12 @@
 					
 			<el-row>
 				<el-col :span="24">
-			<el-table  :data="vehicleInfo.list"   >
+			<el-table  :data="vehicleInfo.list">
 						<el-table-column prop="uid" label="员工编号" style="color:#B3D8FF ;">	
 						</el-table-column>
-						<el-table-column  label="部门" style="color:#B3D8FF ;">
-							<template slot-scope="temp">
-									{{temp.row.depid  |changSex}}
-							</template>
+						<el-table-column  label="部门"prop="depname"  style="color:#B3D8FF ;">
 						</el-table-column>
-						<el-table-column prop="rid" label="职位" style="color:#B3D8FF ;">
-							<template slot-scope="temp">
-									{{temp.row.rid  |changSex2}}
-							</template>
+						<el-table-column prop="rname" label="职位" style="color:#B3D8FF ;">
 						</el-table-column>
 						<el-table-column prop="username" label="员工姓名" style="color:#B3D8FF ;">
 						</el-table-column>
@@ -104,7 +98,7 @@
 						</el-table-column>
 						
 					</el-table>
-					<el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="vehicleInfo.total" :page-sizes="[1,2,3,4,5]" :page-size="vehicleInfo.pageSize">
+					<el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,prev, pager, next, jumper" :total="vehicleInfo.total" :page-size="this.vehicleInfo.pages" >
 			</el-col>	
 			</el-row>
 	
@@ -275,116 +269,23 @@
 				addd:false,
 				vehicleInfo:[],
 				finduid:{},
-				stsy: [{
-					name: '员工编号',
-					value: 'uid'
-				},{
-					name: '部门',
-					value: 'depid'
-				}, {
-					name: '职位',
-					value: 'rid'
-				}, {
-					name: '员工姓名',
-					value: 'username'
-				}, {
-					name: '性别',
-					value: 'sex'
-				}, {
-					name: '居住地址',
-					value: 'address'
-				}, {
-					name: '入职时间',
-					value: 'comedate'
-				}, {
-					name: '操作',
-					value: '0'
-				}],
-        options: [{
-          value: '1',
-          label: '维修部',
-
-        }, {
-          value: '2',
-          label: '人事部',
-
-        }, {
-          value: '3',
-          label: '客服部',
-
-        }, {
-          value: '4',
-          label: '财务部',
-
-        }, {
-          value: '5',
-          label: '仓库部',
-
-        }, {
-          value: '6',
-          label: '系统部',
-
-        }],
-        value: '员工部门'
-      ,
-        options1: [{
-          value: '1',
-          label: '总经理',
-
-        }, {
-          value: '2',
-          label: '前台经理',
-
-        }, {
-          value: '3',
-          label: '售后经理',
-
-        }, {
-          value: '4',
-          label: '仓库管理员',
-
-        }, {
-          value: '5',
-          label: '人事经理',
-
-        }, {
-          value: '6',
-          label: '前台顾问',
-
-        }],
-        value1: '员工职位'
 			}
 			,filters: {
-     changSex(val) {
-					var a=["维修部","人事部","客服部","财务部","仓库部","系统部"];
-					return  a[val-1];
-				},changSex2(val) {
-					var a=["总经理","前台经理","售后经理","仓库管理员","人事经理","前台顾问"];
-					return  a[val-1];
-				}
    },
 			methods: { 
-				stringToDate(dateStr,separator){
-     if(!separator){
-            separator="-";
-     }
-     var dateArr = dateStr.split(separator);
-     var year = parseInt(dateArr[0]);
-     var month;                     
-     if(dateArr[1].indexOf("0") == 0){
-         month = parseInt(dateArr[1].substring(1));
-     }else{
-          month = parseInt(dateArr[1]);
-     }
-     var day = parseInt(dateArr[2]);
-     var date = new Date(year,month -1,day);
-     return date;
- },find(){
+				find(){
 					let _this = this;
 					jQuery.getJSON(`http://127.0.0.1:8080/zxp/api/user/finduid`, function(pg) {
 						_this.finduid = pg;
 					});
- },	add(){
+ },prev3(cpage) {
+					this.client(cpage, 3,this.username);
+				},next3(cpage) {
+					this.page(cpage, 3,this.username);
+				},
+				current3(cpage) {
+					this.page(cpage, 3,this.username);
+				},	add(){
 					let _this = this;
 					_this.addd= true;
 					_this.find();
@@ -448,7 +349,7 @@
 							success(msg) {
 								if(msg.code == "200") {
 									alert("删除成功");
-									_this.page(1, 3);
+									_this.page(1, 3,null);
 								} else {
 									alert("删除失败");
 								}
@@ -474,18 +375,16 @@
 					jQuery.getJSON(`http://127.0.0.1:8080/zxp/api/user/queryUserAll/${n}/${s}/${name}`,function(pg) {
 						_this.vehicleInfo = pg;
 						_this.list = pg.list;
-						
 					});
 				},
 				//页数改变事件
-
-				change(num) {
+change(num) {
 					let _this = this;
 					this.page(num, _this.vehicleInfo.pageSize,_this.username);
 				},
 				//pageSize选择事件
 				sizec(size) {
-					this.page(1, size);
+					this.page(1, size,_this.username);
 				},
 				//添加数据
 				addall() {

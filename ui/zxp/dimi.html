@@ -50,7 +50,7 @@
 							</el-table>
 						</template>
 						<div class="page">
-							<el-pagination layout="prev, pager, next" @current-change="current1" @prev-click="prev1" @next-click="next1" :total="this.vehicleInfo.queryBanzuList">
+							<el-pagination layout="prev, pager, next" @current-change="current1" @prev-click="prev1" @next-click="next1" :total="this.user.pages*10">
 							</el-pagination>
 						</div>
 					</el-dialog>    
@@ -59,95 +59,34 @@
 				<el-col :span="24">
 				<template>
     <el-table      :data="vehicleInfo.list"    >
-     					<el-table-column  label="部门" style="color:#B3D8FF ;">
-							<template slot-scope="temp">
-									{{temp.row.user.depid  |changSex}}
-							</template>
+     					<el-table-column  prop="depname" label="部门" style="color:#B3D8FF ;">
 						</el-table-column>
-						<el-table-column prop="rid" label="职位" style="color:#B3D8FF ;">
-							<template slot-scope="temp">
-									{{temp.row.user.rid  |changSex2}}
-							</template>
+						<el-table-column prop="rname" label="职位" style="color:#B3D8FF ;">
 						</el-table-column>
-						<el-table-column prop="user.uid" label="员工编号" style="color:#B3D8FF ;">
+						<el-table-column prop="uid" label="员工编号" style="color:#B3D8FF ;">
 						</el-table-column>
-						<el-table-column prop="user.username" label="姓名" style="color:#B3D8FF ;">
+						<el-table-column prop="username" label="姓名" style="color:#B3D8FF ;">
 						</el-table-column>
-						<el-table-column prop="user.sex" label="性别" style="color:#B3D8FF ;">
+						<el-table-column prop="sex" label="性别" style="color:#B3D8FF ;">
 						</el-table-column>
-						<el-table-column prop="leave.leavedate" label="离职日期" style="color:#B3D8FF ;">
+						<el-table-column prop="leavedate" label="离职日期" style="color:#B3D8FF ;">
 						</el-table-column>
-						<el-table-column prop="leave.content" label="离职原因" style="color:#B3D8FF ;">
+						<el-table-column prop="content" label="离职原因" style="color:#B3D8FF ;">
 						</el-table-column>
 						<el-table-column label="操作" style="color:#B3D8FF ;"  width="175">
 							<template slot-scope="scope">
-								<el-button  type="text"   @click="updateUser(vehicleInfo.list[scope.$index].user.uid)">回滚</el-button>
+								<el-button  type="text"   @click="updateUser(vehicleInfo.list[scope.$index].uid)">回滚</el-button>
 							</template>
 						</el-table-column>
     </el-table>
   </template>
-  <el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="vehicleInfo.total" :page-sizes="[1,2,3,4,5]" :page-size="vehicleInfo.pageSize">
+  <el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,prev, pager, next, jumper" :total="vehicleInfo.total"  :page-size="this.vehicleInfo.pages" >
   </el-col>	
 			</el-row>
     
     
     
     
-	<!--<el-dialog title="此员工资料信息如下:" :visible.sync="dialogVisiblee" width="68%" :before-close="handleClose" style="margin-top: -90px;">
-		<el-divider></el-divider>
-员工编号：
-		<el-input type="text" style="width: 200px;" placeholder=""  v-model="empVo.empid" maxlength="20" show-word-limit/>&nbsp;&nbsp;&nbsp;  
-		员工姓名：
-		<el-input type="text" style="width: 200px;" placeholder="" v-model="empVo.empname" maxlength="20" show-word-limit/>
-		员工性别：
-		<el-input type="text" style="width: 200px;" placeholder="" v-model="empVo.empsex" maxlength="20" show-word-limit/>&nbsp;&nbsp;&nbsp; 
-		<br /><br />
-		员工账号：
-		<el-input type="text" style="width: 200px;" placeholder="" v-model="empVo.emptype" maxlength="20" show-word-limit/>&nbsp;&nbsp;&nbsp; 
-		
-		员工部门：
-		<el-input type="text" style="width: 200px;" placeholder="" v-model="empVo.payrollname" maxlength="20" show-word-limit/>&nbsp;&nbsp;&nbsp; 
-		员工职位：
-		<el-input type="text" style="width: 200px;" placeholder="" v-model="empVo.postname" maxlength="20" show-word-limit/>&nbsp;&nbsp;&nbsp; 
-		<br /><br />
-		员工状况：
-		<el-input type="text" style="width: 200px;" placeholder="" v-model="empVo.empcondition" maxlength="20" show-word-limit/>&nbsp;&nbsp;&nbsp; 
-		员工身高：
-		<el-input type="text" style="width: 200px;" placeholder="" v-model="empVo.empheight" maxlength="20" show-word-limit/>&nbsp;&nbsp;&nbsp; 
-		员工学历：
-		<el-input type="text" style="width: 200px;" placeholder="" v-model="empVo.empeducation" maxlength="20" show-word-limit/>&nbsp;&nbsp;&nbsp; 
-		<br /><br />
-		毕业学校：
-		<el-input type="text" style="width: 200px;" placeholder="" v-model="empVo.empschool" maxlength="20" show-word-limit/>&nbsp;&nbsp;&nbsp; 
-		员工专业：
-		<el-input type="text" style="width: 200px;" placeholder="" v-model="empVo.empprofession" maxlength="20" show-word-limit/>&nbsp;&nbsp;&nbsp; 
-		身份证号：
-		<el-input type="text" style="width: 200px;" placeholder="" v-model="empVo.empcard" maxlength="20" show-word-limit/>&nbsp;&nbsp;&nbsp;
-		<br /><br />
-		居住地址：
-		<el-input type="text" style="width: 200px;" placeholder=""  v-model="empVo.empaddress" maxlength="20" show-word-limit/>&nbsp;&nbsp;&nbsp; 
-		联系方式：
-		<el-input type="text" style="width: 200px;" placeholder="" v-model="empVo.emptelephone" maxlength="20" show-word-limit/>&nbsp;&nbsp;&nbsp; 
-		电子邮箱：
-		<el-input type="text" style="width: 200px;" placeholder="" v-model="empVo.empemail" maxlength="20" show-word-limit/>&nbsp;&nbsp;&nbsp;
-		<br /><br />
-		入职时间：
-		<el-input type="text" style="width: 200px;" placeholder="" v-model="empVo.empentrytime" maxlength="20" show-word-limit/>&nbsp;&nbsp;&nbsp; 
-		出生日期：
-		<el-input type="text" style="width: 200px;" placeholder="" v-model="empVo.empbirthtime" maxlength="20" show-word-limit/>&nbsp;&nbsp;&nbsp; 
-		推荐人：&nbsp;&nbsp;&nbsp;
-		<el-input type="text" style="width: 200px;" placeholder="" v-model="empVo.empreferrer" maxlength="20" show-word-limit/>&nbsp;&nbsp;&nbsp;
-		<br /><br />
-		员工门店：
-		<el-input type="text" style="width: 200px;" placeholder="" v-model="empVo.shopname" maxlength="20" show-word-limit/>&nbsp;&nbsp;&nbsp; 
-		计薪方式：
-		<el-input type="text" style="width: 200px;" placeholder="" v-model="empVo.payrollname" maxlength="20" show-word-limit/>&nbsp;&nbsp;&nbsp; 
-		<el-divider></el-divider>
-		<span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisiblee = false">取 消</el-button>
-    <el-button type="primary" @click="dialogVisiblee = false">确 定</el-button>
-  </span>
-	</el-dialog>
 	
 	
 	
@@ -157,58 +96,10 @@
 	
 	
 
-	<el-dialog title="添加员工离职信息" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
-		离职编号：
-		<el-input type="text" style="width: 200px;" placeholder="请输入离职编号" disabled="" v-model="suiji" maxlength="10" show-word-limit/>&nbsp;&nbsp;&nbsp; 离职原因：
-		<el-input type="text" style="width: 200px;" placeholder="请输入离职编号" v-model="record.dimissioncause" maxlength="10" show-word-limit/>
-		<br /><br />
-		<template>
-			员工姓名：
-			<el-select v-model="record.empid" filterable placeholder="请选择" style="width: 200px;" id="sel">
-				<el-option v-for="item in employee" :key="item.empname" :label="item.empname" :value="item.empid">
-
-				</el-option>
-			</el-select>
-		</template>
-		&nbsp;&nbsp;
-		<template>
-			<div class="block" style="display:inline-block">
-				<span class="demonstration">离职日期：</span>
-				<el-date-picker v-model="record.dimissiontime" type="datetime" placeholder="选择日期时间">
-				</el-date-picker>
-			</div>
-
-		</template>
-
-		<span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="add">确 定</el-button>
-  </span>
-	</el-dialog>
-
-	<template>
-
-		<div class="block" style="margin-top: 20px;">
-			<el-pagination v-if="pageInfo.total!=0" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[3, 6, 9]" :page-size="pageInfo.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.total">
-			</el-pagination>
-		</div>
-	</template>-->
 	
 	
 	
 	
-	<!--<el-dialog title="添加离职" :visible.sync="add" width="72%" :before-close="handleClose">
-		员工姓名：
-		<el-input type="text" style="width: 200px;" placeholder="" id="rname" maxlength="20" v-model="formLabelAlign.username" />&nbsp;&nbsp;&nbsp; 
-		离职原因：
-		<el-input type="text" style="width: 200px;" placeholder="" id="rname" maxlength="20" v-model="formLabelAlign.content" />&nbsp;&nbsp;&nbsp; 
-		<br />
-		<br />
-		<span slot="footer" class="dialog-footer" style="position: relative;left: -400px;">
-   				 <el-button @click="add = false">取 消</el-button>
-   				 <el-button type="primary" @click="addall">保存</el-button>
-  				</span>
-			</el-dialog>-->
 </div>
 	</body>
 	<script>var app = new Vue({
@@ -236,111 +127,10 @@
 				carlist: [],
 				list: [],
 				vehicleInfo:[],
-				stsy: [{
-					name: '员工编号',
-					value: 'uid'
-				},{
-					name: '部门',
-					value: 'depid'
-				}, {
-					name: '职位',
-					value: 'rid'
-				}, {
-					name: '员工姓名',
-					value: 'username'
-				}, {
-					name: '性别',
-					value: 'sex'
-				}, {
-					name: '居住地址',
-					value: 'address'
-				}, {
-					name: '入职时间',
-					value: 'comedate'
-				}, {
-					name: '操作',
-					value: '0'
-				}],
-        options: [{
-          value: '1',
-          label: '维修部',
-
-        }, {
-          value: '2',
-          label: '人事部',
-
-        }, {
-          value: '3',
-          label: '客服部',
-
-        }, {
-          value: '4',
-          label: '财务部',
-
-        }, {
-          value: '5',
-          label: '仓库部',
-
-        }, {
-          value: '6',
-          label: '系统部',
-
-        }],
-        value: '员工部门'
-      ,
-        options1: [{
-          value: '1',
-          label: '总经理',
-
-        }, {
-          value: '2',
-          label: '前台经理',
-
-        }, {
-          value: '3',
-          label: '售后经理',
-
-        }, {
-          value: '4',
-          label: '仓库管理员',
-
-        }, {
-          value: '5',
-          label: '人事经理',
-
-        }, {
-          value: '6',
-          label: '前台顾问',
-
-        }],
-        value1: '员工职位'
 			}
 			,filters: {
-     changSex(val) {
-					var a=["维修部","人事部","客服部","财务部","仓库部","系统部"];
-					return  a[val-1];
-				},changSex2(val) {
-					var a=["总经理","前台经理","售后经理","仓库管理员","人事经理","前台顾问"];
-					return  a[val-1];
-				}
    },
 			methods: { 
-				stringToDate(dateStr,separator){
-     if(!separator){
-            separator="-";
-     }
-     var dateArr = dateStr.split(separator);
-     var year = parseInt(dateArr[0]);
-     var month;                     
-     if(dateArr[1].indexOf("0") == 0){
-         month = parseInt(dateArr[1].substring(1));
-     }else{
-          month = parseInt(dateArr[1]);
-     }
-     var day = parseInt(dateArr[2]);
-     var date = new Date(year,month -1,day);
-     return date;
- },
 				delOne(uid) {
 					let _this = this;
 					if(window.confirm('是否确定删除？')) {
@@ -360,6 +150,7 @@
 				},	add(){
 					let _this = this;
 					_this.isShow2= true;
+					_this.username="";
 					_this.queryBanzuList(1,3);
 					
 				},prev1(cpage) {
@@ -367,7 +158,11 @@
 				},
 				/*下一页发动机查询*/
 				next1(cpage) {
-					this.queryBanzuList(cpage, 3);
+					if(cpage>this.user.pages){
+						cpage=this.user.pages;
+					}else{
+						this.queryBanzuList(cpage, 3);
+					}
 				},
 				/*当前页发动机查询*/
 				current1(cpage) {
@@ -382,9 +177,6 @@
 						_this.user = pg;
 					});
 				},
-				/* formatRole: function(row, column) {
-                return row.ud_status == '1' ? "维修部" : row.ud_status == '2' ? "人事部": row.ud_status == '3' ? "客服部": row.ud_status == '4' ? "财务部": row.ud_status == '5' ? "仓库部": row.ud_status == '6' ? "系统部";
-            },*/
 				page(n,s,name) {
 					let _this = this;
 						if(name==""){
@@ -403,7 +195,7 @@
 				},
 				//pageSize选择事件
 				sizec(size) {
-					this.page(1, size);
+					this.page(1, size,_this.name);
 				},
 				//添加数据
 				addall() {
@@ -416,9 +208,9 @@
 						contentType: 'application/json; charset=UTF-8',
 						success(data){
 							if(data=="ok"){
-								alert("新增失败！");
+								alert("离职失败！");
 							}else{							
-								alert("新增成功！");
+								alert("离职成功！");
 									_this.isShow2 = false;
 									_this.page(1, 3,null);
 							}
@@ -441,54 +233,6 @@
 							}
 						}
 					);
-				},
-				updates() {
-					let _this = this;
-					$.ajax("http://localhost:8080/zxp/api/user/updatetxl", {
-						type: "put",
-						contentType: "application/json",
-						data: JSON.stringify(_this.formLabelAlign),
-						dataType: "json",
-						success(msg) {
-							if(msg.code == "200") {
-								alert('保存成功');
-									_this. modify= false;
-									_this.page(1, 3);
-							} else {
-								alert('保存失败');
-							}
-						}
-					});
-				},update(uid) {
-					let _this = this;
-					_this.modify = true;
-					var a=["维修部","人事部","客服部","财务部","仓库部","系统部"];
-					var aa=["总经理","前台经理","售后经理","仓库管理员","人事经理","前台顾问"];
-					$.getJSON(`http://127.0.0.1:8080/zxp/api/user/selectById/${uid}`,
-						function(data) {
-							_this. formLabelAlign= data;
-							_this. formLabelAlign.depid= a[data.depid-1];
-							_this. formLabelAlign.rid= aa[data.rid-1];
-						}
-					);
-				},
-				updates() {
-					let _this = this;
-					$.ajax("http://localhost:8080/zxp/api/user/update", {
-						type: "put",
-						contentType: "application/json",
-						data: JSON.stringify(_this.formLabelAlign),
-						dataType: "json",
-						success(msg) {
-							if(msg.code == "200") {
-								alert('保存成功');
-									_this. modify= false;
-									_this.page(1, 3);
-							} else {
-								alert('保存失败');
-							}
-						}
-					});
 				},
 				updateUser(uid) {
 					let _this=this;
