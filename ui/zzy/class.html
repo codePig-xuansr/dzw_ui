@@ -120,7 +120,7 @@
 			methods: {
 				//删除方法
 				delOne(sid) {
-					alert(sid)					
+					//alert(sid)					
 					let _this = this;
 					if(window.confirm('是否确定删除？')) {
 						$.ajax(`http://127.0.0.1:8080/zzy/api/class1/deleteStar/${sid}`, {

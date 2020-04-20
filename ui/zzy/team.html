@@ -76,9 +76,9 @@
 						<el-form-item label="维修类型">
 							<el-input v-model="formLabelAlign.bztype"></el-input>
 						</el-form-item>
-						<el-form-item label="班组费用">
+						<!--<el-form-item label="班组费用">
 							<el-input v-model="formLabelAlign.bzcost"></el-input>
-						</el-form-item>
+						</el-form-item>-->
 					</el-form>
 				</div>
 				<span slot="footer" class="dialog-footer">
@@ -95,9 +95,9 @@
 						<el-form-item label="维修类型">
 							<el-input v-model="teams.bztype"></el-input>
 						</el-form-item>
-						<el-form-item label="班组费用">
+						<!--<el-form-item label="班组费用">
 							<el-input v-model="teams.bzcost"></el-input>
-						</el-form-item>
+						</el-form-item>-->
 					</el-form>
 				</div>
 				<span slot="footer" class="dialog-footer">
@@ -297,10 +297,10 @@
 						name: '维修类型',
 						value: 'bztype'
 					}, 
-					{
+/*					{
 						name: '班组费用',
 						value: 'bzcost'
-					},
+					},*/
 					{
 						name: '操作',
 						value: '0'
@@ -560,7 +560,7 @@
 				//添加技工数据
 				addjigong() {
 					let _this = this;
-					alert(JSON.stringify(_this.addjgvalue))
+					//alert(JSON.stringify(_this.addjgvalue))
 					jQuery.ajax("http://127.0.0.1:8080/zzy/api/jigong/addjigong", {
 						type: 'post',
 						data: JSON.stringify(_this.addjgvalue),
