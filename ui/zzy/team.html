@@ -113,9 +113,6 @@
 						<el-form-item label="技工姓名" style="margin-left: 90px;">
 							<el-input v-model="addjgvalue.jname"></el-input>
 						</el-form-item>
-						<!--<el-form-item label="性别">
-							<el-input v-model="addjgvalue.jsex"></el-input>
-						</el-form-item>-->
 						<el-form-item label="性别" style="margin-right: 200px;">
 						<template >
 						  <el-radio  v-model="addjgvalue.jsex" label="男">男</el-radio>
@@ -223,9 +220,12 @@
 						<el-form-item label="技工姓名">
 							<el-input v-model="modifyjgvalue.jname"></el-input>
 						</el-form-item>
-						<el-form-item label="性别">
-							<el-input v-model="modifyjgvalue.jsex"></el-input>
-						</el-form-item>
+						<el-form-item label="性别" style="margin-right: 100px;">
+						<template >
+						  <el-radio  v-model="modifyjgvalue.jsex" label="男">男</el-radio>
+						 <el-radio v-model="modifyjgvalue.jsex" label="女">女</el-radio>
+						</template>
+						</el-form-item><br />
 						<el-form-item label="电话">
 							<el-input v-model="modifyjgvalue.jphone"></el-input>
 						</el-form-item>
