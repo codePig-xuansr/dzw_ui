@@ -39,7 +39,7 @@
 									<div class="ibox-title" style="margin-left: -40px;">
 										<span class="label label-success">今天</span>
 										<h5 style="display: inline;">收入</h5>
-										<span v-if="lastSR!=0" class="label pull-right"><h2 style="display: inline;color: gold;">+{{lastSR}}</h2></span>
+										<span v-if="lastSR!=0" class="label pull-right"><h3 style="display: inline;color: gold;">+{{lastSR}}</h3></span>
 
 									</div>
 									<div class="ibox-content" style="margin-left: 30px;">
@@ -167,13 +167,6 @@
 				};
 			},
 			methods: {
-				getMoneryOne(){
-					setInterval(function(){
-						$.getJSON(`http://127.0.0.1:8080/zkx/api/main/moneyOne`, function(res) {
-							_this.lastSR = res;
-						})
-					},1000)
-				},
 				drawPie(id) {
 					let _this = this;
 					this.charts = echarts.init(document.getElementById(id))
@@ -253,23 +246,29 @@
 				} else {
 					_this.titleshow = false;
 					_this.show = true;
-					$.getJSON(`http://127.0.0.1:8080/zkx/api/main/money`, function(res) {
-						_this.toDayMoney = res;
-					})
+					
+						$.getJSON(`http://127.0.0.1:8080/zkx/api/main/money`, function(res) {
+							_this.toDayMoney = res;
+						})
+						
+						$.getJSON(`http://127.0.0.1:8080/zkx/api/main/dd`, function(res) {
+							_this.dd = res;
+						})
 
-					$.getJSON(`http://127.0.0.1:8080/zkx/api/main/dd`, function(res) {
-						_this.dd = res;
-					})
+						$.getJSON(`http://127.0.0.1:8080/zkx/api/main/wx`, function(res) {
+							_this.toDayWx = res;
+						})
+					
+						$.getJSON(`http://127.0.0.1:8080/zkx/api/main/sum`, function(res) {
+							_this.sum = res;
+						})
+					
 
-					$.getJSON(`http://127.0.0.1:8080/zkx/api/main/wx`, function(res) {
-						_this.toDayWx = res;
-					})
-
-					$.getJSON(`http://127.0.0.1:8080/zkx/api/main/sum`, function(res) {
-						_this.sum = res;
-					})
-
-					_this.getMoneryOne();
+					setInterval(function(){
+						$.getJSON(`http://127.0.0.1:8080/zkx/api/main/moneyOne`, function(res) {
+							_this.lastSR = res;
+						})
+					},1000);
 
 					$.getJSON(`http://127.0.0.1:8080/zkx/api/main/week`, function(res) {
 						//alert(JSON.stringify(res));
