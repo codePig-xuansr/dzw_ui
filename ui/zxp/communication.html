@@ -30,33 +30,112 @@
 			</template>
 			&nbsp;&nbsp;&nbsp;
 			<el-button type="primary" plain @click="page(1,3,username)">查询</el-button>
+			<el-button type="primary" plain @click="addd">新增员工通讯录</el-button>
 			<br />
 			<br />
 
+
+
+<el-dialog title="通讯录修改" :visible.sync="modify" width="72%" :before-close="handleClose">
+		员工编号：
+		<el-input type="text" style="width: 200px;" :disabled="true" placeholder=""  maxlength="20" v-model="txl.uid" />&nbsp;&nbsp;&nbsp; 
+		通讯录编号：
+		<el-input type="text" style="width: 200px;" :disabled="true" placeholder="" id="address" maxlength="20" v-model="txl.tid" />&nbsp;&nbsp;&nbsp;
+		<br />
+		<br />
+		联系方式：
+		<el-input type="text" style="width: 200px;" placeholder=""  maxlength="20" v-model="txl.phone" />&nbsp;&nbsp;&nbsp; 
+		邮箱地址：
+		<el-input type="text" style="width: 200px;" placeholder="" id="address" maxlength="20" v-model="txl.email" />&nbsp;&nbsp;&nbsp;
+		<span slot="footer" class="dialog-footer" style="position: relative;left: -400px;">
+   				 <el-button @click="update = false">取 消</el-button>
+   				 <el-button type="primary" @click="updates">保存</el-button>
+  				</span>
+			</el-dialog>
+
+
+<el-dialog title="新增通讯录" :visible.sync="isShow2" style="width: 100%;margin-top: -100px;">
+						<template>
+							<div style="margin-left: -80px;">
+								<el-button type="text"  style="width: 200px;">员工姓名：
+									<el-input v-model="usernamea"></el-input>
+							</el-button>
+								<el-button type="primary" @click="addall" style="margin-left: 100px;">保存</el-button>
+							</div>
+							<el-table :data="user.list" border >
+								<el-table-column fixed prop="uid" label="员工编号">
+								</el-table-column>
+								<el-table-column prop="username" label="员工姓名">
+								</el-table-column>
+								<el-table-column prop="sex" label="性别">
+								</el-table-column>
+								<el-table-column label="操作">
+									<template slot-scope="scope">
+										<el-button @click="check(scope.row)" type="text" size="small">选择</el-button>
+									</template>
+								</el-table-column>
+							</el-table>
+						</template>
+						<div class="page">
+							<el-pagination layout="prev, pager, next" @current-change="current1" @prev-click="prev1" @next-click="next1" :total="this.user.pages*10">
+							</el-pagination>
+						</div>
+						<el-button type="primary" @click="addAddress">添加明细</el-button>
+						<table class="table table-bordered table-hover">
+									<thead>
+										<tr style="background-color:#EBEBEB">
+											<th>序号</th>
+											<th>电子邮箱</th>
+											<th>联系方式</th>
+											<th>操作</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr v-for="(temp,index) in formLabelAlign.txl">
+											<td>{{index+1}}</td>
+											<td><input v-model="temp.phone" type="text" /></td>
+											<td><input v-model="temp.email" type="text" /></td>
+											<td><span @click="removeAddress(index)" class="glyphicon glyphicon-remove"></span></td>
+										</tr>
+									</tbody>
+								</table>
+					</el-dialog>    
+
+
+
+
 			<el-row>
 				<el-col :span="24">
-					<el-table
-    :data="vehicleInfo.list"
-    style="width: 100%"
-    row-key="uid"
-    border
-    lazy
-    :load="load"
-    :tree-props="{children: 'vehicleInfo', hasChildren: 'hasChildren'}">
-						<el-table-column prop="depname" label="部门" style="color:#B3D8FF ;">
+					<el-table  :data="vehicleInfo.list" @expand-change="expandChange">
+						<el-table-column type="expand">
+						<template slot-scope="props">
+							<el-form label-position="left" inline class="demo-table-expand" >
+								<el-table      :data="props.row.txl"    >
+						<el-table-column prop="phone" label="联系方式"  >	
 						</el-table-column>
-						<el-table-column prop="rname" label="职位" style="color:#B3D8FF ;">
+						<el-table-column prop="email" label="邮箱地址"  >	
 						</el-table-column>
-						<el-table-column prop="uid" label="员工编号" style="color:#B3D8FF ;">
+						<el-table-column label="操作" style="color:#B3D8FF ;" >
+							<template slot-scope="scope">
+								<el-button  type="text"   @click="update(props.row.txl[scope.$index].tid)">编辑</el-button>
+								<el-button type="text"    @click="delOne(props.row.txl[scope.$index].tid)">删除</el-button>
+							</template>
 						</el-table-column>
-						<el-table-column prop="username" label="姓名" style="color:#B3D8FF ;">
+    </el-table>
+								
+							</el-form>
+						</template>
+					</el-table-column>
+					<el-table-column prop="user.uid" label="员工编号" style="color:#B3D8FF ;">
 						</el-table-column>
-						<el-table-column prop="phone" label="电话" style="color:#B3D8FF ;">
+						<el-table-column prop="user.username" label="姓名" style="color:#B3D8FF ;">
 						</el-table-column>
-						<el-table-column prop="email" label="邮箱" style="color:#B3D8FF ;">
+						<el-table-column prop="user.sex" label="性别" style="color:#B3D8FF ;">
+						</el-table-column>
+						<el-table-column prop="user.address" label="家庭住址" style="color:#B3D8FF ;">
 						</el-table-column>
 					</el-table>
-					<el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,prev, pager, next, jumper" :total="vehicleInfo.total"  :page-size="vehicleInfo.size">
+					<el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,prev, pager, next, jumper" :total="vehicleInfo.total" :page-size="this.vehicleInfo.pages" >
 				</el-col>
 			</el-row>
 
@@ -105,36 +184,87 @@
 			el: '#app',
 			data: {
 				username: '',
+				usernamea: '',
 				formLabelAlign: {
 					user: {
 
 					},
 					txl: []
 				},
+				txl:{},
 				add: false,
 				modify: false,
 				piges: {},
+				user:{},
 				carlist: [],
 				list: [],
 				vehicleInfo: [],
-				lazy:true,
+				list1: [],
+				vehicleInfo1: [],
+				isShow2:false,
 			},
 			methods: {
-				delOne(uid) {
+				delOne(tid) {
 					let _this = this;
 					if(window.confirm('是否确定删除？')) {
-						$.ajax(`http://localhost:8080/zxp/api/user/delete/${uid}`, {
+						$.ajax(`http://localhost:8080/zxp/api/txl/delete/${tid}`, {
 							type: "delete",
 							dataType: "json",
 							success(msg) {
 								if(msg.code == "200") {
 									alert("删除成功");
-									_this.page(1, 3);
+									_this.page(1, 3,null);
 								} else {
 									alert("删除失败");
 								}
 							}
 						});
+					}
+				},addAddress() {
+					this.formLabelAlign.txl.push({
+						phone: '',
+						email: ''
+					});
+				},removeAddress(index) {
+					this.formLabelAlign.txl.splice(index, 1);
+				},addd(){
+					let _this = this;
+					_this.isShow2= true;
+					_this.username="";
+					_this.queryBanzuList(1,3);
+				},prev1(cpage) {
+					this.queryBanzuList(cpage, 3);
+				},
+				/*下一页发动机查询*/
+				next1(cpage) {
+					if(cpage>this.user.pages){
+						cpage=this.user.pages;
+					}else{
+						this.queryBanzuList(cpage, 3);
+					}
+				},
+				/*当前页发动机查询*/
+				current1(cpage) {
+					this.queryBanzuList(cpage, 3);
+				},
+				/*选择发动机后回填数据*/
+				check(row) {
+					this.usernamea = row.username;
+					this.formLabelAlign.user.uid=row.uid;
+				},queryBanzuList(n, s) {
+					let _this = this;
+					jQuery.getJSON(`http://127.0.0.1:8080/zxp/api/leave/findUser/${n}/${s}`, function(pg) {
+						_this.user = pg;
+					});
+				},expandChange(row, expanded) {
+					/*判断是否表格展开时*/
+					if(expanded.length > 0) {
+						let _this = this;
+							/*$.getJSON(`http://127.0.0.1:8080/zxp/api/txl/querytxl/${row.uid}`,
+								function(pg) {
+									_this.vehicleInfo1 = pg;
+									_this.list1 = pg.list;
+								});*/
 					}
 				},
 				load(tree, treeNode, resolve) {
@@ -146,12 +276,12 @@
 						resolve(this.vehicleInfo)
 					}, 1000)
 				},
-				page(n, s, name, id) {
+				page(n, s, name) {
 					let _this = this;
 					if(name == "") {
 						name = null;
 					}
-					jQuery.getJSON(`http://127.0.0.1:8080/zxp/api/txl/queryTxlAll/${n}/${s}/${name}/${id}`, function(pg) {
+					jQuery.getJSON(`http://127.0.0.1:8080/zxp/api/txl/queryTxlAll/${n}/${s}/${name}`, function(pg) {
 						_this.vehicleInfo = pg;
 						_this.list = pg.list;
 					});
@@ -160,17 +290,17 @@
 
 				change(num) {
 					let _this = this;
-					this.page(num, _this.vehicleInfo.pageSize, _this.username,0);
+					this.page(num, _this.vehicleInfo.pageSize, _this.username);
 				},
 				//pageSize选择事件
 				sizec(size) {
 					let _this = this;
-					this.page(1, size,_this.username,0);
+					_this.page(1, size,_this.username);
 				},
 				//添加数据
 				addall() {
 					let _this = this;
-					jQuery.ajax("http://127.0.0.1:8080/zxp/api/user/add", {
+					jQuery.ajax("http://127.0.0.1:8080/zxp/api/txl/add", {
 						type: 'post',
 						data: JSON.stringify(_this.formLabelAlign),
 						contentType: 'application/json; charset=UTF-8',
@@ -179,15 +309,14 @@
 								alert("新增失败！");
 							} else {
 								alert("新增成功！");
-								_this.add = false;
-								_this.page(1, 3);
+								_this.isShow2 = false;
+								_this.page(1, 3,null);
 							}
 						}
 					});
 				},
 				updates() {
 					let _this = this;
-					alert(JSON.stringify(_this.formLabelAlign));
 					$.ajax("http://localhost:8080/zxp/api/user/updatetxl", {
 						type: "put",
 						contentType: "application/json",
@@ -197,34 +326,34 @@
 							if(msg.code == "200") {
 								alert('保存成功');
 								_this.modify = false;
-								_this.page(1, 3);
+								_this.page(1, 3,null);
 							} else {
 								alert('保存失败');
 							}
 						}
 					});
 				},
-				update(uid) {
+				update(tid) {
 					let _this = this;
 					_this.modify = true;
-					$.getJSON(`http://127.0.0.1:8080/zxp/api/user/selectById/${uid}`,
+					$.getJSON(`http://127.0.0.1:8080/zxp/api/txl/selectById/${tid}`,
 						function(data) {
-							_this.formLabelAlign = data;
+							_this.txl = data;
 						}
 					);
 				},
 				updates() {
 					let _this = this;
-					$.ajax("http://localhost:8080/zxp/api/user/update", {
+					$.ajax("http://localhost:8080/zxp/api/txl/update", {
 						type: "put",
 						contentType: "application/json",
-						data: JSON.stringify(_this.formLabelAlign),
+						data: JSON.stringify(_this.txl),
 						dataType: "json",
 						success(msg) {
 							if(msg.code == "200") {
 								alert('保存成功');
 								_this.modify = false;
-								_this.page(1, 3);
+								_this.page(1, 3,null);
 							} else {
 								alert('保存失败');
 							}
@@ -234,7 +363,7 @@
 			},
 			mounted() {
 				let _this = this;
-				_this.page(1, 3, null, 0);
+				_this.page(1, 3, null);
 			}
 		});
 	</script>
