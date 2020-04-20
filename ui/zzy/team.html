@@ -130,42 +130,16 @@
 						</el-form-item>
 						<el-form-item label="工作时长">
 							<el-input v-model="addjgvalue.worktime"></el-input>
-						</el-form-item>
-						<el-form-item label="星级">
-										<template>
-							  <el-select v-model="addjgvalue.sid" placeholder="请选择" >
-							    <el-option
-							      v-for="t in queryStarListValue"
-							      :key="t.sid"
-							      :label="t.sname"
-							      :value="t.sid">
-							    </el-option>
-							  </el-select>
-							</template>
-						</el-form-item>
-						<el-form-item label="类型">
-							<el-select v-model="addjgvalue.depid" placeholder="请选择">
-				              <el-option
-				                v-for="item in dep"
-				                :key="item.value"
-				                :label="item.label"
-				                :value="item.value"
-				                :disabled="item.disabled">
-				              </el-option>
-				          </el-select>
-						</el-form-item>
-						<el-form-item label="归属班组">													 
-						<template>
-							  <el-select v-model="addjgvalue.bzid" placeholder="请选择">
-							    <el-option
-							      v-for="t in queryBanzuListValue"
-							      :key="t.bzid"
-							      :label="t.bzname"
-							      :value="t.bzid">
-							    </el-option>
-							  </el-select>
-						</template>
-						</el-form-item>		
+						</el-form-item>&nbsp;&nbsp;&nbsp;
+						&nbsp;&nbsp;&nbsp;<el-button type="text" @click="queryStarList(1,3)" style="width: 207px;margin-right: 70px;margin-top: -11px;">星级状态&nbsp;
+								<el-input v-model="modifyjgvalue.sname" placeholder="请选择"></el-input>
+							</el-button><br />
+						<el-button type="text" @click="queryDepartmentList(1,3)" style="width: 207px;margin-right: 60px;">员工部门&nbsp;&nbsp;
+								<el-input v-model="addjgvalue.depname" placeholder="请选择"></el-input>
+							</el-button>	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<el-button type="text" @click="queryBanzuList(1,3)" style="width: 207px;margin-right: 40px;">归属班组&nbsp;&nbsp;
+								<el-input v-model="addjgvalue.bzname" placeholder="请选择"></el-input>
+							</el-button>	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					</el-form>
 				</div>
 				<span slot="footer" class="dialog-footer">
@@ -173,6 +147,69 @@
    				 <el-button type="primary" @click="addjigong">保存</el-button>
   				</span>
 			</el-dialog>
+
+			<el-dialog title="部门" :visible.sync="isShow2" style="width: 50%;margin-left: 400px;">
+						<template>
+							
+							<el-table :data="queryDepartmentListValue.list" border style="width: 100%">
+								<el-table-column fixed prop="depid" label="部门id">
+								</el-table-column>
+								<el-table-column prop="depname" label="部门名称">
+								</el-table-column>
+								<el-table-column label="操作">
+									<template slot-scope="scope">
+										<el-button @click="check(scope.row)" type="text" size="small">选择</el-button>
+									</template>
+								</el-table-column>
+							</el-table>
+						</template>
+						<div class="page">
+							<el-pagination layout="prev, pager, next" @current-change="current1" @prev-click="prev1" @next-click="next1" :total="this.queryDepartmentListValue.pages*10">
+							</el-pagination>
+						</div>
+					</el-dialog>
+					
+					<el-dialog title="班组" :visible.sync="isShow3" style="width: 50%;margin-left: 400px;">
+						<template>
+							
+							<el-table :data="queryBanzuListValue.list" border style="width: 100%">
+								<el-table-column fixed prop="bzid" label="班组id">
+								</el-table-column>
+								<el-table-column prop="bzname" label="班组名称">
+								</el-table-column>
+								<el-table-column label="操作">
+									<template slot-scope="scope">
+										<el-button @click="check2(scope.row)" type="text" size="small">选择</el-button>
+									</template>
+								</el-table-column>
+							</el-table>
+						</template>
+						<div class="page">
+							<el-pagination layout="prev, pager, next" @current-change="current2" @prev-click="prev2" @next-click="next2" :total="this.queryBanzuListValue.pages*10">
+							</el-pagination>
+						</div>
+					</el-dialog>
+					
+					<el-dialog title="星级状态" :visible.sync="isShow4" style="width: 50%;margin-left: 400px;">
+						<template>
+							
+							<el-table :data="queryStarListValue.list" border style="width: 100%">
+								<el-table-column fixed prop="sid" label="班组id">
+								</el-table-column>
+								<el-table-column prop="sname" label="班组名称">
+								</el-table-column>
+								<el-table-column label="操作">
+									<template slot-scope="scope">
+										<el-button @click="check3(scope.row)" type="text" size="small">选择</el-button>
+									</template>
+								</el-table-column>
+							</el-table>
+						</template>
+						<div class="page">
+							<el-pagination layout="prev, pager, next" @current-change="current3" @prev-click="prev3" @next-click="next3" :total="this.queryStarListValue.pages*10">
+							</el-pagination>
+						</div>
+					</el-dialog>
 
 			<el-dialog title="修改班组技工" :visible.sync="modifyjg" width="60%" :before-close="handleClose">
 				<div>
@@ -197,42 +234,16 @@
 						</el-form-item>
 						<el-form-item label="工作时长">
 							<el-input v-model="modifyjgvalue.worktime"></el-input>
-						</el-form-item>
-						<el-form-item label="星级">
-							<template>
-							  <el-select v-model="modifyjgvalue.sid" placeholder="请选择" >
-							    <el-option
-							      v-for="t in queryStarListValue"
-							      :key="t.sid"
-							      :label="t.sname"
-							      :value="t.sid">
-							    </el-option>
-							  </el-select>
-							</template>
-						</el-form-item>
-						<el-form-item label="类型">
-							<el-select v-model="modifyjgvalue.depid" placeholder="请选择">
-				              <el-option
-				                v-for="item in dep"
-				                :key="item.value"
-				                :label="item.label"
-				                :value="item.value"
-				                :disabled="item.disabled">
-				              </el-option>
-				          </el-select>
-						</el-form-item>
-						<el-form-item label="归属班组">							
-						 <template>
-							  <el-select v-model="modifyjgvalue.bzid" placeholder="请选择">
-							    <el-option
-							      v-for="t in queryBanzuListValue"
-							      :key="t.bzid"
-							      :label="t.bzname"
-							      :value="t.bzid">
-							    </el-option>
-							  </el-select>
-						</template>
-						</el-form-item>		
+						</el-form-item>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<el-button type="text" @click="queryStarList(1,3)" style="width: 207px;margin-right: 70px;margin-top: -11px;">星级状态&nbsp;
+								<el-input v-model="modifyjgvalue.sname"></el-input>
+							</el-button><br />	
+						<el-button type="text" @click="queryDepartmentList(1,3)" style="width: 207px;margin-right: 60px;">员工部门&nbsp;&nbsp;
+								<el-input v-model="modifyjgvalue.depname"></el-input>
+							</el-button>	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<el-button type="text" @click="queryBanzuList(1,3)" style="width: 207px;margin-right: 40px;">归属班组&nbsp;&nbsp;
+								<el-input v-model="modifyjgvalue.bzname"></el-input>
+							</el-button>	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					</el-form>
 				</div>
 				<span slot="footer" class="dialog-footer">
@@ -250,14 +261,23 @@
 			data: {
 				formLabelAlign:{},
 				piges: {},
+				department:{},
 				labelPosition:'right',
+				isShow2:false,
+				isShow3:false,
+				isShow4:false,
 				truename:'',
-				 addbz: false,
+				depname:'',
+				bzname:'',
+				sname:'',
+				addbz: false,
 				addjg: false,
 				addteam:false,
 				modifybz:false,
 				modifyjg:false,
 				addjgvalue:{},
+				department:{},
+				queryDepartmentListValue:{},
 				queryBanzuListValue:{},
 				queryStarListValue:{},
 				modifyjgvalue:{},
@@ -269,8 +289,6 @@
 				},
 				list: [],
 				teams:{},
-			dep: [{ value: '1',label: '维修部',}, { value: '2',label: '人事部', }, { value: '3',label: '客服部',
-			}, {value: '4',label: '财务部',}, {value: '5',label: '仓库部',}, {value: '6',label: '系统部',}],
 			
 				stsy: [{
 							name: '班组名称',
@@ -350,27 +368,98 @@
 				}],
 			},
 			methods: {
+				prev1(cpage) {
+					this.queryDepartmentList(cpage, 3);
+				},
+				/*下一页发动机查询*/
+				next1(cpage) {
+					this.queryDepartmentList(cpage, 3);
+				},
+				/*当前页发动机查询*/
+				current1(cpage) {
+					this.queryDepartmentList(cpage, 3);
+				},
+				/*选择发动机后回填数据*/
+				check(row) {
+					this.addjgvalue.depname = row.depname;
+					this.isShow2 = false;
+					this.addjgvalue.depid=row.depid;
+					this.modifyjgvalue.depname=row.depname;
+					this.modifyjgvalue.depid=row.depid;
+				},queryDepartmentList(n, s) {
+					let _this = this;
+					_this.isShow2 = true;
+					jQuery.getJSON(`http://127.0.0.1:8080/zxp/api/select/queryDepartment/${n}/${s}`, function(pg) {
+						_this.queryDepartmentListValue = pg;
+					});
+				},
+				
+				prev2(cpage) {
+					this.queryBanzuList(cpage, 3);
+				},
+				/*下一页发动机查询*/
+				next2(cpage) {
+					this.queryBanzuList(cpage, 3);
+				},
+				/*当前页发动机查询*/
+				current2(cpage) {
+					this.queryBanzuList(cpage, 3);
+				},
+				/*选择发动机后回填数据*/
+				check2(row) {
+					this.addjgvalue.bzname = row.bzname;
+					this.isShow3 = false;
+					this.addjgvalue.bzid=row.bzid;
+					this.modifyjgvalue.bzname=row.bzname;
+					this.modifyjgvalue.bzid=row.bzid;
+				},queryBanzuList(n, s) {
+					let _this = this;
+					_this.isShow3 = true;
+					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/banzu/queryBanzuAll/${n}/${s}`, function(pg) {
+						_this.queryBanzuListValue = pg;
+					});
+				},
+				
+				prev3(cpage) {
+					this.queryBanzuList(cpage, 3);
+				},
+				/*下一页发动机查询*/
+				next3(cpage) {
+					this.queryBanzuList(cpage, 3);
+				},
+				/*当前页发动机查询*/
+				current3(cpage) {
+					this.queryBanzuList(cpage, 3);
+				},
+				/*选择发动机后回填数据*/
+				check3(row) {
+					this.addjgvalue.sname = row.sname;
+					this.isShow4 = false;
+					this.addjgvalue.sid=row.sid;
+					this.modifyjgvalue.sname=row.sname;
+					this.modifyjgvalue.sid=row.sid;
+				},queryStarList(n, s) {
+					let _this = this;
+					_this.isShow4 = true;
+					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/class1/queryStarAll/${n}/${s}`, function(pg) {
+						_this.queryStarListValue = pg;
+					});
+				},
+				
 				//查询班组信息
 				SelectValue(){
 					let _this = this;
 					_this.addjg = true;
-					_this.queryBanzuList();
-					_this.queryStarList();
+					
 				},
-				//下拉框查询班组
-				queryBanzuList() {
-					let _this = this;
-					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/banzu/queryBanzuList`, function(pg) {
-						_this.queryBanzuListValue = pg;
-					});
-				},
+				
 				//下拉框查询星级状态
-				queryStarList() {
+				/*queryStarList() {
 					let _this = this;
 					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/class1/queryStarList`, function(pg) {
 						_this.queryStarListValue = pg;
 					});
-				},
+				},*/
 				//删除技工
 				delJigong(jid) {
 					//alert(jid)					
@@ -382,7 +471,7 @@
 							success(msg) {
 								if(msg.code == "200") {
 									alert("删除成功");
-									_this.jgpage(1,5);
+									_this.jgpage(1,5,null);
 								} else {
 									alert("删除失败");
 								}
@@ -482,7 +571,7 @@
 							}else{							
 								alert("新增成功！");
 								_this.addjg = false;
-								_this.jgpage(1,2);
+								_this.jgpage(1,2,null);
 							}
 						}
 					});
@@ -500,8 +589,7 @@
 				//根据技工jid查询技工信息
 				queryJigongByid(jid){
 					let _this = this;	
-					_this.queryBanzuList();
-					_this.queryStarList();
+	
 					_this.modifyjg = true;
 					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/jigong/queryJigongById/${jid}`,function(pg) {
 						_this.modifyjgvalue = pg;
@@ -522,7 +610,7 @@
 							} else {
 								alert("修改成功！");
 								_this.modifyjg = false;
-								_this.jgpage(1,2);
+								_this.jgpage(1,2,null);
 								
 							}
 						}

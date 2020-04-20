@@ -86,18 +86,9 @@
 						<el-form-item label="车型">
 							<el-input v-model="formLabelAlign.katype"></el-input>
 						</el-form-item>
-						<el-form-item label="归属班组">							
-						 <template>
-							  <el-select v-model="formLabelAlign.bzid" placeholder="请选择" style="width:340px">
-							    <el-option
-							      v-for="t in queryBanzuListValue"
-							      :key="t.bzid"
-							      :label="t.bzname"
-							      :value="t.bzid">
-							    </el-option>
-							  </el-select>
-							</template>
-						</el-form-item>					
+						<el-button type="text" @click="queryBanzuList(1,3)" style="width: 340px;margin-right: 40px;">归属班组
+								<el-input v-model="formLabelAlign.bzname" placeholder="请选择"></el-input>
+							</el-button>			
 					</el-form>
 				</div>
 				<span slot="footer" class="dialog-footer">
@@ -121,19 +112,9 @@
 						<el-form-item label="当前里程">
 							<el-input v-model="carlist.kalc"></el-input>
 						</el-form-item>
-						<el-form-item label="归属班组">							
-						 <template>
-							  <el-select v-model="carlist.bzid" placeholder="请选择" style="width:340px">
-							    <el-option
-							      v-for="t in queryBanzuListValue"
-							      :key="t.bzid"
-							      :label="t.bzname"
-							      :value="t.bzid">
-							    </el-option>
-							  </el-select>
-							</template>
-				          </el-select>
-						</el-form-item>		
+						<el-button type="text" @click="queryBanzuList(1,3)" style="width: 340px;margin-right: 40px;">归属班组
+								<el-input v-model="carlist.bzname"></el-input>
+							</el-button>
 					</el-form>
 				</div>
 				<span slot="footer" class="dialog-footer">
@@ -141,6 +122,29 @@
    				 <el-button type="primary" @click="modifyall">保存</el-button>
   				</span>
 			</el-dialog>
+			
+			<el-dialog title="班组" :visible.sync="isShow3" style="width: 50%;margin-left: 400px;">
+						<template>
+							
+							<el-table :data="queryBanzuListValue.list" border style="width: 100%">
+								<el-table-column fixed prop="bzid" label="班组id">
+								</el-table-column>
+								<el-table-column prop="bzname" label="班组名称">
+								</el-table-column>
+								<el-table-column label="操作">
+									<template slot-scope="scope">
+										<el-button @click="check2(scope.row)" type="text" size="small">选择</el-button>
+									</template>
+								</el-table-column>
+							</el-table>
+						</template>
+						<div class="page">
+							<el-pagination layout="prev, pager, next" @current-change="current2" @prev-click="prev2" @next-click="next2" :total="this.queryBanzuListValue.pages*10">
+							</el-pagination>
+						</div>
+					</el-dialog>
+
+			
 				<template>
 					<el-tabs v-model="activeName" type="border-card">
 						<el-tab-pane label="空闲车辆信息" name="first">
@@ -217,6 +221,8 @@
 					bzid:'',
 				},
 				activeName: 'first',
+				isShow3:false,
+				bzname:'',
 				add: false,
 				modify: false,
 				labelPosition:'right',
@@ -309,7 +315,7 @@
 				addBanzu(){
 					let _this = this;
 					_this.add = true;
-					_this.queryBanzuList();
+					
 
 				},
 				//删除方法
@@ -331,14 +337,32 @@
 						});
 					}
 				},
-				//下拉框查询班组
-				queryBanzuList() {
+				prev2(cpage) {
+					this.queryBanzuList(cpage, 3);
+				},
+				/*下一页发动机查询*/
+				next2(cpage) {
+					this.queryBanzuList(cpage, 3);
+				},
+				/*当前页发动机查询*/
+				current2(cpage) {
+					this.queryBanzuList(cpage, 3);
+				},
+				/*选择发动机后回填数据*/
+				check2(row) {
+					this.formLabelAlign.bzname = row.bzname;
+					this.isShow3 = false;
+					this.formLabelAlign.bzid=row.bzid;
+					this.carlist.bzname=row.bzname;
+					this.carlist.bzid=row.bzid;
+				},queryBanzuList(n, s) {
 					let _this = this;
-					//alert(1)
-					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/banzu/queryBanzuList`, function(pg) {
+					_this.isShow3 = true;
+					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/banzu/queryBanzuAll/${n}/${s}`, function(pg) {
 						_this.queryBanzuListValue = pg;
 					});
 				},
+				
 				//分页查询数据
 				page(pageNum, pageSize) {
 					let _this = this;
@@ -418,7 +442,6 @@
 					//alert(kaid)
 					let _this = this;	
 					_this.modify = true;
-					_this.queryBanzuList();
 					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/kache/queryKacheByid/${kaid}`,function(pg) {
 						_this.carlist = pg;
 					});

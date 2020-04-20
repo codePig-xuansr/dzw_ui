@@ -60,21 +60,12 @@
 						<el-form-item label="数量单位">
 							<el-input v-model="formLabelAlign.prodw"></el-input>
 						</el-form-item>
-						<el-form-item label="商品价格">
+						<el-form-item label="商品价格" style="margin-right: 30px;">
 							<el-input v-model="formLabelAlign.proprice"></el-input>
 						</el-form-item>
-						<el-form-item label="供应商">
-							<template>
-							  <el-select v-model="formLabelAlign.ghid" placeholder="请选择">
-							    <el-option
-							      v-for="t in queryGonghuoListValue"
-							      :key="t.ghid"
-							      :label="t.ghname"
-							      :value="t.ghid">
-							    </el-option>
-							  </el-select>
-							</template>						
-						</el-form-item>
+						<el-button type="text" @click="queryGonghuoList(1,3)" style="width: 217px;margin-right: 60px;margin-top: -10px;">供应商&nbsp;&nbsp;&nbsp;
+								<el-input v-model="formLabelAlign.ghname"></el-input>
+							</el-button>
 					</el-form>
 				</div>
 				<span slot="footer" class="dialog-footer">
@@ -82,6 +73,26 @@
    				 <el-button type="primary" @click="addall">保存</el-button>
   				</span>
 			</el-dialog>
+
+						<el-dialog title="供货商" :visible.sync="isShow3" style="width: 50%;margin-left: 400px;">
+							<template>
+							<el-table :data="queryGonghuoListValue.list" border style="width: 100%">
+								<el-table-column fixed prop="ghid" label="班组id">
+								</el-table-column>
+								<el-table-column prop="ghname" label="班组名称">
+								</el-table-column>
+								<el-table-column label="操作">
+									<template slot-scope="scope">
+										<el-button @click="check2(scope.row)" type="text" size="small">选择</el-button>
+									</template>
+								</el-table-column>
+							</el-table>
+						</template>
+						<div class="page">
+							<el-pagination layout="prev, pager, next" @current-change="current2" @prev-click="prev2" @next-click="next2" :total="this.queryGonghuoListValue.pages*10">
+							</el-pagination>
+						</div>
+					</el-dialog>
 
 			<el-dialog title="修改商品资料" :visible.sync="modify" width="60%" :before-close="handleClose">
 				<div>
@@ -105,22 +116,12 @@
 						<el-form-item label="数量单位">
 							<el-input v-model="teams.prodw"></el-input>
 						</el-form-item>
-						<el-form-item label="供应商">													
-						 <template>
-							  <el-select v-model="teams.ghid" placeholder="请选择">
-							    <el-option
-							      v-for="t in queryGonghuoListValue"
-							      :key="t.ghid"
-							      :label="t.ghname"
-							      :value="t.ghid">
-							    </el-option>
-							  </el-select>
-							</template>
-						</el-form-item>		
 						<el-form-item label="商品价格">
-							<el-input v-model="teams.proprice"></el-input>
-						</el-form-item>
-						
+							<el-input v-model="teams.proprice" ></el-input>
+						</el-form-item><br />
+						<el-button type="text" @click="queryGonghuoList(1,3)" style="width: 217px;margin-right: 330px;">供应商
+								<el-input v-model="teams.ghname"></el-input>
+						</el-button>
 					</el-form>
 				</div>
 				<span slot="footer" class="dialog-footer">
@@ -137,6 +138,8 @@
 			data: {
 				formLabelAlign:{},
 				proname:'',
+				ghname:'',
+				isShow3:false,
 				add: false,
 				modify:false,
 				piges: {},
@@ -196,21 +199,44 @@
 				}],
 			},
 			methods: {
-				//page(1, 5,null)
+				prev2(cpage) {
+					this.queryGonghuoList(cpage, 3);
+				},
+				/*下一页发动机查询*/
+				next2(cpage) {
+					this.queryGonghuoList(cpage, 3);
+				},
+				/*当前页发动机查询*/
+				current2(cpage) {
+					this.queryGonghuoList(cpage, 3);
+				},
+				/*选择发动机后回填数据*/
+				check2(row) {
+					this.formLabelAlign.ghname = row.ghname;
+					this.isShow3 = false;
+					this.formLabelAlign.ghid=row.ghid;
+					this.teams.ghname=row.ghname;
+					this.teams.ghid=row.ghid;
+				},queryGonghuoList(n, s) {
+					let _this = this;
+					_this.isShow3 = true;
+					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/gonghuo/queryGonghuoList/${n}/${s}`, function(pg) {
+						_this.queryGonghuoListValue = pg;
+					});
+				},
 				addSpzl(){
 					let _this = this;
 					_this.add = true;
-					_this.queryGonghuoList();
 				},
 				//下拉框查询供货商
-				queryGonghuoList() {
+				/*queryGonghuoList() {
 					let _this = this;
 					//alert(1)
 					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/gonghuo/queryGonghuoList`, function(pg) {
 						_this.queryGonghuoListValue = pg;
 						//alert(JSON.stringify(_this.queryBanzuListValue))
 					});
-				},
+				},*/
 				page(pageNum, pageSize,proname) {
 					let _this = this;
 						if(proname==""){
@@ -246,7 +272,7 @@
 							}else{							
 								alert("新增成功！");
 								_this.add = false;
-								_this.page(1,5);
+								_this.page(1,5,null);
 							}
 						}
 					});
@@ -256,7 +282,6 @@
 					//alert(proid)
 					let _this = this;	
 					_this.modify = true;
-					_this.queryGonghuoList();
 					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/product/queryProductById/${proid}`,function(pg) {
 						_this.teams = pg;
 					});
@@ -275,7 +300,7 @@
 							} else {
 								alert("修改成功！");
 								_this.modify = false;
-								_this.page(1,5);
+								_this.page(1,5,null);
 							}
 						}
 					});
