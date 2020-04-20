@@ -71,7 +71,7 @@
 								</el-form-item>
 							</el-col>-->
 							<el-col :span="12">
-								<el-button type="text" @click="queryBanzuList(1,3)">
+								<el-button type="text" @click="queryweixiuTypeList(1,3)">
 									<el-form-item label="项目类别" prop="xid">
 										<el-input v-model="weixiufuwu.xid"></el-input>
 									</el-form-item>
@@ -125,7 +125,7 @@
 					this.leibie = false;
 					this.weixiufuwu.xid = row.xid;
 				},
-				queryBanzuList(n, s) {
+				queryweixiuTypeList(n, s) {
 					let _this = this;
 					_this.leibie = true;
 					$.getJSON(`http://localhost:8080/api/ljl/weixiu/All/weixiuleibie/name/${n}/${s}`,
@@ -136,15 +136,15 @@
 					);
 				},
 				prev1(cpage) {
-					this.queryBanzuList(cpage, 3);
+					this.queryweixiuTypeList(cpage, 3);
 				},
 				/*下一页发动机查询*/
 				next1(cpage) {
-					this.queryBanzuList(cpage, 3);
+					this.queryweixiuTypeList(cpage, 3);
 				},
 				/*当前页发动机查询*/
 				current1(cpage) {
-					this.queryBanzuList(cpage, 3);
+					this.queryweixiuTypeList(cpage, 3);
 				},
 				fh() {
 					weixiu.xinzengweixiu = false;

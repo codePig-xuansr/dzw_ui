@@ -101,12 +101,6 @@
 								</el-button>
 							</el-col>
 						</el-row>
-						<!--<el-form-item label="品牌名称">
-							<el-input v-model="ping.pname"></el-input>
-						</el-form-item>
-						<el-form-item label="品牌首字母">
-							<el-input v-model="ping.pzimu"></el-input>
-						</el-form-item>-->
 					</el-form>
 					<span slot="footer" class="dialog-footer">
    				 	<el-button @click="pingpaixinzeng = false">取 消</el-button>
@@ -141,16 +135,6 @@
 								</el-button>
 							</el-col>
 						</el-row>
-						<!--
-						<el-form-item label="品牌编号">
-							<el-input v-model="ping.pid" readonly></el-input>
-						</el-form-item>
-						<el-form-item label="品牌名称">
-							<el-input v-model="ping.pname"></el-input>
-						</el-form-item>
-						<el-form-item label="品牌首字母">
-							<el-input v-model="ping.pzimu"></el-input>
-						</el-form-item>-->
 					</el-form>
 					<span slot="footer" class="dialog-footer">
    				 	<el-button @click="pingpaixiugai = false">取 消</el-button>
@@ -207,23 +191,34 @@
 							</el-col>
 						</el-row>
 						<el-row>
-							<el-col :span="9">
-								<el-form-item prop="xid" label="车牌品牌" style="margin-left: 20px;">
+							<el-col :span="10">
+								<el-button type="text" @click="querychepaiTypeList(1,3)">
+									<el-form-item label="车牌品牌" prop="carid">
+										<el-input v-model="cardangan.carid"></el-input>
+									</el-form-item>
+								</el-button>
+
+								<!--<el-form-item prop="xid" label="车牌品牌" style="margin-left: 20px;">
 									<el-select v-model="cardangan.carid" placeholder="请选择">
 										<el-option v-for="(t,i) in addpingpaai" :value="t.pid">
 											{{t.pname}}
 										</el-option>
 									</el-select>
-								</el-form-item>
+								</el-form-item>-->
 							</el-col>
-							<el-col :span="12">
-								<el-form-item prop="xid" label="发动机" style="margin-left: 100px;">
+							<el-col :span="10" style="margin-left: 40px;">
+								<el-button type="text" @click="queryfadongjiTypeList(1,3)">
+									<el-form-item label="发动机" prop="fadongjiid">
+										<el-input v-model="cardangan.fadongjiid"></el-input>
+									</el-form-item>
+								</el-button>
+								<!--<el-form-item prop="xid" label="发动机" style="margin-left: 100px;">
 									<el-select v-model="cardangan.fadongjiid" placeholder="请选择">
 										<el-option v-for="(t,i) in addfadongji" :value="t.fadongjiid">
 											{{t.fadongjiname}}
 										</el-option>
 									</el-select>
-								</el-form-item>
+								</el-form-item>-->
 							</el-col>
 						</el-row>
 
@@ -240,13 +235,35 @@
             	时间：2020-04-19
             	描述：修改区间
             -->
-            
-			<!--<el-dialog title="车牌" :visible.sync="isShow2" style="width: 50%;margin-left: 400px;">
+
+			<el-dialog title="车牌品牌" :visible.sync="pinpai" style="width: 50%;margin-left: 400px;">
 				<template>
-					<el-table :data="queryBanzuListValue.list" border style="width: 100%">
+					<el-table :data="addpingpaai.list" border style="width: 100%">
 						<el-table-column fixed prop="pid" label="车牌品牌">
 						</el-table-column>
 						<el-table-column prop="pname" label="车牌名称">
+						</el-table-column>
+						<el-table-column label="操作">
+							<template slot-scope="scope">
+								<el-button @click="check2(scope.row)" type="text" size="small">选择</el-button>
+							</template>
+						</el-table-column>
+					</el-table>
+				</template>
+				<div class="page">
+					<el-pagination layout="prev, pager, next" @current-change="current1" @prev-click="prev1" @next-click="next1" :total="this.addpingpaai.pages*10">
+					</el-pagination>
+				</div>
+			</el-dialog>
+
+			<el-dialog title="发动机" :visible.sync="fadongji" style="width: 50%;margin-left: 400px;">
+				<template>
+					<el-table :data="addfadongji.list" border style="width: 100%">
+						<el-table-column fixed prop="fadongjiid" label="发动机编号">
+						</el-table-column>
+						<el-table-column prop="fadongjiname" label="发动机名称">
+						</el-table-column>
+						<el-table-column prop="fadongjipp" label="发动机品牌">
 						</el-table-column>
 						<el-table-column label="操作">
 							<template slot-scope="scope">
@@ -256,10 +273,10 @@
 					</el-table>
 				</template>
 				<div class="page">
-					<el-pagination layout="prev, pager, next" @current-change="current1" @prev-click="prev1" @next-click="next1" :total="this.vehicleInfo.pages*10">
+					<el-pagination layout="prev, pager, next" @current-change="current1" @prev-click="prev1" @next-click="next1" :total="this.addfadongji.pages*10">
 					</el-pagination>
 				</div>
-			</el-dialog>-->
+			</el-dialog>
 
 			<!--
             	作者：2453688922@qq.com
@@ -318,58 +335,21 @@
 							</el-col>
 						</el-row>
 						<el-row>
-							<el-col :span="9">
-								<el-form-item prop="xid" label="车牌品牌" style="margin-left: 20px;">
-									<el-select v-model="cardangan.carid" placeholder="请选择">
-										<el-option v-for="(t,i) in addpingpaai" :value="t.pid">
-											{{t.pname}}
-										</el-option>
-									</el-select>
-								</el-form-item>
+							<el-col :span="10">
+								<el-button type="text" @click="querychepaiTypeList(1,3)">
+									<el-form-item label="车牌品牌" prop="carid">
+										<el-input v-model="cardangan.carid"></el-input>
+									</el-form-item>
+								</el-button>
 							</el-col>
-							<el-col :span="12">
-								<el-form-item prop="xid" label="发动机" style="margin-left: 100px;">
-									<el-select v-model="cardangan.fadongjiid" placeholder="请选择">
-										<el-option v-for="(t,i) in addfadongji" :value="t.fadongjiid">
-											{{t.fadongjiname}}
-										</el-option>
-									</el-select>
-								</el-form-item>
+							<el-col :span="10" style="margin-left: 40px;">
+								<el-button type="text" @click="queryfadongjiTypeList(1,3)">
+									<el-form-item label="发动机" prop="fadongjiid">
+										<el-input v-model="cardangan.fadongjiid"></el-input>
+									</el-form-item>
+								</el-button>
 							</el-col>
 						</el-row>
-						<!--<el-form-item label="车牌编号：">
-							<el-input v-model="cardangan.danganid" readonly></el-input>
-						</el-form-item>-->
-						<!--<el-form-item label="车辆名称">
-							<el-input v-model="cardangan.carname"></el-input>
-						</el-form-item>
-						<el-form-item label="参考价格">
-							<el-input v-model="cardangan.cankaoprice"></el-input>
-						</el-form-item>
-						<el-form-item label="车辆年款">
-							<el-input v-model="cardangan.carniankuan"></el-input>
-						</el-form-item>-->
-						<!--<el-form-item label="功率">
-							<el-input v-model="cardangan.gonglv"></el-input>
-						</el-form-item>
-						<el-form-item label="进口国家">
-							<el-input v-model="cardangan.jinkouguochan"></el-input>
-						</el-form-item>-->
-						<!--<el-form-item label="车牌品牌">
-							<el-select placeholder="请选择" v-model="cardangan.carid">
-								<el-option v-for="(t,i) in addpingpaai" :value="t.pid">
-									{{t.pname}}
-								</el-option>
-							</el-select>
-						</el-form-item>
-						<el-form-item label="发动机型号">
-							<el-select placeholder="请选择" v-model="cardangan.fadongjiid">
-								<el-option v-for="(t,i) in addfadongji" :value="t.fadongjiid">
-									{{t.fadongjiname}}
-								</el-option>
-							</el-select>
-						</el-form-item>-->
-
 					</el-form>
 					<span slot="footer" class="dialog-footer">
    				 	<el-button @click="danganxiugai = false">取 消</el-button>
@@ -390,6 +370,8 @@
 					pzimu: '',
 					pdate: new Date().toLocaleDateString()
 				},
+				pinpai: false,
+				fadongji: false,
 				cardangan: {
 					danganid: 0,
 					carid: '',
@@ -412,6 +394,56 @@
 				pingpaixiugai: false
 			},
 			methods: {
+				prev2(cpage) {
+					this.querychepaiTypeList(cpage, 3);
+				},
+				/*下一页发动机查询*/
+				next2(cpage) {
+					this.querychepaiTypeList(cpage, 3);
+				},
+				/*当前页发动机查询*/
+				current2(cpage) {
+					this.querychepaiTypeList(cpage, 3);
+				},
+				/*选择发动机后回填数据*/
+				check2(row) {
+					this.pinpai = false;
+					this.cardangan.carid = row.pid;
+				},
+				querychepaiTypeList(n, s) {
+					let _this = this;
+					_this.pinpai = true;
+					$.getJSON(`http://localhost:8080/api/ljl/dangan/selectdangan/danganpingpai/${n}/${s}`,
+						function(rs) {
+							_this.addpingpaai = rs.list;
+						});
+				},
+
+				check(row) {
+					this.fadongji = false;
+					this.cardangan.fadongjiid = row.fadongjiid;
+				},
+				queryfadongjiTypeList(n, s) {
+					let _this = this;
+					_this.fadongji = true;
+					$.getJSON(
+						`http://localhost:8080/api/ljl/dangan/selectdangan/fadongji/${n}/${s}`,
+						function(data) {
+							_this.addfadongji = data.list;
+						}
+					);
+				},
+				prev1(cpage) {
+					this.queryfadongjiTypeList(cpage, 3);
+				},
+				/*下一页发动机查询*/
+				next1(cpage) {
+					this.queryfadongjiTypeList(cpage, 3);
+				},
+				/*当前页发动机查询*/
+				current1(cpage) {
+					this.queryfadongjiTypeList(cpage, 3);
+				},
 				chaxundangan() {
 					let _this = this;
 					if(_this.carname == '') {
