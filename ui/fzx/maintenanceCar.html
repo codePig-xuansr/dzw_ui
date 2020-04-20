@@ -216,6 +216,7 @@
 				temps:[],
 				pcs:[],
 				pc:'',
+				sfwx:[],
 				jct:true,
 			},
 			methods:{
@@ -267,21 +268,33 @@
 				},
 				jcar(){
 					let _this=this;
+					
 					//判断业务类型
 					if(_this.yw=='2'){
 						let carnoo= _this.pc;
 						let carno= _this.carNo;
 						if(carno==''||carnoo==''){
 							_this.$message({
-									message: '请选择车辆',
+									message: '请选择车辆和救援车辆',
 									type: 'error'
 								});
 							return;
 						}
-						sessionStorage.setItem('d',1);
-						sessionStorage.setItem("carno",carno);
-						sessionStorage.setItem("carnoo",carnoo);
-						indexVm.toUrl('ui/fzx/maintenanceOrder.html');
+						jQuery.getJSON(`http://localhost:8080/api/fzx/selectwx/${carno}`,function(data) {
+							_this.sfwx = data;
+							if(data.code=="300"){
+								_this.$message({
+										message: '该车正在维修中',
+										type: 'error'
+									});
+								return;
+							}
+							sessionStorage.setItem('d',1);
+							sessionStorage.setItem("carno",carno);
+							sessionStorage.setItem("carnoo",carnoo);
+							indexVm.toUrl('ui/fzx/maintenanceOrder.html');
+						});
+						
 					}else{
 						let carno= _this.carNo;
 						if(carno==''){
@@ -291,8 +304,19 @@
 								});
 							return;
 						}
-						sessionStorage.setItem("carno",carno);
-						indexVm.toUrl('ui/fzx/maintenanceOrder.html');
+						jQuery.getJSON(`http://localhost:8080/api/fzx/selectwx/${carno}`,function(data) {
+							_this.sfwx = data;
+							if(data.code=="300"){
+								_this.$message({
+										message: '该车正在维修中',
+										type: 'error'
+									});
+								return;
+							}
+							sessionStorage.setItem("carno",carno);
+							indexVm.toUrl('ui/fzx/maintenanceOrder.html');
+						});
+						
 							
 
 					}

@@ -107,7 +107,15 @@
 								</el-form-item>
 								<span class="kg"></span>
 								<el-form-item label="预计完工："prop="yujidate">
-									<template> <el-input v-model="fzxweixiuadd.yujidate" type="date" size="small" style="width: 170px;"></el-input></template>
+									<template>
+										<el-date-picker
+									      v-model="fzxweixiuadd.yujidate"
+									      align="right"
+									      type="date"
+									      placeholder="选择日期"
+									      :picker-options="pickerOptions1">
+									    </el-date-picker>
+									</template>
 								</el-form-item>
 								<br><br>
 								<el-form-item label="备注说明" prop="beizhu">
@@ -119,8 +127,8 @@
 							  </el-form>
 							  <el-form>
 								<el-form-item>
-									<el-tabs type="border-card" >				
-										<el-tab-pane label="维修项目">
+									<el-tabs type="border-card" v-model="tabs" @tab-click="tabck">				
+										<el-tab-pane label="维修项目" name="1">
 											<template>
 												<el-row>
 												  <el-col :span="24">
@@ -147,7 +155,7 @@
 												</el-row>
 											</template>
 										</el-tab-pane>
-										<el-tab-pane label="结算信息">
+										<el-tab-pane label="结算信息" name="2">
 											<el-row>
 												  <el-col :span="24">
 													  <template>
@@ -234,6 +242,7 @@
 				},
 				jg:'0',
 				gsf:'0',
+				tabs:'1',
 				jsxx:[{}],
 				//表单基础验证
 				rus2:{
@@ -243,11 +252,23 @@
 					yujidate:[{required: true, message:'请填写预计时间', trigger: 'blur'}],
 					fuwugw:[{required: true, message:'请选择服务顾问', trigger: 'change'}],
 					shigongbc:[{required: true, message:'请选择班次', trigger: 'change'}],
-				}
+				},
+				pickerOptions1: {
+		        disabledDate(time) {
+		            return time.getTime() < Date.now();
+		        }
+		    },
 			},
 			methods:{
 				oo(){
 					$("#ocnt").load('ui/fzx/addOne.html');
+				},
+				tabck(){
+					let _this=this;
+					if(_this.tabs==2){
+						//救援费用
+						_this.fzxweixiuadd.jiuyuanfy=parseInt(_this.fzxweixiuadd.licheng) * parseInt(3);
+					}
 				},
 				//添加维修项目确定
 				save1(){
@@ -275,8 +296,7 @@
 							}
 							_this.addone=false;
 							_this.fzxweixiuadd.fzxweixiuxm=cd;
-							//救援费用
-							_this.fzxweixiuadd.jiuyuanfy=parseInt(_this.fzxweixiuadd.licheng) * parseInt(3);
+							
 							//工时费
 							_this.gsf=sessionStorage.getItem("gsf");
 						}else{

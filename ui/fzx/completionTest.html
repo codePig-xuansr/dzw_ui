@@ -274,7 +274,6 @@
 					        			let date2 = date1.getTime() - new Date(_this.dqdate).getTime();   //时间差的毫秒数  
 					       				let leave1=date2%(8760*3600*1000);	//计算天数后剩余的毫秒数
 					        			let bztime=Math.floor(leave1/(3600*1000))+1;//相差多少小时
-					        			alert(bztime);
 										_this.jgrecord.recordid= _this.fzxweixiuadd.recordid=_this.jgrecord.recordid;
 										_this.jgrecord.jgstatus= _this.fzxweixiuadd.status=_this.hg;
 										jQuery.ajax({
