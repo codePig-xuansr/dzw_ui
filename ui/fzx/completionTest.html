@@ -357,14 +357,13 @@
 				},
 				ck(){
 					if(this.cominfo.recorddate==''){this.cominfo.recorddate=null};
-					if(this.cominfo.status==''){this.cominfo.status=null};
 					if(this.cominfo.recordid==''){this.cominfo.recordid=null};
 					this.page(1,3,this.cominfo.recorddate,this.cominfo.status,this.cominfo.recordid);
 				},
 				reset(){
 					this.cominfo.recorddate=null;
-					this.cominfo.status='';
-					this.cominfo.recordid='';
+					this.cominfo.status=null;
+					this.cominfo.recordid=null;
 				},
 				page(num,size,recorddate,status,recordid){
 					let _this=this;
