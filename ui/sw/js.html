@@ -301,6 +301,8 @@
 				getPayImg(recordno, jsmoney) {
 					let _this = this;
 					this.alipay = true;
+					var date = new Date();
+					recordno=recordno+date.getFullYear()+(date.getMonth()+1)+date.getDate()+date.getHours()+date.getMinutes()+date.getSeconds()+"";
 					_this.getPayResult(recordno);
 					$.getJSON(`http://127.0.0.1:8080/zkx/api/pay/getImg/${recordno}/${jsmoney}`, function(img) {
 						_this.url = _this.url + img;
