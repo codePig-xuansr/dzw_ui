@@ -67,13 +67,15 @@
 									  </template>
 								</el-form-item>
 								<span class="kg"></span>
-								<el-form-item label="业务类别：" prop="yewutype"> 
+								<el-form-item label="业务类别" prop="yewutype">
 									<template>
-										<el-select v-model="fzxweixiuadd.yewutype" placeholder="请选择" size="small" style="width: 120px;">
-										  <el-option v-for="(temp,index) in bs" :label="temp.xname" :value="temp.xname" :key="temp.xname"></el-option>
-										</el-select>
+										<el-button type="text" @click="querykc(1,3)" style="width: 120px; margin-top: -10px;">
+											<el-input v-model="fzxweixiuadd.yewutype"></el-input>
+										</el-button>
 									  </template>
 								</el-form-item>
+								
+								
 								<span class="kg"></span>
 								<el-form-item label="结算方式" prop="clearing">
 									<template>
@@ -85,13 +87,6 @@
 									  </template>
 								</el-form-item>
 								<br><br>
-								<!--<el-form-item label="驾驶员：" prop="driver">
-									<template> <el-input v-model="fzxweixiuadd.driver" size="small" style="width: 120px;"></el-input></template>
-								</el-form-item>
-								<span class="kg"></span>
-								<el-form-item label="联系电话：" prop="driverphone">
-									<template> <el-input v-model="fzxweixiuadd.driverphone" oninput="this.value=this.value.replace(/[^\d]/g,'')" size="small" style="width: 170px;"></el-input></template>
-								</el-form-item>-->
 								<span class="kg"></span>
 								<el-form-item v-if="lc" label="救援卡车牌号："prop="kano">
 									<template> <el-input v-model="fzxweixiuadd.kano" :disabled="true" type="text" size="small" style="width: 170px;"></el-input></template>
@@ -155,6 +150,26 @@
 												</el-row>
 											</template>
 										</el-tab-pane>
+										<el-tab-pane label="维修材料" name="3">
+											<template>
+												<el-row>
+												  <el-col :span="24">
+													  <template>
+														  <el-table :data="fzxweixiuadd.fzxweixiucl" border empty-text="请添加维修材料">
+															<el-table-column v-for="(temp,index) in cl" :label="temp.name" :align="'center'" :resizable="false" :key="temp.name">
+																<template slot-scope="scope">
+																	<span v-if="temp.values!=0">{{scope.row[temp.values]}}</span>
+																	<span v-if="temp.values==0">
+										  								 <el-button type="danger" icon="el-icon-delete" @click="dell(scope.$index,fzxweixiuadd.fzxweixiucl)">删除</el-button>
+																	</span>
+																  </template>
+															</el-table-column>
+														  </el-table>
+													  </template>
+												  </el-col>
+												</el-row>
+											</template>
+										</el-tab-pane>
 										<el-tab-pane label="结算信息" name="2">
 											<el-row>
 												  <el-col :span="24">
@@ -163,6 +178,11 @@
 															<el-table-column label="项目总价" :align="'center'" >
 																	<template slot-scope="scope">
 																	<span>{{jg}}</span>
+																  </template>
+															</el-table-column>
+															<el-table-column label="材料总价" :align="'center'" >
+																	<template slot-scope="scope">
+																	<span>{{cljg}}</span>
 																  </template>
 															</el-table-column>
 															<el-table-column label="人工工时费" :align="'center'" >
@@ -197,12 +217,39 @@
 						<el-button @click="scc">确认</el-button>
 					  </div>
 				</el-dialog>
+				<el-dialog width="930px" @opened="sss"  title="选择维修材料" :visible.sync="addss" append-to-body>
+					<div id="sontt"></div>
+					<div slot="footer" class="dialog-footer">
+						<el-button @click="sccc">确认</el-button>
+					  </div>
+				</el-dialog>
 				<div id="ocnt"></div>
 				<div slot="footer" class="dialog-footer">
 				  <el-button @click="addone = false">取 消</el-button>
 				  <el-button type="primary" @click="save1">确定</el-button>
 				</div>
 			  </el-dialog>
+			  
+			  <el-dialog title="业务类别" :visible.sync="isShow1" style="width: 50%;margin-left: 400px;">
+						<template>
+							<el-table :data="bs.list" border style="width: 100%">
+								<el-table-column fixed prop="xid" label="业务类别id">
+								</el-table-column>
+								<el-table-column prop="xname" label="业务类别">
+								</el-table-column>
+								<el-table-column label="操作">
+									<template slot-scope="scope">
+										<el-button @click="check1(scope.row)" type="text" size="small">选择</el-button>
+									</template>
+								</el-table-column>
+							</el-table>
+						</template>
+						<div class="page">
+							<el-pagination layout="prev, pager, next" @current-change="current1" @prev-click="prev1" @next-click="next1" :total="this.bs.pages*10">
+							</el-pagination>
+						</div>
+					</el-dialog>
+			  
 		</div>
 	</body>
 	<script>
@@ -210,6 +257,8 @@
 		var orderVm =new Vue({
 			el:'#orderVm',
 			data:{
+				isShow1:false,
+				ywid:'',
 				today:'',
 				xde:false,
 				fy:true,
@@ -218,11 +267,13 @@
 				checked:false,
 				addone:false,
 				adds:false,
+				addss:false,
 				pickinfo:{},
 				cs:[],
 				dj:[{name:'商业单据'},{name:'金融单据'}],
 				bs:[],
 				ms:[{name:'项目编码',values:'fwcod'},{name:'项目名称',values:'fwname'},{name:'优惠前单价',values:'fwprice'},{name:'优惠后单价',values:'vipprice'},{name:'故障描述',values:'guzhanginfo'},{name:'故障原因',values:'guzhangyuanyin'},{name:'维修班组',values:'bzid'},{name:'操作',values:'0'}],
+				cl:[{name:'材料编码',values:'proid'},{name:'材料名称',values:'proname'},{name:'材料单价',values:'proprice'},{name:'故障描述',values:'guzhanginfo'},{name:'故障原因',values:'guzhangyuanyin'},{name:'维修班组',values:'bzid'},{name:'操作',values:'0'}],
 				fzxweixiuadd:{
 					recordid:'',
 					carno:'',
@@ -238,9 +289,11 @@
 					licheng:'0',
 					kano:'',
 					jiuyuanfy:'0',
-					fzxweixiuxm:[]//添加维修项目
+					fzxweixiuxm:[],//添加维修项目
+					fzxweixiucl:[]//添加维修材料
 				},
 				jg:'0',
+				cljg:'0',
 				gsf:'0',
 				tabs:'1',
 				jsxx:[{}],
@@ -284,19 +337,28 @@
 								return;
 							}
 							let cd= oneVm.fwcod;
+							let cdd= oneVm.proid;
 							for(let i=0;i<cd.length;i++){
 								cd[i].num=1;
 								cd[i].guzhanginfo = oneVm.minfo.guzhanginfo;
 								cd[i].guzhangyuanyin = oneVm.minfo.guzhangyuanyin;
-								cd[i].bzname = oneVm.minfo.bzname;
+								//cd[i].bzname = oneVm.minfo.bzname;
 								cd[i].bzid = oneVm.minfo.bzid;
-								cd[i].bzcost = oneVm.minfo.bzcost;
+								//cd[i].bzcost = oneVm.minfo.bzcost;
 								//计算项目总价格
 								_this.jg = parseInt(_this.jg) + parseInt(cd[i].fwprice);
 							}
+							for(let i=0;i<cdd.length;i++){
+								//计算材料总价格
+								cdd[i].num=1;
+								cdd[i].guzhanginfo = oneVm.minfo.guzhanginfo;
+								cdd[i].guzhangyuanyin = oneVm.minfo.guzhangyuanyin;
+								cdd[i].bzid = oneVm.minfo.bzid;
+								_this.cljg = parseInt(_this.cljg) + parseInt(cdd[i].proprice);
+							}
 							_this.addone=false;
 							_this.fzxweixiuadd.fzxweixiuxm=cd;
-							
+							_this.fzxweixiuadd.fzxweixiucl=cdd;
 							//工时费
 							_this.gsf=sessionStorage.getItem("gsf");
 						}else{
@@ -306,6 +368,9 @@
 				},
 				ss(){
 					$("#sont").load("ui/fzx/addS.html");
+				},
+				sss(){
+					$("#sontt").load("ui/fzx/addSS.html");
 				},
 				//选择维修项目确定框
 				scc(){
@@ -321,7 +386,23 @@
 					oneVm.fwcod=c;
 					this.adds=false;
 				},
+				sccc(){
+					let c= addsVmm.checked;
+					//每次添加前清空数组
+					oneVm.wxs2=[];
+					addsVmm.checked=[];
+					for(let i=0;i<c.length;i++){
+						//添加维修项目名到多选框,数组绑定
+						oneVm.wxs2.push(c[i].proname);
+					}
+					//主体数据
+					oneVm.proid=c;
+					this.addss=false;
+				},
 				del(index, rows){
+					rows.splice(index, 1);
+				},
+				dell(index, rows){
 					rows.splice(index, 1);
 				},
 				//新增接车 
@@ -383,14 +464,35 @@
 							return false;
 						}
 					});
+				},
+				/*选择后回填数据*/
+				check1(row) {
+					this.isShow1 = false;
+					this.fzxweixiuadd.yewutype=row.xname;
+					let ywid=this.ywid=row.xid;
+					sessionStorage.setItem("ywid",ywid);
+				},
+				querykc(num,size){
+					let _this=this;
+					_this.isShow1 = true;
+					jQuery.getJSON(`http://localhost:8080/api/fzx/selectFwlb/${num}/${size}`,(data)=>{
+						_this.bs = data;
+					});
+				},prev1(page) {
+					this.querykc(page, 3);
+				},
+				
+				next1(page) {
+					this.querykc(page, 3);
+				},
+				
+				current1(page) {
+					this.querykc(page, 3);
 				}
 			},
 			mounted(){
 				let _this=this;
 				_this.fzxweixiuadd.recordid = new Date().getTime();
-				jQuery.getJSON('http://localhost:8080/api/fzx/selectFwlb',(data)=>{
-						_this.bs = data;
-				});
 				jQuery.getJSON('http://localhost:8080/api/fzx/selectgw',(data)=>{
 						_this.cs = data;
 				});

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			#addsVmm{
+				padding: 5px 0 0 5px;
+			}
+			.el-dialog__body{
+				padding-top: 0 !important;
+				padding-left: 5px !important;
+			}
+			body{
+				padding-right: 0 !important;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="addsVmm">
+			<el-row>
+			  <el-col :span="18">
+				<template>
+					<el-table :data="minfoo" border>
+						<el-table-column v-for="(temp,index) in ms" :label="temp.name" align="center" :resizable="false">
+							<template slot-scope="scope">
+								<span v-if="temp.values!=0">{{scope.row[temp.values]}}</span>
+								 <span v-if="temp.values==0">
+									<template>
+										<el-checkbox-group v-model="checked">
+											<!-- 空格为了不让lable显示 -->
+											<el-checkbox :label="scope.row">&nbsp;</el-checkbox>
+										</el-checkbox-group>
+									  </template>
+								</span> 
+							  </template>
+						</el-table-column>
+					</el-table>
+				</template>
+			  </el-col>
+			</el-row>
+		</div>
+	</body>
+	<script>
+		var addsVmm=new Vue({
+			el:'#addsVmm',
+			data:{
+				minfoo:[],
+				ms:[{name:'选择',values:'0'},{name:'材料编码',values:'proid'},
+				{name:'材料名称',values:'proname'},{name:'单价',values:'proprice'}],
+				checked:[]
+			},
+			methods:{
+				
+			},
+			mounted(){
+				let _this=this;
+				jQuery.getJSON(`http://localhost:8080/api/fzx/selectcl`,(data)=>{
+					_this.minfoo=data;
+				});
+			}
+		});
+	</script>
+</html>

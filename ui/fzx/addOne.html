@@ -33,15 +33,26 @@
 						<span style="margin-left: 10px;"></span>
 						<el-button type="danger" plain size="small" @click="open">选择项目</el-button>
 					</el-form-item>
-					<el-form-item prop="bzid" label="维修班组">
+					
+					<el-form-item  label="维修材料：">
 						<template>
-							<el-select v-model="minfo.bzid" @change="selectGet">
-								<el-option-group v-for="(temp,index) in ar" :label=`${temp.bzname}${k}${temp.bzcost}元小时`>
-								  <el-option :lable="temp.bzcost" :value="temp.bzid"></el-option>
-								</el-option-group>
-							</el-select>
+							<el-select v-model="wxs2" multiple>
+								 <el-option v-for="item in wxs2" :label="item" :value="item">
+								</el-option> 
+							  </el-select>
+						</template>
+						<span style="margin-left: 10px;"></span>
+						<el-button type="danger" plain size="small" @click="openn">选择材料</el-button>
+					</el-form-item>
+					
+					<el-form-item prop="bzid" label="维修班组：">
+						<template>
+							<el-button type="text" @click="querykc(1,3)" style="width: 220px; margin-top: -15px; margin-left: -100px;">
+								<el-input v-model="minfo.bzid"></el-input>
+							</el-button>
 						</template>
 					</el-form-item>
+					
 					<el-form-item prop="guzhanginfo" label="故障描述：">
 						<el-input v-model="minfo.guzhanginfo" type="textarea"></el-input>
 					</el-form-item>
@@ -51,21 +62,47 @@
 				  </el-form>
 			  </el-col>
 			</el-row>
+			
+			<el-dialog title="维修班组" :visible.sync="isShow1" style="width: 50%;margin-left: 400px;">
+						<template>
+							<el-table :data="ar.list" border style="width: 100%">
+								<el-table-column fixed prop="bzid" label="班组id">
+								</el-table-column>
+								<el-table-column prop="bzname" label="班组名字">
+								</el-table-column>
+								<el-table-column prop="ticheng" label="工时费">
+								</el-table-column>
+								<el-table-column label="操作">
+									<template slot-scope="scope">
+										<el-button @click="check1(scope.row)" type="text" size="small">选择</el-button>
+									</template>
+								</el-table-column>
+							</el-table>
+						</template>
+						<div class="page">
+							<el-pagination layout="prev, pager, next" @current-change="current1" @prev-click="prev1" @next-click="next1" :total="this.ar.pages*10">
+							</el-pagination>
+						</div>
+					</el-dialog>
+			
 		</div>
 	</body>
 	<script>
 		var oneVm=new Vue({
 			el:'#oneVm',
 			data:{
+				isShow1:false,
 				k:'  ',
 				wxs1:[],
+				wxs2:[],
 				fwcod:[],
+				proid:[],
 				minfo: {
 					guzhanginfo:'',
 					guzhangyuanyin:'',
 					bzid:''
 					},
-				ar:{},
+				ar:[],
 				arts:{},
 				//表单基础验证
 				rules:{
@@ -79,24 +116,38 @@
 				jQuery.getJSON('http://localhost:8080/api/fzx/selectBz', function(data) {
 					_this.arts = data;
 				});
-				jQuery.getJSON('http://localhost:8080/api/fzx/selectBzz', function(data) {
-					_this.ar = data;
-				});
 			},
 			methods:{
 				open(){
 					orderVm.adds=true;
 				},
-				selectGet(val){
-			    	//传进来的val是select组件选中的value值，也就是一个fruitEnName
-			      	var obj = {}
-			      	obj = this.ar.find(function(item){
-			        return item.bzid === val
-			      })
-			      //obj 就是被选中的那个对象，也就能拿到label值了。
-			      var gsf=obj.bzcost+"元小时";
-			      sessionStorage.setItem("gsf",gsf);
-			    }
+				openn(){
+					orderVm.addss=true;
+				},
+				/*选择后回填数据*/
+				check1(row) {
+					this.isShow1 = false;
+					this.minfo.bzid=row.bzid;
+					var gsf=row.ticheng+"元小时";
+			      	sessionStorage.setItem("gsf",gsf);
+				},
+				querykc(num,size){
+					let _this=this;
+					_this.isShow1 = true;
+					jQuery.getJSON(`http://localhost:8080/api/fzx/selectBzz/${num}/${size}`,(data)=>{
+						_this.ar = data;
+					});
+				},prev1(page) {
+					this.querykc(page, 3);
+				},
+				
+				next1(page) {
+					this.querykc(page, 3);
+				},
+				
+				current1(page) {
+					this.querykc(page, 3);
+				}
 			}
 		});
 	</script>
