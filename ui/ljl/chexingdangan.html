@@ -28,8 +28,9 @@
 								</el-table-column>
 								<el-table-column prop="pzimu" label="首字母">
 								</el-table-column>
-								<el-table-column fixed="right" label="操作" width="100">
+								<el-table-column fixed="right" label="操作" width="150">
 									<template slot-scope="scope">
+										<el-button type="text" @click="selectbypid(pingpai[scope.$index].pid)" size="small">查询</el-button>
 										<el-button @click="pingpaiupdate(pingpai[scope.$index].pid)" type="text" size="small">编辑</el-button>
 										<el-button type="text" @click="del(pingpai[scope.$index].pid)" size="small">删除</el-button>
 									</template>
@@ -53,11 +54,13 @@
 							<el-table :data="chexing.list" style="width: 100%">
 								<el-table-column prop="danganid" label="车牌编号">
 								</el-table-column>
-								<el-table-column prop="carid" label="车型ID">
+								<el-table-column prop="pname" label="品牌ID">
+								</el-table-column>
+								<el-table-column prop="carid" label="车型编号">
 								</el-table-column>
 								<el-table-column prop="carname" label="车型名称">
 								</el-table-column>
-								<el-table-column prop="fadongjiid" label="发动机品牌">
+								<el-table-column prop="fadongjiname" label="发动机品牌">
 								</el-table-column>
 								<el-table-column prop="cankaoprice" label="参考价格">
 								</el-table-column>
@@ -157,6 +160,13 @@
 									</el-form-item>
 								</el-button>
 							</el-col>
+							<el-col :span="10" style="margin-left: 40px;">
+								<el-button type="text">
+									<el-form-item label="车型编号" prop="carid">
+										<el-input v-model="cardangan.carid" readonly></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
 						</el-row>
 						<el-row>
 							<el-col :span="10">
@@ -193,8 +203,8 @@
 						<el-row>
 							<el-col :span="10">
 								<el-button type="text" @click="querychepaiTypeList(1,3)">
-									<el-form-item label="车牌品牌" prop="carid">
-										<el-input v-model="cardangan.carid"></el-input>
+									<el-form-item label="车牌品牌" prop="pname">
+										<el-input v-model="cardangan.pname"></el-input>
 									</el-form-item>
 								</el-button>
 
@@ -208,8 +218,8 @@
 							</el-col>
 							<el-col :span="10" style="margin-left: 40px;">
 								<el-button type="text" @click="queryfadongjiTypeList(1,3)">
-									<el-form-item label="发动机" prop="fadongjiid">
-										<el-input v-model="cardangan.fadongjiid"></el-input>
+									<el-form-item label="发动机" prop="fadongjiname">
+										<el-input v-model="cardangan.fadongjiname"></el-input>
 									</el-form-item>
 								</el-button>
 								<!--<el-form-item prop="xid" label="发动机" style="margin-left: 100px;">
@@ -294,6 +304,15 @@
 									</el-form-item>
 								</el-button>
 							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="10">
+								<el-button type="text">
+									<el-form-item label="车型编号" prop="carid">
+										<el-input v-model="cardangan.carid"></el-input>
+									</el-form-item>
+								</el-button>
+							</el-col>
 							<el-col :span="10" style="margin-left: 40px;">
 								<el-button type="text">
 									<el-form-item label="参考价格" prop="cankaoprice">
@@ -337,15 +356,15 @@
 						<el-row>
 							<el-col :span="10">
 								<el-button type="text" @click="querychepaiTypeList(1,3)">
-									<el-form-item label="车牌品牌" prop="carid">
-										<el-input v-model="cardangan.carid"></el-input>
+									<el-form-item label="车牌品牌" prop="pname">
+										<el-input v-model="cardangan.pname"></el-input>
 									</el-form-item>
 								</el-button>
 							</el-col>
 							<el-col :span="10" style="margin-left: 40px;">
 								<el-button type="text" @click="queryfadongjiTypeList(1,3)">
-									<el-form-item label="发动机" prop="fadongjiid">
-										<el-input v-model="cardangan.fadongjiid"></el-input>
+									<el-form-item label="发动机" prop="fadongjiname">
+										<el-input v-model="cardangan.fadongjiname"></el-input>
 									</el-form-item>
 								</el-button>
 							</el-col>
@@ -372,16 +391,7 @@
 				},
 				pinpai: false,
 				fadongji: false,
-				cardangan: {
-					danganid: 0,
-					carid: '',
-					carname: '',
-					fadongjiid: '',
-					cankaoprice: '',
-					carniankuan: '',
-					gonglv: 0,
-					jinkouguochan: ''
-				},
+				cardangan: {},
 				addpingpaai: [],
 				addfadongji: [],
 				pname: '',
@@ -394,6 +404,30 @@
 				pingpaixiugai: false
 			},
 			methods: {
+				selectbypid(pid){
+					//alert(pid)
+					let _this = this;
+					$.getJSON(`http://localhost:8080/api/ljl/dangan/chexing/danganchaxun/bypid/${pid}/1/5`,
+						function(data) {
+							_this.chexing = data;
+						}
+					);
+				},
+				getId() {
+					var myDate = new Date();
+					var year = myDate.getFullYear(); //获取当前年
+					var month = myDate.getMonth() + 1; //获取当前月
+					var date = myDate.getDate(); //获取当前日
+					var xingqi = myDate.getDay();
+					var shi = myDate.getHours();
+					var fen = myDate.getMinutes();
+					var miao = myDate.getSeconds(); // 获取秒
+					this.cardangan.carid = year + '' + this.getNow(month) + "" + this.getNow(date) + "" + xingqi + "" + shi + "" + fen + "" + miao;
+					return this.cardangan.carid;
+				},
+				getNow(s){
+					return s < 10 ? '0' + s:s;
+				},
 				prev2(cpage) {
 					this.querychepaiTypeList(cpage, 3);
 				},
@@ -407,8 +441,9 @@
 				},
 				/*选择发动机后回填数据*/
 				check2(row) {
+					this.cardangan.pname = row.pname;
 					this.pinpai = false;
-					this.cardangan.carid = row.pid;
+					this.cardangan.pid = row.pid;
 				},
 				querychepaiTypeList(n, s) {
 					let _this = this;
@@ -418,10 +453,16 @@
 							_this.addpingpaai = rs.list;
 						});
 				},
-
 				check(row) {
+					this.cardangan.fadongjiname = row.fadongjiname;
 					this.fadongji = false;
 					this.cardangan.fadongjiid = row.fadongjiid;
+					/*this.formLabelAlign.ghname = row.ghname;
+					this.isShow3 = false;
+					this.formLabelAlign.ghid=row.ghid;
+					this.teams.ghname=row.ghname;
+					this.teams.ghid=row.ghid;
+					*/
 				},
 				queryfadongjiTypeList(n, s) {
 					let _this = this;
@@ -510,10 +551,11 @@
 					let _this = this;
 					_this.danganxiugai = true;
 					//alert(danganid)
-					_this.selecttypeid();
+					//_this.selecttypeid();
 					$.getJSON(
 						`http://localhost:8080/api/ljl/dangan/All/Dangan/Byid/${danganid}`,
 						function(data) {
+							//alert(JSON.stringify(data))
 							_this.cardangan = data;
 						}
 					);
@@ -521,11 +563,11 @@
 				selecttypeid() {
 					let _this = this;
 					$.getJSON(
-						`http://localhost:8080/api/ljl/dangan/selectdangan/fadongji`,
+						`http://localhost:8080/api/ljl/dangan/selectdangan/fadongji/1/5`,
 						function(data) {
 							_this.addfadongji = data.list;
 							$.getJSON(
-								`http://localhost:8080/api/ljl/dangan/selectdangan/danganpingpai`,
+								`http://localhost:8080/api/ljl/dangan/selectdangan/danganpingpai/1/5`,
 								function(rs) {
 									_this.addpingpaai = rs.list;
 								}
@@ -536,6 +578,7 @@
 				danganadd() {
 					let _this = this;
 					_this.danganxinzeng = true;
+					_this.getId();
 					_this.selecttypeid();
 					/*$.getJSON(
 						`http://localhost:8080/api/ljl/dangan/danganadd/IdMax`,
@@ -567,16 +610,7 @@
 					});
 				},
 				qingkongchexing() {
-					this.cardangan = {
-						danganid: 0,
-						carid: '',
-						carname: '',
-						fadongjiid: '',
-						cankaoprice: '',
-						carniankuan: '',
-						gonglv: 0,
-						jinkouguochan: ''
-					}
+					this.cardangan = {}
 				},
 				qingkongping() {
 					this.ping = {
@@ -631,9 +665,7 @@
 					);*/
 				},
 				del(pid) {
-					//alert(pid)
 					let _this = this;
-
 					this.$confirm('是否移除该品牌并移除该品牌所有车辆?', '系统提示', {
 						confirmButtonText: '确定',
 						cancelButtonText: '取消',
