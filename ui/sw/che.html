@@ -167,14 +167,14 @@
 						</el-form-item>
 						<el-row>
 							<el-col :span="10">
-								<el-button type="text">
+								<el-button type="text" @click="pingpai(1,3)">
 									<el-form-item label="车辆品牌" prop="carpp">
 										<el-input v-model="car.carpp"></el-input>
 									</el-form-item>
 								</el-button>
 							</el-col>
 							<el-col :span="10" style="margin-left: 40px;">
-								<el-button type="text">
+								<el-button type="text" @click="dangan(1,3)">
 									<el-form-item label="车辆型号" prop="carxinghao">
 										<el-input v-model="car.carxinghao"></el-input>
 									</el-form-item>
@@ -219,6 +219,44 @@
 							<el-button @click="resetForm('ruleForm')">重置</el-button>
 						</el-form-item>
 					</el-form>
+				</el-dialog>
+				<el-dialog title="车辆车型" :visible.sync="isShow7" style="width: 50%;margin-left: 500px;">
+					<template>
+						<el-table :data="dangans.list" border style="width: 100%">
+							<el-table-column fixed prop="carid" label="车型id">
+							</el-table-column>
+							<el-table-column prop="carname" label="车型名称">
+							</el-table-column>
+							<el-table-column label="操作">
+								<template slot-scope="scope">
+									<el-button @click="check3(scope.row.carname)" type="text" size="small">选择</el-button>
+								</template>
+							</el-table-column>
+						</el-table>
+					</template>
+					<div class="page">
+						<el-pagination layout="prev, pager, next" @current-change="current5" @prev-click="prev5" @next-click="next5" :total="this.dangans.pages*10">
+						</el-pagination>
+					</div>
+				</el-dialog>
+				<el-dialog title="车辆品牌" :visible.sync="isShow6" style="width: 50%;margin-left: 500px;">
+					<template>
+						<el-table :data="pingpais.list" border style="width: 100%">
+							<el-table-column fixed prop="pid" label="品牌id">
+							</el-table-column>
+							<el-table-column prop="pname" label="品牌名称">
+							</el-table-column>
+							<el-table-column label="操作">
+								<template slot-scope="scope">
+									<el-button @click="check2(scope.row.pname)" type="text" size="small">选择</el-button>
+								</template>
+							</el-table-column>
+						</el-table>
+					</template>
+					<div class="page">
+						<el-pagination layout="prev, pager, next" @current-change="current4" @prev-click="prev4" @next-click="next4" :total="this.pingpais.pages*10">
+						</el-pagination>
+					</div>
 				</el-dialog>
 				<el-dialog title="发动机id" :visible.sync="isShow2" style="width: 50%;margin-left: 500px;">
 					<template>
@@ -344,6 +382,8 @@
 			el: '#cheVm',
 			data: {
 				activeName: 'first',
+				dangans:{},
+				pingpais: {},
 				fadongjis: {},
 				car: {
 					carpp: "",
@@ -385,6 +425,8 @@
 				isShow3: false,
 				isShow4: false,
 				isShow5: false,
+				isShow6: false,
+				isShow7: false,
 				ruleForm: {
 					name: '',
 					region: '',
@@ -468,9 +510,61 @@
 				}
 			},
 			methods: {
+					/*选择车型后回填数据*/
+				check3(name) {
+					this.car.carxinghao = name;
+					this.isShow7 = false;
+				},
+				/*上一页车型查询*/
+				prev5(cpage) {
+					this.dangan(cpage, 3);
+				},
+				/*下一页车型查询*/
+				next5(cpage) {
+					this.dangan(cpage, 3);
+				},
+				/*当前页车型查询*/
+				current5(cpage) {
+					this.dangan(cpage, 3);
+				},
+				/*查询所有车型*/
+				dangan(pageNum, pageSize) {
+					let _this = this; //非常重要
+					_this.isShow7 = true;
+					$.getJSON(`http://127.0.0.1:8080/api/dangan/${pageNum}/${pageSize}`,
+						function(res) {
+							_this.dangans = res;
+						})
+				},
+				/*选择车牌后回填数据*/
+				check2(name) {
+					this.car.carpp = name;
+					this.isShow6 = false;
+				},
+				/*上一页车牌查询*/
+				prev4(cpage) {
+					this.pingpai(cpage, 3);
+				},
+				/*下一页车牌查询*/
+				next4(cpage) {
+					this.pingpai(cpage, 3);
+				},
+				/*当前页车牌查询*/
+				current4(cpage) {
+					this.pingpai(cpage, 3);
+				},
+				/*查询所有车牌*/
+				pingpai(pageNum, pageSize) {
+					let _this = this; //非常重要
+					_this.isShow6 = true;
+					$.getJSON(`http://127.0.0.1:8080/api/pingpai/${pageNum}/${pageSize}`,
+						function(res) {
+							_this.pingpais = res;
+						})
+				},
 				/*上一页消费记录查询*/
 				prev3(cpage) {
-					this.queryXF(cpage, this.xf.list[0].kid);
+					this.queryXF(cpage, 3, this.xf.list[0].kid);
 				},
 				/*下一页消费记录查询*/
 				next3(cpage) {
@@ -490,7 +584,7 @@
 				},
 				/*上一页车辆查询*/
 				prev2(cpage) {
-					this.queryCl(cpage, this.cl.list[0].kid);
+					this.queryCl(cpage, 3,this.cl.list[0].kid);
 				},
 				/*下一页车辆查询*/
 				next2(cpage) {
