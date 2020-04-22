@@ -302,9 +302,11 @@
 					let _this = this;
 					this.alipay = true;
 					var date = new Date();
-					recordno=recordno+date.getFullYear()+(date.getMonth()+1)+date.getDate()+date.getHours()+date.getMinutes()+date.getSeconds()+"";
-					_this.getPayResult(recordno);
-					$.getJSON(`http://127.0.0.1:8080/zkx/api/pay/getImg/${recordno}/${jsmoney}`, function(img) {
+					recordno2=recordno+date.getFullYear()+(date.getMonth()+1)+date.getDate()+date.getHours()+date.getMinutes()+date.getSeconds()+"";
+					alert(recordno2);
+					_this.getPayResult(recordno2);
+					
+					$.getJSON(`http://127.0.0.1:8080/zkx/api/pay/getImg/${recordno2}/${jsmoney}`, function(img) {
 						_this.url = _this.url + img;
 						_this.loading=false;
 					})
@@ -312,6 +314,9 @@
 				//根据单号查询订单支付状态
 				getPayResult(recordno) {
 					let _this = this;
+					if(!this.alipay){
+						return;
+					}
 					$.getJSON(`http://127.0.0.1:8080/zkx/api/pay/payRes/${recordno}`, function(res) {
 						if(res != "SUCCESS") {
 							_this.getPayResult(recordno);
