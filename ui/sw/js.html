@@ -305,7 +305,6 @@
 					recordno2=recordno+date.getFullYear()+(date.getMonth()+1)+date.getDate()+date.getHours()+date.getMinutes()+date.getSeconds()+"";
 					alert(recordno2);
 					_this.getPayResult(recordno2);
-					
 					$.getJSON(`http://127.0.0.1:8080/zkx/api/pay/getImg/${recordno2}/${jsmoney}`, function(img) {
 						_this.url = _this.url + img;
 						_this.loading=false;
@@ -315,10 +314,12 @@
 				getPayResult(recordno) {
 					let _this = this;
 					if(!this.alipay){
+						//二维码对话框关闭后就不继续发送查询请求
 						return;
 					}
 					$.getJSON(`http://127.0.0.1:8080/zkx/api/pay/payRes/${recordno}`, function(res) {
 						if(res != "SUCCESS") {
+							//如果支付一直不成功就递归自己 一直查
 							_this.getPayResult(recordno);
 						} else {
 							_this.pay();
