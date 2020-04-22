@@ -136,7 +136,7 @@
 			</el-dialog>
 			<!--支付宝二维码弹窗-->
 			<el-dialog title="订单支付" :visible.sync="alipay">
-				<div class="demo-image__preview">
+				<div class="demo-image__preview" v-loading="loading">
 					<el-image style="width: 200px; height: 200px" :src="url">
 					</el-image>
 				</div>
@@ -260,6 +260,7 @@
 		var JsVm = new Vue({
 			el: '#JsVm',
 			data: {
+				loading:true,
 				alipay: false,
 				url: 'http://127.0.0.1:8080/',
 				radio: "",
@@ -303,6 +304,7 @@
 					_this.getPayResult(recordno);
 					$.getJSON(`http://127.0.0.1:8080/zkx/api/pay/getImg/${recordno}/${jsmoney}`, function(img) {
 						_this.url = _this.url + img;
+						_this.loading=false;
 					})
 				},
 				//根据单号查询订单支付状态
