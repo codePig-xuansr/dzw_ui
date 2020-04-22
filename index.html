@@ -92,6 +92,9 @@
 							<el-dropdown>
 								<el-avatar src="images/background3.jpg"></el-avatar>
 								<el-dropdown-menu slot="dropdown">
+									<!--<el-dropdown-item>
+										<a href="javascript:;" @click="getPayImg">支付宝支付测试</a>
+									</el-dropdown-item>-->
 									<el-dropdown-item>
 										<a href="javascript:;" @click="dialogFormVisible = true">修改密码</a>
 									</el-dropdown-item>
@@ -116,6 +119,14 @@
 							<el-button type="primary" @click="updatepwd">保 存</el-button>
 						</div>
 					</el-dialog>
+					<el-dialog title="订单支付" :visible.sync="alipay">
+						<div class="demo-image__preview">
+						  <el-image 
+						    style="width: 200px; height: 200px"
+						    :src="url">
+						  </el-image>
+						</div>
+					</el-dialog>
 
 					<!--主体内容-->
 					<div id="cnt"></div>
@@ -130,6 +141,7 @@
 			el: '#indexVm',
 			data: {
 				updatePwd: false,
+				alipay:false,
 				dialogFormVisible: false,
 				cols: false,
 				sz: [],
@@ -146,10 +158,32 @@
 					oldpwd: '',
 					newpwd: '',
 					checkpwd: ''
-				}
-
+				},
+				 url: 'http://127.0.0.1:8080/'
 			},
 			methods: {
+				/*getPayImg(){
+					let _this = this;
+					this.alipay=true;
+					_this.getPayResult();
+					$.getJSON(`http://127.0.0.1:8080/zkx/api/pay/getImg/20200422/100`, function(img) {
+						_this.url =_this.url+img;
+					})
+				},
+				getPayResult(){
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/zkx/api/pay/payRes/20200422`, function(res) {
+						if(res!="SUCCESS"){
+							_this.getPayResult();
+						}else{
+							_this.$message({
+								message: '订单支付成功',
+								type: 'success'
+							});
+							_this.alipay=false;
+						}
+					})
+				},*/
 				To(fcode) {
 					$("#cnt").load(window.menuMapping[fcode]);
 				},
