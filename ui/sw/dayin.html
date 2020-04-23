@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../../css/index.css" />
+		<script type="text/javascript" src="../../js/vue.js"></script>
+		<script type="text/javascript" src="../../js/jquery-1.12.4.js"></script>
+		<script type="text/javascript" src="../../js/jq_ajax_config.js"></script>
+	</head>
+
+	<body>
+		<div id="dayinApp">
+			<template>
+				<el-dialog title="提示" :visible.sync="isShow1" width="35%">
+					<h4 class="modal-title">费用明细</h4>
+					<h5 class="font-bold">销售单号:{{pageInfo.list[0].recordid}}</h5>
+					<h5 class="font-bold">客户名：&nbsp;&nbsp;{{pageInfo.list[0].kname}}<span>&nbsp;&nbsp;客户级别：{{viptype}} &nbsp;&nbsp;客户折扣：{{vipdiscount}}</span></h5>
+					<p class="font-bold">车牌号码&nbsp;&nbsp;&nbsp;&nbsp;{{pageInfo.list[0].carno}}</p>
+					<h4>总费用：</h4>
+					<p>
+						<el-table :data="prices">
+							<el-table-column label="该小组维修工时费" prop="bzcost">
+							</el-table-column>
+							<el-table-column label="当前消耗工时" prop="bztime">
+							</el-table-column>
+							<el-table-column label="人工费" prop="rgfei">
+							</el-table-column>
+							<el-table-column label="救援费" prop="jiuyuanfy">
+							</el-table-column>
+							<el-table-column label="商品总消费" prop="spfei">
+							</el-table-column>
+							<el-table-column label="维修项目总消费" prop="xmfei">
+							</el-table-column>
+							<el-table-column label="共消费" prop="sum">
+							</el-table-column>
+						</el-table>
+					</p>
+					<p style="color: #999999; size: 5px;">计算方式：(人工费(小组工时费×共消耗工时)+维修业务费用+救援费+商品费用)<span>×会员折扣</span></p>
+					<h4>项目费用：</h4>
+					<p>
+						<el-table :data="fw">
+							<el-table-column label="销售单号" prop="recordid">
+							</el-table-column>
+							<el-table-column label="项目编号" prop="fwcod">
+							</el-table-column>
+							<el-table-column label="项目名称" prop="fwname">
+							</el-table-column>
+							<el-table-column label="项目价格" prop="fwprice">
+							</el-table-column>
+						</el-table>
+					</p>
+					<h4>商品费用：</h4>
+					<p>
+						<el-table :data="shoppings">
+							<el-table-column label="商品编号" prop="proid">
+							</el-table-column>
+							<el-table-column label="商品名字" prop="proname">
+							</el-table-column>
+							<el-table-column label="商品价格" prop="proprice">
+							</el-table-column>
+							<el-table-column label="商品品牌" prop="propp">
+							</el-table-column>
+							<el-table-column label="购买数量" prop="num">
+							</el-table-column>
+						</el-table>
+					</p>
+				</el-dialog>
+			</template>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../js/index.js"></script>
+	<script>
+		var danyinApp = new Vue({
+			el: '#dayinApp',
+			data: {
+				isShow1: true,
+				pageInfo: {},
+				fw: [],
+				prices: [],
+				shoppings: [],
+				viptype: "不是会员",
+				vipdiscount: "0",
+			},
+			methods: {
+				query(recordid) {
+					let _this = this;
+					$.getJSON(`http://127.0.0.1:8080/api/product/${recordid}`,
+						function(res) {
+							_this.shoppings = res;
+							/*商品总价*/
+							let sumshopping = 0;
+							_this.shoppings.forEach((item, i) => {
+								sumshopping += item.proprice * item.num;
+							})
+							$.getJSON(`http://127.0.0.1:8080/api/fuwu/${recordid}`,
+								function(res) {
+									_this.fw = res;
+									/*维修项目总价*/
+									let sumfw = 0;
+									_this.fw.forEach((item, i) => {
+										sumfw += item.fwprice;
+									})
+									/*人工费*/
+									let sumren = _this.pageInfo.list[0].bzcost * _this.pageInfo.list[0].bztime;
+									/*共消费*/
+									let sum = sumfw + sumren + _this.pageInfo.list[0].jiuyuanfy + _this.spfei;
+									/*回填数据*/
+									let price = {};
+									price["bztime"] = _this.pageInfo.list[0].bztime;
+									price["bzcost"] = _this.pageInfo.list[0].bzcost;
+									price["jiuyuanfy"] = _this.pageInfo.list[0].jiuyuanfy;
+									price["rgfei"] = sumren;
+									price["spfei"] = sumshopping;
+									price["xmfei"] = sumfw;
+									if(_this.pageInfo.list[0].jsstatus == 0) {
+										price["sum"] = sum;
+									}
+									if(_this.pageInfo.list[0].jsstatus == 1) {
+										price["sum"] = _this.pageInfo.list[0].jsmoney;
+									}
+									_this.prices.push(price);
+									if(_this.prices.length > 0) {
+										setTimeout(function() {
+											window.print();
+										}, 2000);
+									}
+								})
+						});
+				}
+
+			},
+			mounted() {
+				let recordid = sessionStorage.getItem('id');
+				let _this = this;
+				$.getJSON(`http://127.0.0.1:8080/api/weixiu/${recordid}`,
+					function(res) {
+						_this.pageInfo = res;
+						$.getJSON(`http://127.0.0.1:8080/api/vip/kh/${res.list[0].kid}`,
+							function(res) {
+								_this.vipdiscount = res.vipdiscount;
+								if(res.vipdiscount >= 0) {
+									_this.viptype = "普通会员";
+								}
+								_this.query(recordid);
+							});
+					})
+			}
+		});
+	</script>
+
+</html>

@@ -401,12 +401,12 @@
 									type: 'success'
 								});
 								_this.alipay = false;
+								_this.isShow4 = false;
 								_this.jsrecord = {
 									recordid: "",
 									jstype: "",
 									jsmoney: ""
 								}
-								_this.isShow4 = false;
 								/*修改维修表结算状态*/
 								$.ajax(`http://127.0.0.1:8080/api/weixiu`, {
 									type: "put",
@@ -415,6 +415,10 @@
 									dataType: "json",
 									success(res) {
 										if(res.code == "200") {
+											if(confirm("需要打印订单吗？")) {
+												sessionStorage.setItem('id', _this.weixiu.recordid);
+												location.href = "/dzw_ui/ui/sw/dayin.html";
+											}
 											_this.page(1, 3, 0);
 											_this.weixiu = {
 												recordid: "",
@@ -525,7 +529,6 @@
 										_this.rgfei = sumren;
 										/*共消费*/
 										let sum = sumfw + sumren + row.jiuyuanfy + _this.spfei;
-										console.info(sum);
 										/*回填数据*/
 										if(row.jsstatus == 0) {
 											row.jsmoney = sum;
