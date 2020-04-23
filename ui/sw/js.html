@@ -135,10 +135,19 @@
 				</el-form>
 			</el-dialog>
 			<!--支付宝二维码弹窗-->
-			<el-dialog title="订单支付" :visible.sync="alipay">
+			<el-dialog width="250px" title="订单支付" :visible.sync="alipay">
 				<div class="demo-image__preview" v-loading="loading">
 					<el-image style="width: 200px; height: 200px" :src="url">
-					</el-image>
+					</el-image><br />
+					<div class="" style="display: inline-block;height: 48px;">
+						<el-image src="/dzw_ui/images/zhi2.png">
+						</el-image>
+					</div>
+					<div id="" style="display: inline-block;height: 48px;">
+						<p style="font-size: 12px;line-height: 50px;">打开手机支付宝</p>
+						<p style="font-size: 12px;">扫一扫进行支付</p>
+					</div>
+					
 				</div>
 			</el-dialog>
 			<template>
@@ -303,7 +312,7 @@
 					this.alipay = true;
 					var date = new Date();
 					recordno2=recordno+date.getFullYear()+(date.getMonth()+1)+date.getDate()+date.getHours()+date.getMinutes()+date.getSeconds()+"";
-					alert(recordno2);
+					//alert(recordno2);
 					_this.getPayResult(recordno2);
 					$.getJSON(`http://127.0.0.1:8080/zkx/api/pay/getImg/${recordno2}/${jsmoney}`, function(img) {
 						_this.url = _this.url + img;
