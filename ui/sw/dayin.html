@@ -105,7 +105,7 @@
 									/*人工费*/
 									let sumren = _this.pageInfo.list[0].bzcost * _this.pageInfo.list[0].bztime;
 									/*共消费*/
-									let sum = sumfw + sumren + _this.pageInfo.list[0].jiuyuanfy + _this.spfei;
+									let sum = sumfw + sumren + _this.pageInfo.list[0].jiuyuanfy + sumshopping;
 									/*回填数据*/
 									let price = {};
 									price["bztime"] = _this.pageInfo.list[0].bztime;
@@ -125,6 +125,9 @@
 										setTimeout(function() {
 											window.print();
 										}, 2000);
+										setTimeout(function() {
+											location.href="/dzw_ui/index.html";
+										}, 3000);
 									}
 								})
 						});
