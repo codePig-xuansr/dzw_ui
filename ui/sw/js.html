@@ -186,11 +186,12 @@
 								<el-button type="success" icon="el-icon-check" @click="js(props.row.recordid)" circle v-if="props.row.jsstatus==0">结算</el-button>
 							</el-form>
 							<el-button type="text" @click="isShow1 = true">费用明细</el-button>
-							<el-dialog title="提示" :visible.sync="isShow1" width="30%" :before-close="handleClose">
+							<el-dialog title="提示" :visible.sync="isShow1" width="35%" :before-close="handleClose">
 								<h4 class="modal-title">费用明细</h4>
 								<h5 class="font-bold">销售单号:{{props.row.recordid}}</h5>
 								<h5 class="font-bold">客户名：{{props.row.kname}}&nbsp;&nbsp;<span v-if="props.row.jsstatus==1">客户级别：{{viptype}} 客户折扣：{{vipdiscount}}</span></h5>
 								<p class="font-bold">车牌号码&nbsp;&nbsp;&nbsp;&nbsp;{{props.row.carno}}</p>
+								<h4>总费用：</h4>
 								<p>
 									<el-table :data="prices" style="">
 										<el-table-column label="该小组维修工时费" prop="bzcost">
@@ -200,6 +201,8 @@
 										<el-table-column label="人工费" prop="rgfei">
 										</el-table-column>
 										<el-table-column label="救援费" prop="jiuyuanfy">
+										</el-table-column>
+										<el-table-column label="商品总消费" prop="spfei">
 										</el-table-column>
 										<el-table-column label="维修项目总消费" prop="xmfei">
 										</el-table-column>
@@ -213,7 +216,8 @@
 								<p class="font-bold">人工费:&nbsp;&nbsp;&nbsp;{{rgfei}}</p>
 								<p class="font-bold">维修项目总消费:&nbsp;&nbsp;&nbsp;{{xmfei}}</p>
 								<p class="font-bold">共消费&nbsp;&nbsp;&nbsp;{{props.row.jsmoney}}</p>-->
-								<p style="color: #999999; size: 5px;">计算方式：(人工费(小组工时费×共消耗工时)+维修业务费用+救援费)<span v-if="props.row.jsstatus==1">×会员折扣</span></p>
+								<p style="color: #999999; size: 5px;">计算方式：(人工费(小组工时费×共消耗工时)+维修业务费用+救援费+商品费用)<span v-if="props.row.jsstatus==1">×会员折扣</span></p>
+								<h4>项目费用：</h4>
 								<p>
 									<el-table :data="fw" style="">
 										<el-table-column label="销售单号" prop="recordid">
@@ -223,6 +227,21 @@
 										<el-table-column label="项目名称" prop="fwname">
 										</el-table-column>
 										<el-table-column label="项目价格" prop="fwprice">
+										</el-table-column>
+									</el-table>
+								</p>
+								<h4>商品费用：</h4>
+								<p>
+									<el-table :data="shoppings" style="">
+										<el-table-column label="商品编号" prop="proid">
+										</el-table-column>
+										<el-table-column label="商品名字" prop="proname">
+										</el-table-column>
+										<el-table-column label="商品价格" prop="proprice">
+										</el-table-column>
+										<el-table-column label="商品品牌" prop="propp">
+										</el-table-column>
+										<el-table-column label="购买数量" prop="num">
 										</el-table-column>
 									</el-table>
 								</p>
@@ -260,7 +279,7 @@
 		var JsVm = new Vue({
 			el: '#JsVm',
 			data: {
-				loading:true,
+				loading: true,
 				alipay: false,
 				url: 'http://127.0.0.1:8080/',
 				radio: "",
@@ -287,7 +306,9 @@
 				jsmoney: "",
 				rgfei: "",
 				xmfei: "",
+				spfei: "",
 				fw: [],
+				shoppings: [],
 				viptype: "不是会员",
 				vipdiscount: "0",
 				recordid: "",
@@ -302,18 +323,18 @@
 					let _this = this;
 					this.alipay = true;
 					var date = new Date();
-					recordno2=recordno+date.getFullYear()+(date.getMonth()+1)+date.getDate()+date.getHours()+date.getMinutes()+date.getSeconds()+"";
+					recordno2 = recordno + date.getFullYear() + (date.getMonth() + 1) + date.getDate() + date.getHours() + date.getMinutes() + date.getSeconds() + "";
 					alert(recordno2);
 					_this.getPayResult(recordno2);
 					$.getJSON(`http://127.0.0.1:8080/zkx/api/pay/getImg/${recordno2}/${jsmoney}`, function(img) {
 						_this.url = _this.url + img;
-						_this.loading=false;
+						_this.loading = false;
 					})
 				},
 				//根据单号查询订单支付状态
 				getPayResult(recordno) {
 					let _this = this;
-					if(!this.alipay){
+					if(!this.alipay) {
 						//二维码对话框关闭后就不继续发送查询请求
 						return;
 					}
@@ -472,6 +493,17 @@
 									}
 								});
 						}
+
+						$.getJSON(`http://127.0.0.1:8080/api/product/${row.recordid}`,
+							function(res) {
+								_this.shoppings = res;
+								/*商品总价*/
+								let sumshopping = 0;
+								_this.shoppings.forEach((item, i) => {
+									sumshopping += item.proprice * item.num;
+								})
+								_this.spfei = sumshopping;
+							});
 						$.getJSON(`http://127.0.0.1:8080/api/fuwu/${row.recordid}`,
 							function(res) {
 								_this.fw = res;
@@ -485,7 +517,7 @@
 								let sumren = row.bzcost * row.bztime;
 								_this.rgfei = sumren;
 								/*共消费*/
-								let sum = sumfw + sumren + row.jiuyuanfy;
+								let sum = sumfw + sumren + row.jiuyuanfy+_this.spfei;
 								/*回填数据*/
 								if(row.jsstatus == 0) {
 									row.jsmoney = sum;
@@ -496,6 +528,7 @@
 								price["bzcost"] = row.bzcost;
 								price["jiuyuanfy"] = row.jiuyuanfy;
 								price["rgfei"] = sumren;
+								price["spfei"] = _this.spfei;
 								price["xmfei"] = sumfw;
 								if(row.jsstatus == 0) {
 									price["sum"] = sum;
