@@ -180,6 +180,93 @@
 					<el-button type="primary" @click="comjg">确 定</el-button>
 				</span>
 			</el-dialog>
+			
+			
+			
+			
+			<!--<el-dialog title="返工检验" :visible.sync="csss">
+				<div>
+					<el-row>
+					  <el-col :span="24">
+						<template>
+							<el-radio-group v-model="hg"  @change="tabs">
+							  <el-radio label="1" border >客户要求</el-radio>
+							  <el-radio label="2" border >技工原因</el-radio>
+							</el-radio-group>
+							<hr>
+							  <el-tabs v-model="hg">
+								<el-tab-pane name="1">
+									<el-form :model="jgrecord" inline="true" :rules="ruls4" ref="jgrecord">
+									  <el-form-item label="预计完工">
+										<a style="color: hotpink;font-size: 16px;">{{edate}}</a>
+									  </el-form-item>
+									  <el-form-item label="实际完工">
+										<a style="color:chocolate;font-size: 16px;">{{today}}</a>
+									</el-form-item>
+									<br>
+									<el-form-item label="质检员：" prop="checkperson">
+										<el-input v-model="jgrecord.checkperson"></el-input>
+									</el-form-item><br>
+									<el-form-item  label="维修项目：">
+										<template>
+											<el-select v-model="wxs1" multiple>
+												 <el-option v-for="item in wxs1" :label="item" :value="item">
+												</el-option> 
+											  </el-select>
+										</template>
+										<span style="margin-left: 10px;"></span>
+										<el-button type="danger" plain size="small" @click="open">选择项目</el-button>
+									</el-form-item>
+									
+									<el-form-item  label="维修材料：">
+										<template>
+											<el-select v-model="wxs2" multiple>
+												 <el-option v-for="item in wxs2" :label="item" :value="item">
+												</el-option> 
+											  </el-select>
+										</template>
+										<span style="margin-left: 10px;"></span>
+										<el-button type="danger" plain size="small" @click="openn">选择材料</el-button>
+									</el-form-item>
+									</el-form>
+								</el-tab-pane>
+								<el-tab-pane name="2">
+									<el-form :model="jgrecord" inline="true">
+										<el-form-item label="已返工：">
+											<a style="color: red;">{{fgct}}</a><span style="margin-left: 5px;">次</span>
+										</el-form-item>
+										<br>
+										<div>
+									  <el-form-item label="返工原因：">
+										<el-input v-model="jgrecord.yuanyin" style="width: 200px;" type="textarea"></el-input>
+									  </el-form-item>
+									  <br>
+									  <el-form-item label="责任人：">
+										<el-input v-model="jgrecord.checkperson"></el-input>
+									  </el-form-item>
+									  <br>
+									  <el-form-item label="处罚金额：">
+										<el-input v-model="jgrecord.chufa" oninput="this.value=this.value.replace(/[^\d]/g,'')" style="width: 200px;"></el-input>
+									  </el-form-item>
+									</div>
+									</el-form>
+								</el-tab-pane>
+							  </el-tabs>
+						</template>
+						
+					  </el-col>
+					</el-row>
+				</div>
+				<span slot="footer" class="dialog-footer">
+					<el-button @click="csss = false">取 消</el-button>
+					<el-button type="primary" @click="comjg">确 定</el-button>
+				</span>
+			</el-dialog>-->
+			
+			
+			
+			
+			
 		</div>
 	</body>
 	<script>
@@ -187,6 +274,7 @@
 			el:'#comVm',
 			data:{
 				cs:false,
+				//csss:false,
 				fgct:'',
 				cominfo:{
 					recorddate:null,
@@ -218,9 +306,17 @@
 					yuanyin:[{required: true, message:'请填写误工原因', trigger: 'blur'}],
 					chufa:[{required: true, message:'请填写处罚金额', trigger: 'blur'}],
 					checkperson:[{required: true, message:'请填写质检人员姓名', trigger: 'blur'}]
-				}
+				},
+				wxs1:[],
+				wxs2:[],
 			},
 			methods:{
+				open(){
+					orderVm.adds=true;
+				},
+				openn(){
+					orderVm.addss=true;
+				},
 				tabs(i){
 					let _this=this;
 					if(i==2){
@@ -253,6 +349,22 @@
 					//当前时间>预计完工，true:超过
 					this.wg=date2Str>date1Str;
 					this.cs=true;
+				},
+				//竣工模态框调用....
+				fg(recordid,edate,dqdate){
+					this.dqdate=dqdate;
+					//移除校验结果
+					if(this.$refs['jgrecord']!=undefined){
+						this.$refs['jgrecord'].resetFields();
+					}
+					this.jgrecord.recordid=recordid;
+					this.edate=edate;
+					this.today = new Date().toLocaleString('chinese',{hour12:false});
+					var date1Str = new Date(Date.parse(edate));
+					var date2Str = new Date(Date.parse(this.today));
+					//当前时间>预计完工，true:超过
+					this.wg=date2Str>date1Str;
+					this.csss=true;
 				},
 				//竣工检查
 				comjg(){
