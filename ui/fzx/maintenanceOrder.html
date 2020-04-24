@@ -273,7 +273,7 @@
 				dj:[{name:'商业单据'},{name:'金融单据'}],
 				bs:[],
 				ms:[{name:'项目编码',values:'fwcod'},{name:'项目名称',values:'fwname'},{name:'优惠前单价',values:'fwprice'},{name:'优惠后单价',values:'vipprice'},{name:'故障描述',values:'guzhanginfo'},{name:'故障原因',values:'guzhangyuanyin'},{name:'维修班组',values:'bzid'},{name:'操作',values:'0'}],
-				cl:[{name:'材料编码',values:'proid'},{name:'材料名称',values:'proname'},{name:'材料单价',values:'proprice'},{name:'故障描述',values:'guzhanginfo'},{name:'故障原因',values:'guzhangyuanyin'},{name:'维修班组',values:'bzid'},{name:'操作',values:'0'}],
+				cl:[{name:'材料编码',values:'proid'},{name:'材料名称',values:'proname'},{name:'材料单价',values:'proprice'},{name:'材料数量',values:'num'},{name:'故障描述',values:'guzhanginfo'},{name:'故障原因',values:'guzhangyuanyin'},{name:'维修班组',values:'bzid'},{name:'操作',values:'0'}],
 				fzxweixiuadd:{
 					recordid:'',
 					carno:'',
@@ -339,7 +339,6 @@
 							let cd= oneVm.fwcod;
 							let cdd= oneVm.proid;
 							for(let i=0;i<cd.length;i++){
-								cd[i].num=1;
 								cd[i].guzhanginfo = oneVm.minfo.guzhanginfo;
 								cd[i].guzhangyuanyin = oneVm.minfo.guzhangyuanyin;
 								//cd[i].bzname = oneVm.minfo.bzname;
@@ -349,8 +348,6 @@
 								_this.jg = parseInt(_this.jg) + parseInt(cd[i].fwprice);
 							}
 							for(let i=0;i<cdd.length;i++){
-								//计算材料总价格
-								cdd[i].num=1;
 								cdd[i].guzhanginfo = oneVm.minfo.guzhanginfo;
 								cdd[i].guzhangyuanyin = oneVm.minfo.guzhangyuanyin;
 								cdd[i].bzid = oneVm.minfo.bzid;
@@ -387,16 +384,30 @@
 					this.adds=false;
 				},
 				sccc(){
-					let c= addsVmm.checked;
+					//选中的材料列表
+					let checkedCls= addsVmm.checked;
+					//alert(JSON.stringify(checkedCls));
+					//选中的材料列表对应的计数列表
+					/*let checkedNums= addsVmm.checkedNums;
+					//下标数组
+					let indexs=[];
+					checkedCls.forEach(function(index,checkObj){
+						indexs.push(checkObj.);
+					})
+					checkedNums.forEach(function(index,checkNum){
+						
+					})*/
+					//alert(JSON.stringify(checkedNums));
 					//每次添加前清空数组
 					oneVm.wxs2=[];
 					addsVmm.checked=[];
-					for(let i=0;i<c.length;i++){
-						//添加维修项目名到多选框,数组绑定
-						oneVm.wxs2.push(c[i].proname);
+					addsVmm.checkedNums=[];
+					for(let i=0;i<checkedCls.length;i++){
+						//添加product名到多选框,数组绑定
+						oneVm.wxs2.push(checkedCls[i].proname);
 					}
 					//主体数据
-					oneVm.proid=c;
+					oneVm.proid=checkedCls;
 					this.addss=false;
 				},
 				del(index, rows){
