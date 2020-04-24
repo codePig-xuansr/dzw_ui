@@ -351,7 +351,7 @@
 								cdd[i].guzhanginfo = oneVm.minfo.guzhanginfo;
 								cdd[i].guzhangyuanyin = oneVm.minfo.guzhangyuanyin;
 								cdd[i].bzid = oneVm.minfo.bzid;
-								_this.cljg = parseInt(_this.cljg) + parseInt(cdd[i].proprice);
+								_this.cljg = parseInt(_this.cljg) + parseInt(cdd[i].proprice * cdd[i].num);
 							}
 							_this.addone=false;
 							_this.fzxweixiuadd.fzxweixiuxm=cd;
@@ -386,21 +386,9 @@
 				sccc(){
 					//选中的材料列表
 					let checkedCls= addsVmm.checked;
-					//alert(JSON.stringify(checkedCls));
-					//选中的材料列表对应的计数列表
-					/*let checkedNums= addsVmm.checkedNums;
-					//下标数组
-					let indexs=[];
-					checkedCls.forEach(function(index,checkObj){
-						indexs.push(checkObj.);
-					})
-					checkedNums.forEach(function(index,checkNum){
-						
-					})*/
 					//每次添加前清空数组
 					oneVm.wxs2=[];
 					addsVmm.checked=[];
-					addsVmm.checkedNums=[];
 					for(let i=0;i<checkedCls.length;i++){
 						//添加product名到多选框,数组绑定
 						oneVm.wxs2.push(checkedCls[i].proname);
