@@ -52,13 +52,13 @@
 				border-bottom: none !important;
 			}
 			
-			.el-tabs__content{
+			/*.el-tabs__content{
 				display: none;
-			}
+			}*/
 			
-			.el-tabs--card>.el-tabs__header{
+			/*.el-tabs--card>.el-tabs__header{
 				border-bottom: 0;
-			}
+			}*/
 		</style>
 	</head>
 
@@ -135,14 +135,14 @@
 						  </el-image>
 						</div>
 					</el-dialog>
-					<el-tabs @tab-click="tabClick" v-model="editableTabsValue" type="card" closable @tab-remove="removeTab">
+					<!--<el-tabs @tab-click="tabClick" v-model="editableTabsValue" type="card" closable @tab-remove="removeTab">
 					  <el-tab-pane
 					    v-for="(item, index) in editableTabs"
 					    :key="item.name"
 					    :label="item.title"
 					    :name="item.name"
 					    >{{item.content}}</el-tab-pane>
-					</el-tabs>
+					</el-tabs>-->
 					<div id="cnt"></div>
 				</el-main>
 			</el-container>
