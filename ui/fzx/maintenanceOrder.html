@@ -341,9 +341,7 @@
 							for(let i=0;i<cd.length;i++){
 								cd[i].guzhanginfo = oneVm.minfo.guzhanginfo;
 								cd[i].guzhangyuanyin = oneVm.minfo.guzhangyuanyin;
-								//cd[i].bzname = oneVm.minfo.bzname;
 								cd[i].bzid = oneVm.minfo.bzid;
-								//cd[i].bzcost = oneVm.minfo.bzcost;
 								//计算项目总价格
 								_this.jg = parseInt(_this.jg) + parseInt(cd[i].fwprice);
 							}
@@ -351,6 +349,7 @@
 								cdd[i].guzhanginfo = oneVm.minfo.guzhanginfo;
 								cdd[i].guzhangyuanyin = oneVm.minfo.guzhangyuanyin;
 								cdd[i].bzid = oneVm.minfo.bzid;
+								//计算材料总价格
 								_this.cljg = parseInt(_this.cljg) + parseInt(cdd[i].proprice * cdd[i].num);
 							}
 							_this.addone=false;
