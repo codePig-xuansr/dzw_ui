@@ -1,110 +1,4 @@
-<!--
-<!DOCTYPE html>
-<html>
 
-	<head>
-		<meta charset="UTF-8">
-		<title>发动机品牌</title>
-		<style>
-			#weixiu {
-				padding-left: 5px;
-			}
-		</style>
-	</head>
-
-	<body>
-		<div id="weixiu">
-			<el-row>
-				<el-col :span="24">
-					<template>
-						<el-row>
-							<el><label>分类编号</label><input type="text" v-model="projectChild" style=" height:30px;" /></el>
-							
-							<el><label>分类名称</label><input type="text" v-model="projectChild" style=" height:30px;" /></el>
-							<el-button type="primary" plain @click="bmxl">增加</el-button>
-
-							<el-button type="primary" plain>掉价</el-button>
-							<el-button type="primary" plain>保存</el-button>
-							<el-button type="primary" plain>导出</el-button>
-						</el-row>
-						<el-row>
-							<el-table :data="wx" border style="width: 100%">
-								<el-table-column v-for="(temp,index) in stsy" :label="temp.name" align="center" :resizable="false">
-									<template slot-scope="scope">
-										<span v-if='temp.value!=0'>{{scope.row[temp.value]}}</span>
-										<el-button v-if='temp.value==0' @click="bmxp(scope.row.coding)">修改</el-button>
-										<el-button v-if='temp.value==0' @click="sc(scope.row.coding)">删除</el-button>
-									</template>
-								</el-table-column>
-							</el-table>
-						</el-row>
-					</template>
-				</el-col>
-			</el-row>
-		</div>
-	</body>
-	<script>
-		var weixiu = new Vue({
-			el: '#weixiu',
-			data: {
-				wx: [],
-				stsy: [{
-						name: '发动机品牌编号',
-						value: 'projectChild'
-					},
-					{
-						name: '发动机品牌名称',
-						value: 'coding'
-					}
-
-				]
-			},
-			methods: {
-				bmxl() {
-					indexVm.To('ui/ljl/weixiuadd.html');
-				},
-				bmxp(coding) {
-
-					sessionStorage.setItem('xiu', coding)
-					indexVm.To('ui/ljl/weixiupdate.html');
-
-				},
-				cx() {
-					let _this = this;
-					alert(this.projectChild)
-					$.getJSON(`http://localhost:8080/api/emps/han/${this.projectChild}`, function(data) {
-						_this.wx = data;
-
-					});
-
-				},
-				sc(coding) {
-					let _this = this;
-
-					$.post(`http://localhost:8080/api/emps/shan/${coding}`, function(data) {
-						alert("删除成功");
-						indexVm.To('ui/ljl/weixiu.html');
-
-					});
-
-				},
-
-				init() {
-					let _this = this;
-					$.getJSON("http://localhost:8080/api/emps", function(data) {
-						_this.wx = data;
-
-					});
-				}
-
-			},
-			mounted() {
-				this.init();
-			}
-
-		});
-	</script>
--->
 <!DOCTYPE html>
 <html>
 
@@ -125,13 +19,10 @@
 					<template>
 						<el-row>
 							<!--<el><label>分类编号</label><input type="text" v-model="fadongji.fadongjiid" placeholder="请输入内容" style=" height:30px;" /></el>-->
-
 							<!--<el><label>分类名称</label><input type="text" v-model="fadongjiname" placeholder="按名称查询" style=" height:30px;" /></el>-->
 							<el-input v-model="fadongjiname" placeholder="支持模糊搜索" style="width: 150px;"></el-input>
 							<el-button type="primary" plain @click="cx">查询</el-button>
-
 							<el-button type="primary" plain @click="bmxl">增加</el-button>
-
 							<!--<el-button type="primary" plain>保存</el-button>-->
 							<!--<el-button type="primary" plain>导出</el-button>-->
 						</el-row>
@@ -155,17 +46,6 @@
 				</el-col>
 			</el-row>
 			<el-dialog title="新增发动机品牌" width="700px" :visible.sync="xinzengfadongji">
-				<!--<el-form label-width="80px">-->
-				<!--<el-form-item label="发动机编号：">
-						<el-input v-model="fadongji.fadongjiid" readonly></el-input>
-					</el-form-item>-->
-				<!--<el-form-item label="发动机名称：">
-						<el-input v-model="fadongji.fadongjiname"></el-input>
-				</el-form>
-				<span slot="footer" class="dialog-footer">
-   				 			<el-button @click="qx">取 消</el-button>
-   				 			<el-button type="primary" @click="add">保存</el-button>
-  						</span>-->
 				<el-form :model="fadongji" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 					<el-row>
 						<el-col>
@@ -175,7 +55,6 @@
 								</el-form-item>
 							</el-button>
 						</el-col>
-
 						<el-col>
 							<el-button type="text">
 								<el-form-item label="发动机品牌：" prop="fadongjipp">
@@ -190,10 +69,8 @@
 					</el-form-item>
 				</el-form>
 			</el-dialog>
-
 			<el-dialog title="修改发动机信息" width="700px" :visible.sync="xiugaifadongji">
-				<el-form label-width="80px">
-
+				<el-form :model="fadongji" :rules="rules" label-width="100px" class="demo-ruleForm" ref="ruleForm">
 					<el-row>
 						<el-col>
 							<el-button type="text">
@@ -219,14 +96,6 @@
 							</el-button>
 						</el-col>
 					</el-row>
-
-					<!--<el-form-item label="发动机编号：">
-						<el-input v-model="fadongji.fadongjiid" readonly></el-input>
-					</el-form-item>
-					<el-form-item label="发动机名称：">
-						<el-input v-model="fadongji.fadongjiname"></el-input>
-					</el-form-item>-->
-					<!--<span slot="footer" class="dialog-footer">-->
 					<el-form-item>
 						<el-button @click="qx">取 消</el-button>
 						<el-button type="primary" @click="updates">保存</el-button>
@@ -234,11 +103,6 @@
 				</el-form>
 			</el-dialog>
 		</div>
-		<!--
-        	作者：2453688922@qq.com
-        	时间：2020-03-30
-        	描述：new Date().toLocaleDateString()
-        -->
 	</body>
 	<script>
 		var weixiu = new Vue({
@@ -266,14 +130,22 @@
 						name: '发动机品牌',
 						value: 'fadongjipp'
 					}
-
 				],
-				fadongjiname: ''
+				fadongjiname: '',
+				rules:{
+					fadongjiname: [{
+						required: true,
+						message: '请输入发动机名称',
+						trigger: 'blur'
+					}],
+					fadongjipp: [{
+						required: true,
+						message: '请输入发动机品牌',
+						trigger: 'blur'
+					}]
+				}
 			},
 			methods: {
-				/*chaxun(){
-					alert(fadongji.scdate)
-				},*/
 				qingkong() {
 					this.fadongji = {
 						fadongjiid: '',
@@ -285,10 +157,6 @@
 				bmxl() {
 					let _this = this;
 					this.xinzengfadongji = true;
-					/*$.getJSON(`http://localhost:8080/api/ljl/fdj/MaxId`,
-						function(data) {
-							_this.fadongji.fadongjiid = data + 1;
-						});*/
 				},
 				qx() {
 					this.xinzengfadongji = false;
@@ -296,7 +164,6 @@
 				},
 				add() {
 					let _this = this;
-					//alert(this.fadongji.fadongjiname)
 					$.ajax("http://localhost:8080/api/ljl/fdj/add", {
 						type: "post",
 						contentType: "application/json",
@@ -314,16 +181,9 @@
 						}
 					});
 				},
-				/*bmxp(coding) {
-
-					sessionStorage.setItem('xiu', coding)
-					indexVm.To('ui/ljl/weixiupdate.html');
-
-				},*/
 				update(fadongjiid) {
 					let _this = this;
 					_this.xiugaifadongji = true;
-					//alert(id)
 					$.getJSON(`http://127.0.0.1:8080/api/ljl/fdj/selectById/${fadongjiid}`,
 						function(data) {
 							_this.fadongji = data;
@@ -377,7 +237,6 @@
 
 						}
 					);
-					//alert(_this.fadongjiname)
 				},
 				change(num) {
 					let _this = this;
@@ -387,24 +246,6 @@
 				sizec(size) {
 					this.pageinfo(1, size);
 				},
-				/*sc(coding) {
-					let _this = this;
-
-					$.post(`http://localhost:8080/api/emps/shan/${coding}`, function(data) {
-						alert("删除成功");
-						indexVm.To('ui/ljl/weixiu.html');
-
-					});
-
-				},*/
-
-				/*init() {
-					let _this = this;
-					$.getJSON("http://localhost:8080/api/emps", function(data) {
-						_this.wx = data;
-
-					});
-				},*/
 				pageinfo(sum, size) {
 					let _this = this;
 					$.getJSON(`http://127.0.0.1:8080/api/ljl/fdj/All/${sum}/${size}`,
@@ -414,7 +255,6 @@
 						}
 					);
 				},
-
 				handleClose(done) {
 					this.$confirm('是否关闭?')
 						.then(_ => {
@@ -422,13 +262,10 @@
 						})
 						.catch(_ => {});
 				}
-
 			},
 			mounted() {
-				//this.init();
 				let _this = this;
 				_this.pageinfo(1, 5);
 			}
-
 		});
 	</script>

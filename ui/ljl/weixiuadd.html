@@ -25,13 +25,11 @@
 		<div id="weixiuadd">
 			<el-row>
 				<el-col :span="24">
-					<el-form label-width="80px">
+					<el-form label-width="80px" :model="weixiufuwu" :rules="rules">
 
-						<el-dialog title="项目类别" :visible.sync="leibie" style="width: 50%;margin-left: 400px;">
+						<el-dialog title="项目类别" :visible.sync="leibie2" style="width: 50%;margin-left: 400px;">
 							<template>
 								<el-table :data="weixiutype.list" border style="width: 100%">
-									<el-table-column fixed prop="xid" label="类别编号">
-									</el-table-column>
 									<el-table-column prop="xname" label="类别名称">
 									</el-table-column>
 									<el-table-column label="操作">
@@ -42,7 +40,7 @@
 								</el-table>
 							</template>
 							<div class="page">
-								<el-pagination layout="prev, pager, next" @current-change="current1" @prev-click="prev1" @next-click="next1" :total="this.weixiutype.pages*10">
+								<el-pagination layout="prev, pager, next" @current-change="current2" @prev-click="prev2" @next-click="next2" :total="this.weixiutype.pages*10">
 								</el-pagination>
 							</div>
 						</el-dialog>
@@ -117,17 +115,39 @@
 					fwprice: '',
 					vipprice: 0
 				},
-				leibie: false,
-				weixiutype: []
+				leibie2: false,
+				weixiutype: [],
+				rules:{
+					fwname: [{
+						required: true,
+						message: '请输入项目名称',
+						trigger: 'blur'
+					}],
+					fwprice: [{
+						required: true,
+						message: '请输入标准价',
+						trigger: 'blur'
+					}],
+					vipprice: [{
+						required: true,
+						message: '请输入VIP价',
+						trigger: 'blur'
+					}],
+					xid: [{
+						required: true,
+						message: '请选择类别',
+						trigger: 'blur'
+					}]
+				}
 			},
 			methods: {
 				check(row) {
-					this.leibie = false;
+					this.leibie2 = false;
 					this.weixiufuwu.xid = row.xid;
 				},
 				queryweixiuTypeList(n, s) {
 					let _this = this;
-					_this.leibie = true;
+					_this.leibie2 = true;
 					$.getJSON(`http://localhost:8080/api/ljl/weixiu/All/weixiuleibie/name/${n}/${s}`,
 						function(rs) {
 							_this.weixiutype = rs;
@@ -135,15 +155,15 @@
 						}
 					);
 				},
-				prev1(cpage) {
+				prev2(cpage) {
 					this.queryweixiuTypeList(cpage, 3);
 				},
 				/*下一页发动机查询*/
-				next1(cpage) {
+				next2(cpage) {
 					this.queryweixiuTypeList(cpage, 3);
 				},
 				/*当前页发动机查询*/
-				current1(cpage) {
+				current2(cpage) {
 					this.queryweixiuTypeList(cpage, 3);
 				},
 				fh() {
