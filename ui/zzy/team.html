@@ -69,11 +69,11 @@
 			</el-row>
 			<el-dialog title="新增班组" :visible.sync="addbz" width="30%" :before-close="handleClose">
 				<div>
-					<el-form :label-position="labelPosition"  label-width="80px" :model="formLabelAlign">
-						<el-form-item label="班组名称">
+					<el-form :label-position="labelPosition" :rules="rules" label-width="80px" :model="formLabelAlign">
+						<el-form-item label="班组名称" prop="bzname">
 							<el-input v-model="formLabelAlign.bzname"></el-input>
 						</el-form-item>
-						<el-form-item label="维修类型">
+						<el-form-item label="维修类型" prop="bztype">
 							<el-input v-model="formLabelAlign.bztype"></el-input>
 						</el-form-item>
 						<!--<el-form-item label="班组费用">
@@ -109,8 +109,8 @@
 			
 			<el-dialog title="新增班组技工" :visible.sync="addjg" width="60%" :before-close="handleClose">
 				<div>
-					<el-form :label-position="labelPosition" :inline="true" label-width="80px" :model="addjgvalue">
-						<el-form-item label="技工姓名" style="margin-left: 90px;">
+					<el-form :label-position="labelPosition" :rules="rules2" :inline="true" label-width="80px" :model="addjgvalue">
+						<el-form-item label="技工名称" style="margin-left: 90px;" prop="jname">
 							<el-input v-model="addjgvalue.jname"></el-input>
 						</el-form-item>
 						<el-form-item label="性别" style="margin-right: 200px;">
@@ -119,30 +119,36 @@
 						 <el-radio v-model="addjgvalue.jsex" label="女">女</el-radio>
 						</template>
 						</el-form-item><br />
-						<el-form-item label="电话">
+						<el-form-item label="电话" prop="jphone">
 							<el-input v-model="addjgvalue.jphone"></el-input>
 						</el-form-item>
-						<el-form-item label="地址">
+						<el-form-item label="地址" prop="jaddress">
 							<el-input v-model="addjgvalue.jaddress"></el-input>
 						</el-form-item>
-						<el-form-item label="用户名">
+						<el-form-item label="用户名" prop="truename">
 							<el-input v-model="addjgvalue.truename"></el-input>
 						</el-form-item>
-						<el-form-item label="身份证">
+						<el-form-item label="身份证" prop="jidcard">
 							<el-input v-model="addjgvalue.jidcard"></el-input>
 						</el-form-item>
-						<el-form-item label="工作时长">
+						<el-form-item label="工作时长" prop="worktime">
 							<el-input v-model="addjgvalue.worktime"></el-input>
-						</el-form-item>&nbsp;&nbsp;&nbsp;
-						&nbsp;&nbsp;&nbsp;<el-button type="text" @click="queryStarList(1,3)" style="width: 207px;margin-right: 70px;margin-top: -11px;">星级状态&nbsp;
+						</el-form-item>
+						<el-button type="text" @click="queryStarList(1,3)" style="width: 230px;margin-right: 68px;margin-top: -11px;">
+							<el-form-item label="星级状态" prop="sname">
 								<el-input v-model="modifyjgvalue.sname" placeholder="请选择"></el-input>
+								</el-form-item>
 							</el-button><br />
-						<el-button type="text" @click="queryDepartmentList(1,3)" style="width: 207px;margin-right: 60px;">员工部门&nbsp;&nbsp;
+						<el-button type="text" @click="queryDepartmentList(1,3)" prop="depname" style="width: 230px;margin-right: 63px;margin-top: -20px;">
+								<el-form-item label="员工部门" prop="depname">
 								<el-input v-model="addjgvalue.depname" placeholder="请选择"></el-input>
-							</el-button>	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<el-button type="text" @click="queryBanzuList(1,3)" style="width: 207px;margin-right: 40px;">归属班组&nbsp;&nbsp;
+								</el-form-item>
+							</el-button>
+						<el-button type="text" @click="queryBanzuList(1,3)" prop="bzname" style="width: 230px;margin-right: 68px;margin-top: -20px;">
+								<el-form-item label="归属班组" prop="bzname">
 								<el-input v-model="addjgvalue.bzname" placeholder="请选择"></el-input>
-							</el-button>	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								</el-form-item>
+							</el-button>
 					</el-form>
 				</div>
 				<span slot="footer" class="dialog-footer">
@@ -216,8 +222,8 @@
 
 			<el-dialog title="修改班组技工" :visible.sync="modifyjg" width="60%" :before-close="handleClose">
 				<div>
-					<el-form :label-position="labelPosition" :inline="true" label-width="80px" :model="modifyjgvalue">
-						<el-form-item label="技工姓名">
+					<el-form :label-position="labelPosition" :rules="rules2" :inline="true" label-width="80px" :model="modifyjgvalue">
+						<el-form-item label="技工名称" prop="jname">
 							<el-input v-model="modifyjgvalue.jname"></el-input>
 						</el-form-item>
 						<el-form-item label="性别" style="margin-right: 100px;">
@@ -226,21 +232,37 @@
 						 <el-radio v-model="modifyjgvalue.jsex" label="女">女</el-radio>
 						</template>
 						</el-form-item><br />
-						<el-form-item label="电话">
+						<el-form-item label="电话" prop="jphone">
 							<el-input v-model="modifyjgvalue.jphone"></el-input>
 						</el-form-item>
-						<el-form-item label="地址">
+						<el-form-item label="地址" prop="jaddress">
 							<el-input v-model="modifyjgvalue.jaddress"></el-input>
 						</el-form-item>
-						<el-form-item label="用户名">
+						<el-form-item label="用户名" prop="truename">
 							<el-input v-model="modifyjgvalue.truename"></el-input>
 						</el-form-item>
-						<el-form-item label="身份证">
+						<el-form-item label="身份证" prop="jidcard">
 							<el-input v-model="modifyjgvalue.jidcard"></el-input>
 						</el-form-item>
-						<el-form-item label="工作时长">
+						<el-form-item label="工作时长" prop="worktime">
 							<el-input v-model="modifyjgvalue.worktime"></el-input>
-						</el-form-item>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						</el-form-item>
+						<el-button type="text" @click="queryStarList(1,3)" style="width: 230px;margin-right: 68px;margin-top: -11px;">
+							<el-form-item label="星级状态" prop="sname">
+								<el-input v-model="modifyjgvalue.sname" placeholder="请选择"></el-input>
+								</el-form-item>
+							</el-button><br />
+						<el-button type="text" @click="queryDepartmentList(1,3)" prop="depname" style="width: 230px;margin-right: 63px;margin-top: -20px;">
+								<el-form-item label="员工部门" prop="depname">
+								<el-input v-model="modifyjgvalue.depname" placeholder="请选择"></el-input>
+								</el-form-item>
+							</el-button>
+						<el-button type="text" @click="queryBanzuList(1,3)" prop="bzname" style="width: 230px;margin-right: 68px;margin-top: -20px;">
+								<el-form-item label="归属班组" prop="bzname">
+								<el-input v-model="modifyjgvalue.bzname" placeholder="请选择"></el-input>
+								</el-form-item>
+							</el-button>
+						<!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<el-button type="text" @click="queryStarList(1,3)" style="width: 207px;margin-right: 70px;margin-top: -11px;">星级状态&nbsp;
 								<el-input v-model="modifyjgvalue.sname"></el-input>
 							</el-button><br />	
@@ -249,7 +271,7 @@
 							</el-button>	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<el-button type="text" @click="queryBanzuList(1,3)" style="width: 207px;margin-right: 40px;">归属班组&nbsp;&nbsp;
 								<el-input v-model="modifyjgvalue.bzname"></el-input>
-							</el-button>	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</el-button>	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
 					</el-form>
 				</div>
 				<span slot="footer" class="dialog-footer">
@@ -293,6 +315,81 @@
 					status:null,
 					recordid:null,
 				},
+				rules: {
+					bzname: [{
+						required: true,
+						message: '请输入班组名称',
+						trigger: 'blur'
+					}],
+					bztype: [{
+						required: true,
+						message: '请输入维修类型',
+						trigger: 'blur'
+					}]
+				},
+				rules2: {
+					jname: [{
+						required: true,
+						message: '请输入技工姓名',
+						trigger: 'blur'
+					}],
+					jphone: [{
+						required: true,
+				    message: '请输入手机号码',
+				    trigger: 'blur'
+				  },
+				  {validator:function(rule,value,callback){
+				      if(/^1[34578]\d{9}$/.test(value) == false){
+				        callback(new Error("请输入正确的手机号"));
+				      }else{
+				        callback();
+				      }
+				    }, trigger: 'blur'}
+					],jaddress: [{
+						required: true,
+						message: '请输入正确的地址',
+						trigger: 'blur'
+					}],
+					truename: [{
+						required: true,
+					    message: '请输入用户名',
+					    trigger: 'blur'
+					    },{
+					    min: 2,
+					    max: 5,
+					    message: '长度在 2 到 5 个字符'
+					    },{
+					    pattern: /^[\u4E00-\u9FA5]+$/,
+					    message: '用户名只能为中文'
+					}],jidcard: [{
+						required: true,
+					    message: '请输入身份证ID',
+					    trigger: 'blur'
+					    },{
+					      pattern:/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/, message: '你的身份证格式不正确'
+					    }],
+					worktime: [{
+						 required: true,
+					    message: '请输入工时',
+					    trigger: 'blur'
+					    },{
+					      pattern:/^\d+$|^\d+[.]?\d+$/, message: '只能输入数字'
+					  }],sname: [{
+						required: true,
+						message: '请输入等级名称',
+						trigger: 'blur'
+					}],
+					depname: [{
+						required: true,
+						message: '请输入部门名称',
+						trigger: 'blur'
+					}],bzname: [{
+						required: true,
+						message: '请输入班组',
+						trigger: 'blur'
+					}],
+				},
+				
 				list: [],
 				teams:{},
 			
@@ -316,7 +413,7 @@
 						name: '技工编号',
 						value: 'jid'
 					}, {
-						name: '技工姓名',
+						name: '技工',
 						value: 'jname'
 					},{
 						name: '归属班组',

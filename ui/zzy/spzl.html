@@ -47,25 +47,27 @@
 			</el-row>
 			<el-dialog title="新增商品资料" :visible.sync="add" width="60%" :before-close="handleClose">
 				<div>
-					<el-form :label-position="labelPosition" :inline="true" label-width="80px" :model="formLabelAlign">
-						<el-form-item label="商品名称">
+					<el-form :label-position="labelPosition" :rules="rules" :inline="true" label-width="80px" :model="formLabelAlign">
+						<el-form-item label="商品名称" prop="proname">
 							<el-input v-model="formLabelAlign.proname"></el-input>
 						</el-form-item>
-						<el-form-item label="商品品牌">
+						<el-form-item label="商品品牌" prop="propp">
 							<el-input v-model="formLabelAlign.propp"></el-input>
 						</el-form-item>
-						<el-form-item label="商品库存">
+						<el-form-item label="商品数量" prop="pronum">
 							<el-input v-model="formLabelAlign.pronum"></el-input>
 						</el-form-item>
-						<el-form-item label="数量单位">
+						<el-form-item label="数量单位" prop="prodw">
 							<el-input v-model="formLabelAlign.prodw"></el-input>
 						</el-form-item>
-						<el-form-item label="商品价格" style="margin-right: 30px;">
+						<el-form-item label="商品价格" prop="proprice">
 							<el-input v-model="formLabelAlign.proprice"></el-input>
 						</el-form-item>
-						<el-button type="text" @click="queryGonghuoList(1,3)" style="width: 217px;margin-right: 60px;margin-top: -10px;">供应商&nbsp;&nbsp;&nbsp;
-								<el-input v-model="formLabelAlign.ghname"></el-input>
+						<el-form-item label="供应商" prop="ghname">
+						<el-button type="text" @click="queryGonghuoList(1,3)" style="width: 210px;margin-right: 0px;margin-top: -10px;">
+								<el-input v-model="formLabelAlign.ghname" placeholder="请选择供货商"></el-input>
 							</el-button>
+							</el-form-item>
 					</el-form>
 				</div>
 				<span slot="footer" class="dialog-footer">
@@ -96,7 +98,7 @@
 
 			<el-dialog title="修改商品资料" :visible.sync="modify" width="60%" :before-close="handleClose">
 				<div>
-					<el-form :label-position="labelPosition" :inline="true" label-width="80px" :model="teams">
+					<el-form :label-position="labelPosition" :rules="rules" :inline="true" label-width="80px" :model="teams">
 						<template>
 						  <el-radio  v-model="teams.prostar" label="1">停用</el-radio>
 						 <el-radio v-model="teams.prostar" label="0">通过</el-radio>
@@ -104,24 +106,26 @@
 						<el-form-item label="商品编码">
 							<el-input v-model="teams.proid"></el-input>
 						</el-form-item>
-						<el-form-item label="商品名称">
+						<el-form-item label="商品名称" prop="proname">
 							<el-input v-model="teams.proname"></el-input>
 						</el-form-item>
-						<el-form-item label="商品库存">
+						<el-form-item label="商品数量" prop="pronum">
 							<el-input v-model="teams.pronum"></el-input>
 						</el-form-item>
-						<el-form-item label="商品品牌">
+						<el-form-item label="商品品牌" prop="propp">
 							<el-input v-model="teams.propp"></el-input>
 						</el-form-item>
-						<el-form-item label="数量单位">
+						<el-form-item label="数量单位" prop="prodw">
 							<el-input v-model="teams.prodw"></el-input>
 						</el-form-item>
-						<el-form-item label="商品价格">
+						<el-form-item label="商品价格" prop="proprice">
 							<el-input v-model="teams.proprice" ></el-input>
 						</el-form-item><br />
-						<el-button type="text" @click="queryGonghuoList(1,3)" style="width: 217px;margin-right: 330px;">供应商
-								<el-input v-model="teams.ghname"></el-input>
+						<el-form-item label="供应商" prop="ghname">
+						<el-button type="text" @click="queryGonghuoList(1,3)" style="width: 205px;margin-right: 300px;margin-top: -10px;">
+								<el-input v-model="teams.ghname" placeholder="请选择供货商"></el-input>
 						</el-button>
+						</el-form-item>
 					</el-form>
 				</div>
 				<span slot="footer" class="dialog-footer">
@@ -197,6 +201,39 @@
 					proprice:'222',
 					comstatus:''
 				}],
+				rules: {
+					proname: [{
+						required: true,
+					    message: '请输入商品名称',
+					    trigger: 'blur'
+					}],
+					pronum: [{
+						required: true,
+					    message: '请输入商品品牌',
+					    trigger: 'blur'
+					}],propp: [{
+						required: true,
+						message: '请输入商品数量',
+						trigger: 'blur'
+					}],
+					prodw: [{
+						required: true,
+					    message: '请输入单位',
+					    trigger: 'blur'
+					    }],
+					proprice: [{
+						required: true,
+					    message: '请输入商品价格',
+					    trigger: 'blur'
+					    },{
+					      pattern:/^\d+$|^\d+[.]?\d+$/, message: '只能输入数字'
+					}],
+					ghname: [{
+						required: true,
+					    message: '请选择供货商',
+					    trigger: 'blur'
+					    }]
+				},
 			},
 			methods: {
 				prev2(cpage) {
