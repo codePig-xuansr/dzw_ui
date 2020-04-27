@@ -79,11 +79,11 @@
 						<el-dialog title="供货商" :visible.sync="isShow3" style="width: 50%;margin-left: 400px;">
 							<template>
 							<el-table :data="queryGonghuoListValue.list" border style="width: 100%">
-								<el-table-column fixed prop="ghid" label="班组id">
+								<!--<el-table-column fixed prop="ghid" label="供货商id">
+								</el-table-column>-->
+								<el-table-column prop="ghname" align="center" label="供货商名称">
 								</el-table-column>
-								<el-table-column prop="ghname" label="班组名称">
-								</el-table-column>
-								<el-table-column label="操作">
+								<el-table-column label="操作" align="center">
 									<template slot-scope="scope">
 										<el-button @click="check2(scope.row)" type="text" size="small">选择</el-button>
 									</template>
@@ -228,11 +228,11 @@
 					    },{
 					      pattern:/^\d+$|^\d+[.]?\d+$/, message: '只能输入数字'
 					}],
-					ghname: [{
+					/*ghname: [{
 						required: true,
 					    message: '请选择供货商',
 					    trigger: 'blur'
-					    }]
+					    }]*/
 				},
 			},
 			methods: {
