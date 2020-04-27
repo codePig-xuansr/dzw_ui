@@ -389,6 +389,7 @@
 				/*结算*/
 				pay() {
 					let _this = this;
+					let smid=this.pageInfo.list[0].recordid;
 					$.ajax(`http://127.0.0.1:8080/api/js`, {
 						type: "post",
 						contentType: "application/json",
@@ -400,6 +401,11 @@
 									message: '订单支付成功',
 									type: 'success'
 								});
+								if(_this.jsrecord.jstype==3){
+									$.getJSON(`http://127.0.0.1:8080/zkx/api/pay/getResult/${smid}/${_this.prices[0].sum}`,function(html){
+										console.info(html);
+									});
+								}
 								_this.alipay = false;
 								_this.isShow4 = false;
 								_this.jsrecord = {
