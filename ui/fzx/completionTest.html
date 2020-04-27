@@ -119,7 +119,8 @@
 						<template>
 							<el-radio-group v-model="hg"  @change="tabs">
 							  <el-radio label="1" border >合格</el-radio>
-							  <el-radio label="2" border >不合格</el-radio>
+							  <el-radio label="2" border >己方返工</el-radio>
+							  <el-radio label="3" border >客户返工</el-radio>
 							</el-radio-group>
 							<hr>
 							  <el-tabs v-model="hg">
@@ -170,6 +171,70 @@
 									</div>
 									</el-form>
 								</el-tab-pane>
+								<el-tab-pane name="3">
+									
+									
+									<el-form :model="jgrecord">
+										<el-form-item label="责任人：" style="width: 200px; margin-left: 250px;">
+										<el-input v-model="jgrecord.checkperson"></el-input>
+									  </el-form-item>
+										
+								<el-form-item>
+									<el-tabs type="border-card" v-model="tabss">				
+										<div style="margin-top: 20px;" ></div>
+										<el-tab-pane label="维修项目" name="1">
+											<template>
+												<el-row>
+												  <el-col :span="24">
+													  <el-button type="warning" @click="addonee=true">添加维修项目</el-button>
+													  <span style="margin-left: 840px;"></span>
+												  </el-col>
+												</el-row>
+												<div style="margin-top: 5px;"></div>
+												<el-row>
+												  <el-col :span="24">
+													  <template>
+														  <el-table :data="fzxweixiuxm" border empty-text="请添加维修项目">
+															<el-table-column v-for="(temp,index) in xm" :label="temp.name" :align="'center'" :resizable="false" :key="temp.name">
+																<template slot-scope="scope">
+																	<span v-if="temp.values!=0">{{scope.row[temp.values]}}</span>
+																	<span v-if="temp.values==0">
+										  								 <el-button type="danger" icon="el-icon-delete" @click="del(scope.$index,fzxweixiuxm)">删除</el-button>
+																	</span>
+																  </template>
+															</el-table-column>
+														  </el-table>
+													  </template>
+												  </el-col>
+												</el-row>
+											</template>
+										</el-tab-pane>
+										<el-tab-pane label="维修材料" name="2">
+											<template>
+												<el-row>
+												  <el-col :span="24">
+													  <template>
+														  <el-table :data="fzxweixiucl" border empty-text="请添加维修材料">
+															<el-table-column v-for="(temp,index) in cl" :label="temp.name" :align="'center'" :resizable="false" :key="temp.name">
+																<template slot-scope="scope">
+																	<span v-if="temp.values!=0">{{scope.row[temp.values]}}</span>
+																	<span v-if="temp.values==0">
+										  								 <el-button type="danger" icon="el-icon-delete" @click="dell(scope.$index,fzxweixiucl)">删除</el-button>
+																	</span>
+																  </template>
+															</el-table-column>
+														  </el-table>
+													  </template>
+												  </el-col>
+												</el-row>
+											</template>
+										</el-tab-pane>
+									  </el-tabs>
+								</el-form-item>
+							  </el-form>
+									
+									
+								</el-tab-pane>
 							  </el-tabs>
 						</template>
 						
@@ -180,92 +245,29 @@
 					<el-button @click="cs = false">取 消</el-button>
 					<el-button type="primary" @click="comjg">确 定</el-button>
 				</span>
-			</el-dialog>
+			</el-dialog>		
 			
 			
-			
-			
-			<!--<el-dialog title="返工检验" :visible.sync="csss">
-				<div>
-					<el-row>
-					  <el-col :span="24">
-						<template>
-							<el-radio-group v-model="hg"  @change="tabs">
-							  <el-radio label="1" border >客户要求</el-radio>
-							  <el-radio label="2" border >技工原因</el-radio>
-							</el-radio-group>
-							<hr>
-							  <el-tabs v-model="hg">
-								<el-tab-pane name="1">
-									<el-form :model="jgrecord" inline="true" :rules="ruls4" ref="jgrecord">
-									  <el-form-item label="预计完工">
-										<a style="color: hotpink;font-size: 16px;">{{edate}}</a>
-									  </el-form-item>
-									  <el-form-item label="实际完工">
-										<a style="color:chocolate;font-size: 16px;">{{today}}</a>
-									</el-form-item>
-									<br>
-									<el-form-item label="质检员：" prop="checkperson">
-										<el-input v-model="jgrecord.checkperson"></el-input>
-									</el-form-item><br>
-									<el-form-item  label="维修项目：">
-										<template>
-											<el-select v-model="wxs1" multiple>
-												 <el-option v-for="item in wxs1" :label="item" :value="item">
-												</el-option> 
-											  </el-select>
-										</template>
-										<span style="margin-left: 10px;"></span>
-										<el-button type="danger" plain size="small" @click="open">选择项目</el-button>
-									</el-form-item>
-									
-									<el-form-item  label="维修材料：">
-										<template>
-											<el-select v-model="wxs2" multiple>
-												 <el-option v-for="item in wxs2" :label="item" :value="item">
-												</el-option> 
-											  </el-select>
-										</template>
-										<span style="margin-left: 10px;"></span>
-										<el-button type="danger" plain size="small" @click="openn">选择材料</el-button>
-									</el-form-item>
-									</el-form>
-								</el-tab-pane>
-								<el-tab-pane name="2">
-									<el-form :model="jgrecord" inline="true">
-										<el-form-item label="已返工：">
-											<a style="color: red;">{{fgct}}</a><span style="margin-left: 5px;">次</span>
-										</el-form-item>
-										<br>
-										<div>
-									  <el-form-item label="返工原因：">
-										<el-input v-model="jgrecord.yuanyin" style="width: 200px;" type="textarea"></el-input>
-									  </el-form-item>
-									  <br>
-									  <el-form-item label="责任人：">
-										<el-input v-model="jgrecord.checkperson"></el-input>
-									  </el-form-item>
-									  <br>
-									  <el-form-item label="处罚金额：">
-										<el-input v-model="jgrecord.chufa" oninput="this.value=this.value.replace(/[^\d]/g,'')" style="width: 200px;"></el-input>
-									  </el-form-item>
-									</div>
-									</el-form>
-								</el-tab-pane>
-							  </el-tabs>
-						</template>
-						
-					  </el-col>
-					</el-row>
+			<!--模态框-->
+			<el-dialog @opened="oo" title="添加维修项目" :visible.sync="addonee">
+				<el-dialog width="930px" @opened="ss"  title="选择维修项目" :visible.sync="adds" append-to-body>
+					<div id="sont"></div>
+					<div slot="footer" class="dialog-footer">
+						<el-button @click="scc">确认</el-button>
+					  </div>
+				</el-dialog>
+				<el-dialog width="930px" @opened="sss"  title="选择维修材料" :visible.sync="addss" append-to-body>
+					<div id="sontt"></div>
+					<div slot="footer" class="dialog-footer">
+						<el-button @click="sccc">确认</el-button>
+					  </div>
+				</el-dialog>
+				<div id="ocnt"></div>
+				<div slot="footer" class="dialog-footer">
+				  <el-button @click="addonee = false">取 消</el-button>
+				  <el-button type="primary" @click="save1">确定</el-button>
 				</div>
-				<span slot="footer" class="dialog-footer">
-					<el-button @click="csss = false">取 消</el-button>
-					<el-button type="primary" @click="comjg">确 定</el-button>
-				</span>
-			</el-dialog>-->
-			
-			
-			
+			  </el-dialog>
 			
 			
 		</div>
@@ -274,8 +276,15 @@
 		var comVm=new Vue({
 			el:'#comVm',
 			data:{
+				addonee:false,
+				adds:false,
+				addss:false,
+				tabss:'1',
+				fzxweixiuxm:[],
+				fzxweixiucl:[],
+				xm:[{name:'项目编码',values:'fwcod'},{name:'维修单号',values:'recordid'},{name:'项目名称',values:'fwname'},{name:'单价',values:'fwprice'},{name:'操作',values:'0'}],
+				cl:[{name:'材料编码',values:'proid'},{name:'维修单号',values:'recordid'},{name:'材料名称',values:'proname'},{name:'材料单价',values:'proprice'},{name:'材料数量',values:'num'},{name:'操作',values:'0'}],
 				cs:false,
-				//csss:false,
 				fgct:'',
 				cominfo:{
 					recorddate:null,
@@ -308,15 +317,79 @@
 					chufa:[{required: true, message:'请填写处罚金额', trigger: 'blur'}],
 					checkperson:[{required: true, message:'请填写质检人员姓名', trigger: 'blur'}]
 				},
-				wxs1:[],
-				wxs2:[],
 			},
 			methods:{
-				open(){
-					orderVm.adds=true;
+				//添加维修项目确定
+				save1(){
+					let _this=this;
+					oneeVm.$refs['minfo'].validate((valid)=>{
+						if(valid){
+							//选择维修项目判断
+							if(oneeVm.fwcod[0]==undefined){
+								this.$message({
+									type:'error',
+									message:'请至少选择一项维修项目'
+								});
+								return;
+							}
+							let cd= oneeVm.fwcod;
+							let cdd= oneeVm.proid;
+							for(let i=0;i<cd.length;i++){
+								cd[i].recordid = oneeVm.minfo.recordid;
+							}
+							for(let i=0;i<cdd.length;i++){
+								cdd[i].recordid = oneeVm.minfo.recordid;
+							}
+							_this.addonee=false;
+							_this.fzxweixiuxm=cd;
+							_this.fzxweixiucl=cdd;
+						}else{
+							return false;
+						}
+					});
 				},
-				openn(){
-					orderVm.addss=true;
+				oo(){
+					$("#ocnt").load('ui/fzx/addOnee.html');
+				},
+				ss(){
+					$("#sont").load("ui/fzx/addS.html");
+				},
+				sss(){
+					$("#sontt").load("ui/fzx/addSS.html");
+				},
+				//选择维修项目确定框
+				scc(){
+					let c= addsVm.checked;
+					//每次添加前清空数组
+					oneeVm.wxs1=[];
+					addsVm.checked=[];
+					for(let i=0;i<c.length;i++){
+						//添加维修项目名到多选框,数组绑定
+						oneeVm.wxs1.push(c[i].fwname);
+					}
+					//主体数据
+					oneeVm.fwcod=c;
+					this.adds=false;
+				},
+				sccc(){
+					//选中的材料列表
+					let checkedCls= addsVmm.checked;
+					//每次添加前清空数组
+					oneeVm.wxs2=[];
+					addsVmm.checked=[];
+					for(let i=0;i<checkedCls.length;i++){
+						//添加product名到多选框,数组绑定
+						oneeVm.wxs2.push(checkedCls[i].proname);
+					}
+					//主体数据
+					oneeVm.proid=checkedCls;
+					this.addss=false;
+				},
+				del(index, rows){
+					rows.splice(index, 1);
+				},
+				dell(index, rows){
+					rows.splice(index, 1);
 				},
 				tabs(i){
 					let _this=this;
@@ -343,6 +416,7 @@
 						this.$refs['jgrecord'].resetFields();
 					}
 					this.jgrecord.recordid=recordid;
+					sessionStorage.setItem("recordid",recordid);
 					this.edate=edate;
 					this.today = new Date().toLocaleString('chinese',{hour12:false});
 					var date1Str = new Date(Date.parse(edate));
@@ -350,22 +424,6 @@
 					//当前时间>预计完工，true:超过
 					this.wg=date2Str>date1Str;
 					this.cs=true;
-				},
-				//竣工模态框调用....
-				fg(recordid,edate,dqdate){
-					this.dqdate=dqdate;
-					//移除校验结果
-					if(this.$refs['jgrecord']!=undefined){
-						this.$refs['jgrecord'].resetFields();
-					}
-					this.jgrecord.recordid=recordid;
-					this.edate=edate;
-					this.today = new Date().toLocaleString('chinese',{hour12:false});
-					var date1Str = new Date(Date.parse(edate));
-					var date2Str = new Date(Date.parse(this.today));
-					//当前时间>预计完工，true:超过
-					this.wg=date2Str>date1Str;
-					this.csss=true;
 				},
 				//竣工检查
 				comjg(){
@@ -418,7 +476,7 @@
 											}
 										})
 									
-								}else{
+								}else if(this.hg=='2'){
 										let _this=this;
 										let status= this.fzxweixiuadd.status=this.hg;
 										let recordid= this.fzxweixiuadd.recordid=this.jgrecord.recordid;
@@ -460,6 +518,70 @@
 															
 											}
 										})
+								}else if(this.hg=='3'){
+										let _this=this;
+										let status=2;
+										let recordid= this.fzxweixiuadd.recordid=this.jgrecord.recordid;
+										//结束时间
+					        			let date1 = new Date();    
+					        			//_this.dqdate开单时间
+					        			let date2 = date1.getTime() - new Date(_this.dqdate).getTime();   //时间差的毫秒数  
+					       				let leave1=date2%(8760*3600*1000);	//计算天数后剩余的毫秒数
+					        			let bztime=Math.floor(leave1/(3600*1000));//相差多少小时
+					        			_this.jgrecord.recordid= _this.fzxweixiuadd.recordid=_this.jgrecord.recordid;
+										_this.jgrecord.jgstatus= _this.fzxweixiuadd.status=2;
+									jQuery.ajax({
+											url: `http://localhost:8080/api/fzx/updatejg/${status}/${bztime}/${recordid}`,
+											type: 'put',
+											dataType: 'json',
+											contentType: 'application/json',
+											success(data) {
+												if(data.code == "200"){
+													jQuery.ajax({
+														url: 'http://localhost:8080/api/fzx/addxm',
+														type: 'post',
+														dataType: 'json',
+														contentType: 'application/json',
+														data: JSON.stringify(_this.fzxweixiuxm),
+														success(data) {
+																jQuery.ajax({
+																url: 'http://localhost:8080/api/fzx/addcl',
+																type: 'post',
+																dataType: 'json',
+																contentType: 'application/json',
+																data: JSON.stringify(_this.fzxweixiucl),
+																success(data) {
+																		jQuery.ajax({
+														url: 'http://localhost:8080/api/fzx/addjg',
+														type: 'post',
+														dataType: 'json',
+														contentType: 'application/json',
+														data: JSON.stringify(_this.jgrecord),
+														success(data) {
+																_this.$message({
+																	type: 'success',
+																	message: '返工完成！'
+																});
+														}
+													})
+																}
+															})
+														}
+													})
+													
+													
+													
+												}
+												
+												
+												_this.cs=false;
+												indexVm.toUrl('ui/fzx/completionTest.html');
+											},
+											error() {			
+															
+											}
+										})
+									
 								}
 
 							});

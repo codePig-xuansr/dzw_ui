@@ -57,9 +57,16 @@
 			mounted(){
 				let _this=this;
 				let xid=sessionStorage.getItem("ywid");
-				jQuery.getJSON(`http://localhost:8080/api/fzx/selectFw/${xid}`,(data)=>{
-					_this.minfo=data;
-				});
+				if(xid!=null){
+					jQuery.getJSON(`http://localhost:8080/api/fzx/selectFw/${xid}`,(data)=>{
+						_this.minfo=data;
+					});
+					sessionStorage.removeItem("ywid");
+				}else{
+					jQuery.getJSON(`http://localhost:8080/api/fzx/selectFww`,(data)=>{
+						_this.minfo=data;
+					});
+				}
 			}
 		});
 	</script>

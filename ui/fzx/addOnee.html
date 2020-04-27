@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			#oneeVm{
+				padding: 5px 0 0 5px;
+			}
+			#xz{
+				color: red;
+			}
+			#xz:hover{
+				text-decoration: underline red;
+			}
+			body{
+				padding-right: 0 !important;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="oneeVm">
+			<el-row>
+			  <el-col :span="24">
+				  <el-form :rules="rules" :model="minfo" ref="minfo">
+				  	<el-form-item label="维修单号："prop="recordid">
+						<template> <el-input v-model="minfo.recordid" :disabled="true" type="text" size="small" style="width: 170px;"></el-input></template>
+					</el-form-item>
+					<el-form-item  label="维修项目：">
+						<template>
+							<el-select v-model="wxs1" multiple>
+								 <el-option v-for="item in wxs1" :label="item" :value="item">
+								</el-option> 
+							  </el-select>
+						</template>
+						<span style="margin-left: 10px;"></span>
+						<el-button type="danger" plain size="small" @click="open">选择项目</el-button>
+					</el-form-item>
+					
+					<el-form-item  label="维修材料：">
+						<template>
+							<el-select v-model="wxs2" multiple>
+								 <el-option v-for="item in wxs2" :label="item" :value="item">
+								</el-option> 
+							  </el-select>
+						</template>
+						<span style="margin-left: 10px;"></span>
+						<el-button type="danger" plain size="small" @click="openn">选择材料</el-button>
+					</el-form-item>
+					
+					
+				  </el-form>
+			  </el-col>
+			</el-row>
+			
+		</div>
+	</body>
+	<script>
+		var oneeVm=new Vue({
+			el:'#oneeVm',
+			data:{
+				wxs1:[],
+				wxs2:[],
+				fwcod:[],
+				proid:[],
+				minfo: {
+					recordid:'',
+				},
+				arts:{},
+			},
+			mounted(){
+				let _this=this;
+				_this.minfo.recordid=sessionStorage.getItem("recordid");
+				jQuery.getJSON('http://localhost:8080/api/fzx/selectBz', function(data) {
+					_this.arts = data;
+				});
+			},
+			methods:{
+				open(){
+					comVm.adds=true;
+				},
+				openn(){
+					comVm.addss=true;
+				},
+			}
+		});
+	</script>
+</html>
