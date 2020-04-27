@@ -207,7 +207,7 @@
 						<el-row>
 							<el-col :span="10" style="margin-left: 20px;">
 								<el-button type="text" @click="fadongji(1,3)">发动机
-									<el-input v-model="car.fadongjiid"></el-input>
+									<el-input v-model="car.fadongjiid" label="car.fadongjiname"></el-input>
 								</el-button>
 							</el-col>
 						</el-row>
@@ -248,7 +248,7 @@
 							</el-table-column>
 							<el-table-column label="操作">
 								<template slot-scope="scope">
-									<el-button @click="check2(scope.row.pname)" type="text" size="small">选择</el-button>
+									<el-button @click="check2(scope.row.pid,scope.row.pname)" type="text" size="small">选择</el-button>
 								</template>
 							</el-table-column>
 						</el-table>
@@ -258,16 +258,18 @@
 						</el-pagination>
 					</div>
 				</el-dialog>
-				<el-dialog title="发动机id" :visible.sync="isShow2" style="width: 50%;margin-left: 500px;">
+				<el-dialog title="发动机id" :visible.sync="isShow2" style="width: 70%;margin-left: 250px;">
 					<template>
 						<el-table :data="fadongjis.list" border style="width: 100%">
 							<el-table-column fixed prop="fadongjiid" label="发动机id">
+							</el-table-column>
+							<el-table-column prop="fadongjipp" label="发动机品牌">
 							</el-table-column>
 							<el-table-column prop="fadongjiname" label="发动机名称">
 							</el-table-column>
 							<el-table-column label="操作">
 								<template slot-scope="scope">
-									<el-button @click="check(scope.row.fadongjiid)" type="text" size="small">选择</el-button>
+									<el-button @click="check(scope.row.fadongjiid,scope.row.fadongjiname)" type="text" size="small">选择</el-button>
 								</template>
 							</el-table-column>
 						</el-table>
@@ -427,6 +429,7 @@
 				isShow5: false,
 				isShow6: false,
 				isShow7: false,
+				checkPid:0,
 				ruleForm: {
 					name: '',
 					region: '',
@@ -531,13 +534,14 @@
 				dangan(pageNum, pageSize) {
 					let _this = this; //非常重要
 					_this.isShow7 = true;
-					$.getJSON(`http://127.0.0.1:8080/api/dangan/${pageNum}/${pageSize}`,
+					$.getJSON(`http://127.0.0.1:8080/api/dangan/${pageNum}/${pageSize}/${this.checkPid}`,
 						function(res) {
 							_this.dangans = res;
 						})
 				},
 				/*选择车牌后回填数据*/
-				check2(name) {
+				check2(pid,name) {
+					this.checkPid=pid;
 					this.car.carpp = name;
 					this.isShow6 = false;
 				},
@@ -621,8 +625,9 @@
 					this.fadongji(cpage, 3);
 				},
 				/*选择发动机后回填数据*/
-				check(id) {
+				check(id,name) {
 					this.car.fadongjiid = id;
+					this.car.fadongjiname = name;
 					this.isShow2 = false;
 				},
 				/*查询所有发动机*/

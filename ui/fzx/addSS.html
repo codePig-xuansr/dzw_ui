@@ -19,20 +19,33 @@
 	<body>
 		<div id="addsVmm">
 			<el-row>
-			  <el-col :span="18">
+			  <el-col :span="24">
 				<template>
-					<el-table :data="minfoo" border>
-						<el-table-column v-for="(temp,index) in ms" :label="temp.name" align="center" :resizable="false">
+					<el-table :data="minfo" border>
+						<el-table-column label="选择" align="center" :resizable="false">
 							<template slot-scope="scope">
-								<span v-if="temp.values!=0">{{scope.row[temp.values]}}</span>
-								 <span v-if="temp.values==0">
 									<template>
 										<el-checkbox-group v-model="checked">
 											<!-- 空格为了不让lable显示 -->
 											<el-checkbox :label="scope.row">&nbsp;</el-checkbox>
 										</el-checkbox-group>
-									  </template>
-								</span> 
+									 </template>
+							  </template>
+						</el-table-column>
+						<el-table-column label="材料编码" prop="proid" align="center" :resizable="false">
+							
+						</el-table-column>
+						<el-table-column label="材料名称" prop="proname" align="center" :resizable="false">
+							
+						</el-table-column>
+						<el-table-column label="单价" prop="proprice" align="center" :resizable="false">
+							
+						</el-table-column>
+						<el-table-column label="数量" align="center" :resizable="false">
+							<template slot-scope="scope">
+									<template>
+										<el-input-number size="mini" :min="1" :max="10" v-model="scope.row.num"></el-input-number>
+									</template>
 							  </template>
 						</el-table-column>
 					</el-table>
@@ -45,10 +58,9 @@
 		var addsVmm=new Vue({
 			el:'#addsVmm',
 			data:{
-				minfoo:[],
-				ms:[{name:'选择',values:'0'},{name:'材料编码',values:'proid'},
-				{name:'材料名称',values:'proname'},{name:'单价',values:'proprice'}],
-				checked:[]
+				minfo:[],
+				checked:[],
+				nums:[]
 			},
 			methods:{
 				
@@ -56,7 +68,10 @@
 			mounted(){
 				let _this=this;
 				jQuery.getJSON(`http://localhost:8080/api/fzx/selectcl`,(data)=>{
-					_this.minfoo=data;
+					_this.minfo=data;
+					$.each(data, function(obj) {
+						_this.nums.push({num:0})
+					});
 				});
 			}
 		});

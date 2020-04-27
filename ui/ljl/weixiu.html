@@ -62,7 +62,7 @@
 				</el-col>
 			</el-row>
 			<el-dialog title="新增维修类别" width="600px" :visible.sync="weixiuleibie">
-				<el-form label-width="80px">
+				<el-form label-width="80px" :model="xiangmutype" :rules="rules">
 					<!--<el-form-item label="项目编号：">
 						<el-input v-model="xiangmutype.xid" readonly></el-input>
 					</el-form-item>-->
@@ -91,7 +91,7 @@
 			</el-dialog>
 
 			<el-dialog title="新增子级维修类别" width="600px" :visible.sync="weixiuleibiezi">
-				<el-form label-width="80px">
+				<el-form label-width="80px" :model="xiangmutype" :rules="rules">
 					<!--<el-form-item label="项目编号：">
 						<el-input v-model="xiangmutype.xid" readonly></el-input>
 					</el-form-item>-->
@@ -196,6 +196,18 @@
 						value: 'vipprice'
 					}
 				],
+				rules:{
+					xname: [{
+						required: true,
+						message: '请输入项目类别',
+						trigger: 'blur'
+					}],
+					xfid: [{
+						required: true,
+						message: '请选择上级',
+						trigger: 'blur'
+					}]
+				 },
 				xname: ''
 			},
 			methods: {

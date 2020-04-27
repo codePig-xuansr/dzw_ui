@@ -22,7 +22,7 @@
 		var Main = new Vue({
 			el: "#app",
 			data: {
-				role: {},
+				role: 0,
 				parent: [],
 				uFuns: [],
 				ufs: [],
@@ -218,7 +218,7 @@
 					let plist = [];
 					$.each(arry, function(i, obj) {
 						plist.push({
-							"rid": _this.role.rid,
+							"rid": _this.role,
 							"fid": obj.id
 						});
 					});
@@ -250,12 +250,12 @@
 			mounted() {
 				roleFunApp.loading=false;
 				let _this = this;
-				this.role = JSON.parse(localStorage.getItem("urole"));
+				this.role = localStorage.getItem("urole");
 				$.get(`http://127.0.0.1:8080/zkx/api/funs/f`, function(allfuns) {
 					_this.datas = allfuns;
 				})
 
-				$.get(`http://127.0.0.1:8080/zkx/api/funs/ufuns/${this.role.user}/${this.role.pwd}`, function(funs) {
+				$.get(`http://127.0.0.1:8080/zkx/api/funs/ufuns/${this.role}`, function(funs) {
 					$.each(funs, function(i, obj) {
 						_this.ufs.push(obj.fid);
 					});

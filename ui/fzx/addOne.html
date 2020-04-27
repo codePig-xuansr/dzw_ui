@@ -74,7 +74,8 @@
 								</el-table-column>
 								<el-table-column label="操作">
 									<template slot-scope="scope">
-										<el-button @click="check1(scope.row)" type="text" size="small">选择</el-button>
+										<el-button v-if="scope.row.bzstatus==0" @click="check1(scope.row)" type="text" size="small">选择</el-button>
+										<el-button v-if="scope.row.bzstatus==1" type="text" style="color: red;" size="small">工作中</el-button>
 									</template>
 								</el-table-column>
 							</el-table>
@@ -100,8 +101,8 @@
 				minfo: {
 					guzhanginfo:'',
 					guzhangyuanyin:'',
-					bzid:''
-					},
+					bzid:'',
+				},
 				ar:[],
 				arts:{},
 				//表单基础验证

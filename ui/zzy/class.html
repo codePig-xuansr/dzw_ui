@@ -39,14 +39,14 @@
 			</el-row>
 			<el-dialog title="新增等级" :visible.sync="add" width="30%" :before-close="handleClose">
 				<div>
-					<el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
+					<el-form :label-position="labelPosition" :rules="rules" label-width="80px" :model="formLabelAlign">
 						<!--<el-form-item label="等级编码">
 							<el-input v-model="formLabelAlign.sid"></el-input>
 						</el-form-item>-->
-						<el-form-item label="等级名称">
+						<el-form-item label="等级名称" prop="sname">
 							<el-input v-model="formLabelAlign.sname"></el-input>
 						</el-form-item>
-						<el-form-item label="工时费">
+						<el-form-item label="工时费" prop="ticheng">
 							<el-input v-model="formLabelAlign.ticheng"></el-input>
 						</el-form-item>
 						<!--<el-form-item label="时长">
@@ -62,14 +62,14 @@
 			
 			<el-dialog title="修改等级" :visible.sync="modify" width="30%" :before-close="handleClose">
 				<div>
-					<el-form :label-position="labelPosition" label-width="80px" :model="carlist">
+					<el-form :label-position="labelPosition" :rules="rules" label-width="80px" :model="carlist">
 						<el-form-item label="等级编码">
 							<el-input v-model="carlist.sid" readonly></el-input>
 						</el-form-item>
-						<el-form-item label="等级名称">
+						<el-form-item label="等级名称" prop="sname">
 							<el-input v-model="carlist.sname"></el-input>
 						</el-form-item>
-						<el-form-item label="工时费">
+						<el-form-item label="工时费" prop="ticheng">
 							<el-input v-model="carlist.ticheng"></el-input>
 						</el-form-item>
 						<!--<el-form-item label="时长">
@@ -115,6 +115,21 @@
 					name: '操作',
 					value: '0'
 				}],
+				
+				rules: {
+					sname: [{
+						required: true,
+						message: '请输入等级名称',
+						trigger: 'blur'
+					}],
+					ticheng: [{
+						required: true,
+					    message: '请输入工时费用',
+					    trigger: 'blur'
+					    },{
+					      pattern:/^\d+$|^\d+[.]?\d+$/, message: '只能输入数字'
+					}]
+				}
 				
 			},
 			methods: {

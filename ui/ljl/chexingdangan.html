@@ -8,11 +8,8 @@
 
 	<body>
 		<div id="chexingapp" style="width: 100%;">
-
 			<el-row>
-
 				<el-col :span="6">
-
 					<el-row>
 						<el-button type="primary" @click="pingpaiadd" plain>增加品牌</el-button>
 						<!--<el><input type="text" v-model="pname" placeholder="按名称或字母查询" style=" height:30px;" /></el>-->
@@ -21,7 +18,7 @@
 					</el-row>
 					<div class="grid-content bg-purple">
 						<template>
-							<el-table :data="pingpai" style="width: 100%">
+							<el-table :data="pingpai.list" style="width: 100%">
 								<el-table-column prop="pid" label="编码">
 								</el-table-column>
 								<el-table-column prop="pname" label="品牌名称">
@@ -30,12 +27,13 @@
 								</el-table-column>
 								<el-table-column fixed="right" label="操作" width="150">
 									<template slot-scope="scope">
-										<el-button type="text" @click="selectbypid(pingpai[scope.$index].pid)" size="small">查询</el-button>
-										<el-button @click="pingpaiupdate(pingpai[scope.$index].pid)" type="text" size="small">编辑</el-button>
-										<el-button type="text" @click="del(pingpai[scope.$index].pid)" size="small">删除</el-button>
+										<el-button type="text" @click="selectbypid(pingpai.list[scope.$index].pid)" size="small">查询</el-button>
+										<el-button @click="pingpaiupdate(pingpai.list[scope.$index].pid)" type="text" size="small">编辑</el-button>
+										<el-button type="text" @click="del(pingpai.list[scope.$index].pid)" size="small">删除</el-button>
 									</template>
 								</el-table-column>
 							</el-table>
+							<el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec1" @current-change="change1" layout="total,sizes,prev, pager, next, jumper" :total="pingpai.total" :page-sizes="[3,6,9]" :page-size="pingpai.pageSize">
 						</template>
 
 					</div>
@@ -84,10 +82,7 @@
 			</el-row>
 			<el-dialog title="新增品牌" width="850px" :visible.sync="pingpaixinzeng">
 				<div id="cnt2">
-					<el-form label-width="80px">
-						<!--<el-form-item label="品牌编号：">
-							<el-input v-model="ping.pid" readonly></el-input>
-						</el-form-item>-->
+					<el-form label-width="100px" :rules="rules2" :model="ping">
 						<el-row>
 							<el-col>
 								<el-button type="text">
@@ -114,7 +109,7 @@
 
 			<el-dialog title="修改品牌" width="850px" :visible.sync="pingpaixiugai">
 				<div id="cnt2">
-					<el-form label-width="80px">
+					<el-form label-width="100px" :rules="rules2" :model="ping">
 						<el-row>
 							<el-col>
 								<el-button type="text">
@@ -148,10 +143,7 @@
 
 			<el-dialog title="车型定义" width="850px" :visible.sync="danganxinzeng">
 				<div id="cnt2">
-					<el-form label-width="80px">
-						<!--<el-form-item label="车牌编号：">
-						<el-input v-model="cardangan.danganid" readonly></el-input>
-					</el-form-item>-->
+					<el-form label-width="100px" :rules="rules" :model="cardangan">
 						<el-row>
 							<el-col :span="10">
 								<el-button type="text">
@@ -207,14 +199,6 @@
 										<el-input v-model="cardangan.pname"></el-input>
 									</el-form-item>
 								</el-button>
-
-								<!--<el-form-item prop="xid" label="车牌品牌" style="margin-left: 20px;">
-									<el-select v-model="cardangan.carid" placeholder="请选择">
-										<el-option v-for="(t,i) in addpingpaai" :value="t.pid">
-											{{t.pname}}
-										</el-option>
-									</el-select>
-								</el-form-item>-->
 							</el-col>
 							<el-col :span="10" style="margin-left: 40px;">
 								<el-button type="text" @click="queryfadongjiTypeList(1,3)">
@@ -222,13 +206,6 @@
 										<el-input v-model="cardangan.fadongjiname"></el-input>
 									</el-form-item>
 								</el-button>
-								<!--<el-form-item prop="xid" label="发动机" style="margin-left: 100px;">
-									<el-select v-model="cardangan.fadongjiid" placeholder="请选择">
-										<el-option v-for="(t,i) in addfadongji" :value="t.fadongjiid">
-											{{t.fadongjiname}}
-										</el-option>
-									</el-select>
-								</el-form-item>-->
 							</el-col>
 						</el-row>
 
@@ -239,18 +216,9 @@
   				</span>
 				</div>
 			</el-dialog>
-
-			<!--
-            	作者：2453688922@qq.com
-            	时间：2020-04-19
-            	描述：修改区间
-            -->
-
 			<el-dialog title="车牌品牌" :visible.sync="pinpai" style="width: 50%;margin-left: 400px;">
 				<template>
 					<el-table :data="addpingpaai.list" border style="width: 100%">
-						<el-table-column fixed prop="pid" label="车牌品牌">
-						</el-table-column>
 						<el-table-column prop="pname" label="车牌名称">
 						</el-table-column>
 						<el-table-column label="操作">
@@ -261,7 +229,7 @@
 					</el-table>
 				</template>
 				<div class="page">
-					<el-pagination layout="prev, pager, next" @current-change="current1" @prev-click="prev1" @next-click="next1" :total="this.addpingpaai.pages*10">
+					<el-pagination layout="prev, pager, next" @current-change="current2" @prev-click="prev2" @next-click="next2" :total="this.addpingpaai.pages*10">
 					</el-pagination>
 				</div>
 			</el-dialog>
@@ -269,8 +237,6 @@
 			<el-dialog title="发动机" :visible.sync="fadongji" style="width: 50%;margin-left: 400px;">
 				<template>
 					<el-table :data="addfadongji.list" border style="width: 100%">
-						<el-table-column fixed prop="fadongjiid" label="发动机编号">
-						</el-table-column>
 						<el-table-column prop="fadongjiname" label="发动机名称">
 						</el-table-column>
 						<el-table-column prop="fadongjipp" label="发动机品牌">
@@ -287,15 +253,9 @@
 					</el-pagination>
 				</div>
 			</el-dialog>
-
-			<!--
-            	作者：2453688922@qq.com
-            	时间：2020-04-19
-            	描述：修改区间
-            -->
 			<el-dialog title="车型更新" width="850px" :visible.sync="danganxiugai">
 				<div id="cnt2">
-					<el-form label-width="80px">
+					<el-form label-width="100px" :model="cardangan" :rules="rules">
 						<el-row>
 							<el-col :span="10">
 								<el-button type="text">
@@ -401,10 +361,65 @@
 				danganxiugai: false,
 				danganxinzeng: false,
 				pingpaixinzeng: false,
-				pingpaixiugai: false
+				pingpaixiugai: false,
+				rules:{
+					carid: [{
+						required: true,
+						message: '请输入车型编号',
+						trigger: 'blur'
+					}],
+					cankaoprice: [{
+						required: true,
+						message: '请输入参考价格',
+						trigger: 'blur'
+					}],
+					carname: [{
+						required: true,
+						message: '请输入车辆名称',
+						trigger: 'blur'
+					}],
+					carniankuan: [{
+						required: true,
+						message: '请输入车辆年款',
+						trigger: 'blur'
+					}],
+					gonglv: [{
+						required: true,
+						message: '请输入功率',
+						trigger: 'blur'
+					}],
+					jinkouguochan: [{
+						required: true,
+						message: '请输入进口国家',
+						trigger: 'blur'
+					}],
+					pname: [{
+						required: true,
+						message: '请选择品牌',
+						trigger: 'blur'
+					}],
+					fadongjiname: [{
+						required: true,
+						message: '请选择发动机',
+						trigger: 'blur'
+					}]
+				},
+				rules2:{
+					pname: [{
+						required: true,
+						message: '请输入品牌',
+						trigger: 'blur'
+					}],
+					pzimu: [{
+						required: true,
+						message: '请输入车型的开头字母',
+						trigger: 'blur'
+					}]
+				}
+				
 			},
 			methods: {
-				selectbypid(pid){
+				selectbypid(pid) {
 					//alert(pid)
 					let _this = this;
 					$.getJSON(`http://localhost:8080/api/ljl/dangan/chexing/danganchaxun/bypid/${pid}/1/5`,
@@ -425,8 +440,8 @@
 					this.cardangan.carid = year + '' + this.getNow(month) + "" + this.getNow(date) + "" + xingqi + "" + shi + "" + fen + "" + miao;
 					return this.cardangan.carid;
 				},
-				getNow(s){
-					return s < 10 ? '0' + s:s;
+				getNow(s) {
+					return s < 10 ? '0' + s : s;
 				},
 				prev2(cpage) {
 					this.querychepaiTypeList(cpage, 3);
@@ -457,12 +472,6 @@
 					this.cardangan.fadongjiname = row.fadongjiname;
 					this.fadongji = false;
 					this.cardangan.fadongjiid = row.fadongjiid;
-					/*this.formLabelAlign.ghname = row.ghname;
-					this.isShow3 = false;
-					this.formLabelAlign.ghid=row.ghid;
-					this.teams.ghname=row.ghname;
-					this.teams.ghid=row.ghid;
-					*/
 				},
 				queryfadongjiTypeList(n, s) {
 					let _this = this;
@@ -579,13 +588,7 @@
 					let _this = this;
 					_this.danganxinzeng = true;
 					_this.getId();
-					_this.selecttypeid();
-					/*$.getJSON(
-						`http://localhost:8080/api/ljl/dangan/danganadd/IdMax`,
-						function(data) {
-							_this.cardangan.danganid = data + 1;
-						}
-					);*/
+					//_this.selecttypeid();
 				},
 				addchexingdangan() {
 					let _this = this;
@@ -620,12 +623,15 @@
 						pdate: new Date().toLocaleDateString()
 					}
 				},
-				cx() {
+				cx(){
+					this.chaxunpingpaiByname(1,5);
+				},
+				chaxunpingpaiByname(n, s) {
 					let _this = this;
 					if(_this.pname == '') {
 						_this.pname = null;
 					}
-					$.getJSON(`http://localhost:8080/api/ljl/dangan/All/pingpai/byname/${_this.pname}`,
+					$.getJSON(`http://localhost:8080/api/ljl/dangan/All/pingpai/byname/${_this.pname}/${n}/${s}`,
 						function(data) {
 							_this.pingpai = data;
 
@@ -651,18 +657,6 @@
 				pingpaiadd() {
 					let _this = this;
 					_this.pingpaixinzeng = true;
-					/*$.getJSON(
-						`http://localhost:8080/api/ljl/dangan/pingpaiadd/IdMax`,
-						function(data) {
-							/*if(data=='null'){
-								alert(1)
-								_this.ping.pid = 1;
-							}else{
-								alert(data)
-							}
-							_this.ping.pid = data + 1;
-						}
-					);*/
 				},
 				del(pid) {
 					let _this = this;
@@ -677,7 +671,7 @@
 									message: data.msg,
 									type: 'success'
 								});
-								_this.pingpaichaxun();
+								_this.pingpaichaxun(1,5);
 								_this.info(1, 5);
 							}
 						);
@@ -712,7 +706,7 @@
 								message: data.msg,
 								type: 'success'
 							});
-							_this.pingpaichaxun();
+							_this.pingpaichaxun(1,5);
 							_this.qingkongping();
 							_this.pingpaixiugai = false;
 						},
@@ -734,7 +728,7 @@
 								message: data.msg,
 								type: 'success'
 							});
-							_this.pingpaichaxun();
+							_this.pingpaichaxun(1,5);
 							_this.qingkongping();
 							_this.pingpaixinzeng = false;
 						},
@@ -743,21 +737,27 @@
 						}
 					});
 				},
-				pingpaichaxun() {
+				change1(num) {
+					let _this = this;
+					this.pingpaichaxun(num, _this.pingpai.pageSize);
+				},
+				sizec1(size) {
+					this.pingpaichaxun(1, size);
+				},
+				pingpaichaxun(n, s) {
 					let _this = this;
 					$.getJSON(
-						`http://localhost:8080/api/ljl/dangan/All/Pingpai`,
+						`http://localhost:8080/api/ljl/dangan/All/Pingpai/${n}/${s}`,
 						function(data) {
 							_this.pingpai = data;
 						}
 					);
 				}
-
 			},
 			mounted() {
 				let _this = this;
 				_this.info(1, 5);
-				_this.pingpaichaxun();
+				_this.pingpaichaxun(1,5);
 			}
 		});
 	</script>

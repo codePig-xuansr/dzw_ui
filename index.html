@@ -51,6 +51,14 @@
 			.el-menu--horizontal>.el-menu-item.is-active {
 				border-bottom: none !important;
 			}
+			
+			/*.el-tabs__content{
+				display: none;
+			}*/
+			
+			/*.el-tabs--card>.el-tabs__header{
+				border-bottom: 0;
+			}*/
 		</style>
 	</head>
 
@@ -74,7 +82,7 @@
 								<span>{{temp.fname}}</span>
 							</template>
 							<!--子项-->
-							<el-menu-item v-for="(item,index) in userfuns" :index=i+1+"-"+(index+1) v-if="item.fpid==temp.fid" @click="To(item.fcode)">{{item.fname}}</el-menu-item>
+							<el-menu-item v-for="(item,index) in userfuns" :index=i+1+"-"+(index+1) v-if="item.fpid==temp.fid" @click="To(item.fcode,item.fname)">{{item.fname}}</el-menu-item>
 						</el-submenu>
 						</el-submenu>
 						<!--填充侧边容器-->
@@ -127,8 +135,14 @@
 						  </el-image>
 						</div>
 					</el-dialog>
-
-					<!--主体内容-->
+					<!--<el-tabs @tab-click="tabClick" v-model="editableTabsValue" type="card" closable @tab-remove="removeTab">
+					  <el-tab-pane
+					    v-for="(item, index) in editableTabs"
+					    :key="item.name"
+					    :label="item.title"
+					    :name="item.name"
+					    >{{item.content}}</el-tab-pane>
+					</el-tabs>-->
 					<div id="cnt"></div>
 				</el-main>
 			</el-container>
@@ -159,9 +173,58 @@
 					newpwd: '',
 					checkpwd: ''
 				},
-				 url: 'http://127.0.0.1:8080/'
+				 url: 'http://127.0.0.1:8080/',
+				 editableTabsValue: '2',
+		        editableTabs: [],
+		        /*{
+		          title: 'Tab 2',
+		          name: '2',
+		          content: 'Tab 2 content'
+		        }*/
+		        tabIndex: 0
 			},
 			methods: {
+				tabClick(val){
+					//alert($("#pane-"+val.name).html());
+					$("#cnt").load($("#pane-"+val.name).html());
+				},
+				addTab(titleName,targetName,content) {
+					let tname='';
+					this.editableTabs.forEach(temp=>{
+						if(temp.title==titleName){
+							tname=temp.name;
+						}
+					})
+					if(tname!=''){
+						$(".el-tabs__nav>div").removeClass("is-active");
+						$("#tab-"+tname).addClass("is-active");
+						$("#cnt").load($("#pane-"+tname).html());
+						return;
+					}
+			        let newTabName = ++this.tabIndex + '';
+			        this.editableTabs.push({
+			          title: titleName,
+			          name: newTabName,
+			          content:content
+			        });
+			        this.editableTabsValue = newTabName;
+		      	},
+				removeTab(targetName) {
+		        let tabs = this.editableTabs;
+		        let activeName = this.editableTabsValue;
+		        if (activeName === targetName) {
+		          tabs.forEach((tab, index) => {
+		            if (tab.name === targetName) {
+		              let nextTab = tabs[index + 1] || tabs[index - 1];
+		              if (nextTab) {
+		                activeName = nextTab.name;
+		              }
+		            }
+		          });
+		        }
+		        this.editableTabsValue = activeName;
+		        this.editableTabs = tabs.filter(tab => tab.name !== targetName);
+		      },
 				/*getPayImg(){
 					let _this = this;
 					this.alipay=true;
@@ -184,7 +247,8 @@
 						}
 					})
 				},*/
-				To(fcode) {
+				To(fcode,fname) {
+					this.addTab(fname,fcode,window.menuMapping[fcode]);
 					$("#cnt").load(window.menuMapping[fcode]);
 				},
 				toUrl(url) {
@@ -263,7 +327,7 @@
 			},
 			mounted() {
 				let _this = this;
-				this.To('sy');
+				this.To('sy','主页');
 				console.info(sessionStorage.getItem("user"));
 				this.users = JSON.parse(sessionStorage.getItem("user"));
 
