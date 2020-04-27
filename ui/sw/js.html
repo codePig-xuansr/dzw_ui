@@ -195,12 +195,12 @@
 								<el-button type="success" icon="el-icon-check" @click="js(props.row.recordid)" circle v-if="props.row.jsstatus==0">结算</el-button>
 							</el-form>
 							<el-button type="text" @click="isShow1 = true">费用明细</el-button>
-							<el-dialog title="提示" :visible.sync="isShow1" width="35%" :before-close="handleClose">
-								<h4 class="modal-title">费用明细</h4>
+							<el-dialog title="费用明细" :visible.sync="isShow1" width="50%" :before-close="handleClose">
+								<!--<h4 class="modal-title" style="font-weight: bold;">费用明细</h4>-->
 								<h5 class="font-bold">销售单号:{{props.row.recordid}}</h5>
 								<h5 class="font-bold">客户名：{{props.row.kname}}&nbsp;&nbsp;<span v-if="props.row.jsstatus==1">客户级别：{{viptype}} 客户折扣：{{vipdiscount}}</span></h5>
 								<p class="font-bold">车牌号码&nbsp;&nbsp;&nbsp;&nbsp;{{props.row.carno}}</p>
-								<h4>总费用：</h4>
+								<h4 style="font-weight: bold;">总费用：</h4>
 								<p>
 									<el-table :data="prices" style="">
 										<el-table-column label="该小组维修工时费" prop="bzcost">
@@ -226,7 +226,7 @@
 								<p class="font-bold">维修项目总消费:&nbsp;&nbsp;&nbsp;{{xmfei}}</p>
 								<p class="font-bold">共消费&nbsp;&nbsp;&nbsp;{{props.row.jsmoney}}</p>-->
 								<p style="color: #999999; size: 5px;">计算方式：(人工费(小组工时费×共消耗工时)+维修业务费用+救援费+商品费用)<span v-if="props.row.jsstatus==1">×会员折扣</span></p>
-								<h4>项目费用：</h4>
+								<h4 style="font-weight: bold;">项目费用：</h4>
 								<p>
 									<el-table :data="fw" style="">
 										<el-table-column label="销售单号" prop="recordid">
@@ -239,7 +239,7 @@
 										</el-table-column>
 									</el-table>
 								</p>
-								<h4>商品费用：</h4>
+								<h4 style="font-weight: bold;">商品费用：</h4>
 								<p>
 									<el-table :data="shoppings" style="">
 										<el-table-column label="商品编号" prop="proid">
