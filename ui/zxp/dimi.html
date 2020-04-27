@@ -22,7 +22,7 @@
 	  <el-button type="primary" plain   @click="dcbb">导出</el-button>
 	<br />
 	<br />
-<el-dialog title="离职登记" :visible.sync="isShow2" style="width: 70%;margin-left: 400px;">
+<el-dialog title="离职登记" :visible.sync="isShow2" style="width: 100%;margin-top: -50px;">
 						<template>
 							<div style="margin-left: -80px;">
 								<el-button type="text"  style="width: 200px;">员工姓名：
@@ -225,6 +225,7 @@
 						}
 					);
 				},dcbb(){
+					this.name=null;
 					$.getJSON(`http://127.0.0.1:8080/zxp/api/leave/daochukhzl`,
 						function(data) {
 							if(data.code == "200") {

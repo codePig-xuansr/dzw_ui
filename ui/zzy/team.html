@@ -161,11 +161,11 @@
 						<template>
 							
 							<el-table :data="queryDepartmentListValue.list" border style="width: 100%">
-								<el-table-column fixed prop="depid" label="部门id">
+								<!--<el-table-column fixed prop="depid" label="部门id">
+								</el-table-column>-->
+								<el-table-column prop="depname" align="center" label="部门名称">
 								</el-table-column>
-								<el-table-column prop="depname" label="部门名称">
-								</el-table-column>
-								<el-table-column label="操作">
+								<el-table-column label="操作" align="center">
 									<template slot-scope="scope">
 										<el-button @click="check(scope.row)" type="text" size="small">选择</el-button>
 									</template>
@@ -182,11 +182,11 @@
 						<template>
 							
 							<el-table :data="queryBanzuListValue.list" border style="width: 100%">
-								<el-table-column fixed prop="bzid" label="班组id">
+								<!--<el-table-column fixed prop="bzid" label="班组id">
+								</el-table-column>-->
+								<el-table-column prop="bzname" align="center" label="班组名称">
 								</el-table-column>
-								<el-table-column prop="bzname" label="班组名称">
-								</el-table-column>
-								<el-table-column label="操作">
+								<el-table-column label="操作" align="center">
 									<template slot-scope="scope">
 										<el-button @click="check2(scope.row)" type="text" size="small">选择</el-button>
 									</template>
@@ -203,11 +203,11 @@
 						<template>
 							
 							<el-table :data="queryStarListValue.list" border style="width: 100%">
-								<el-table-column fixed prop="sid" label="星级id">
+								<!--<el-table-column fixed prop="sid" label="星级id">
+								</el-table-column>-->
+								<el-table-column prop="sname" align="center" label="星级名称">
 								</el-table-column>
-								<el-table-column prop="sname" label="星级名称">
-								</el-table-column>
-								<el-table-column label="操作">
+								<el-table-column label="操作" align="center">
 									<template slot-scope="scope">
 										<el-button @click="check3(scope.row)" type="text" size="small">选择</el-button>
 									</template>
@@ -291,6 +291,8 @@
 				piges: {},
 				department:{},
 				labelPosition:'right',
+				
+				radio: '男',
 				isShow2:false,
 				isShow3:false,
 				isShow4:false,
@@ -303,7 +305,9 @@
 				addteam:false,
 				modifybz:false,
 				modifyjg:false,
-				addjgvalue:{},
+				addjgvalue:{
+					jsex:'男',
+				},
 				department:{},
 				queryDepartmentListValue:{},
 				queryBanzuListValue:{},
@@ -374,7 +378,7 @@
 					    trigger: 'blur'
 					    },{
 					      pattern:/^\d+$|^\d+[.]?\d+$/, message: '只能输入数字'
-					  }],sname: [{
+					  }],/*sname: [{
 						required: true,
 						message: '请输入等级名称',
 						trigger: 'blur'
@@ -387,7 +391,7 @@
 						required: true,
 						message: '请输入班组',
 						trigger: 'blur'
-					}],
+					}],*/
 				},
 				
 				list: [],
@@ -656,6 +660,10 @@
 								alert("新增成功！");
 								_this.addbz = false;
 								_this.page(1,2);
+								_this.formLabelAlign={
+									bzname:'',
+									bztype:'',
+								}
 							}
 						}
 					});
@@ -675,6 +683,17 @@
 								alert("新增成功！");
 								_this.addjg = false;
 								_this.jgpage(1,2,null);
+								_this.addjgvalue={
+									jname:'',
+									jphone:'',
+									jaddress:'',
+									truename:'',
+									jidcard:'',
+									worktime:'',
+									sname:'',
+									depname:'',
+									bzname:'',
+								}
 							}
 						}
 					});
