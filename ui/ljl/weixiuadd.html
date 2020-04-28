@@ -70,7 +70,7 @@
 							</el-col>-->
 							<el-col :span="12">
 								<el-button type="text" @click="queryweixiuTypeList(1,3)">
-									<el-form-item label="项目类别" prop="xid">
+									<el-form-item label="项目类别" prop="this.xname">
 										<el-input v-model="weixiufuwu.xid"></el-input>
 									</el-form-item>
 								</el-button>
@@ -115,6 +115,7 @@
 					fwprice: '',
 					vipprice: 0
 				},
+				xname:'',
 				leibie2: false,
 				weixiutype: [],
 				rules:{
@@ -144,6 +145,7 @@
 				check(row) {
 					this.leibie2 = false;
 					this.weixiufuwu.xid = row.xid;
+					this.xname=row.xname;
 				},
 				queryweixiuTypeList(n, s) {
 					let _this = this;
