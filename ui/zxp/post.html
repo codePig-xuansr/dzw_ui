@@ -45,16 +45,31 @@
 								</el-table-column>
     </el-table>
   </template>
-  <el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="vehicleInfo.total" :page-sizes="[1,2,3,4,5]" :page-size="vehicleInfo.pageSize">
+ <el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,prev, pager, next, jumper" :total="vehicleInfo.total" :page-size="this.vehicleInfo.pageSize" >
   </el-col>	
 			</el-row>
 
-<el-dialog title="添加岗位" :visible.sync="add" width="72%" :before-close="handleClose">
+<!--<el-dialog title="添加岗位" :visible.sync="add" width="72%" :before-close="handleClose">
 		岗位名称：
 		<el-input type="text" style="width: 200px;" placeholder="" id="rname" maxlength="20" v-model="formLabelAlign.rname" />&nbsp;&nbsp;&nbsp; 
 		<br />
 		<br />
 		<span slot="footer" class="dialog-footer" style="position: relative;left: -400px;">
+   				 <el-button @click="add = false">取 消</el-button>
+   				 <el-button type="primary" @click="addall">保存</el-button>
+  				</span>
+			</el-dialog>-->
+			
+			
+			
+			<el-dialog title="添加岗位" :visible.sync="add" width="72%" :before-close="handleClose">
+				<div>
+					<el-form  :rules="rules" :inline="true"  :model="formLabelAlign" :label-position="labelPosition">
+						<el-form-item label="岗位名称"  prop="rname" >
+							<el-input v-model="formLabelAlign.rname" ></el-input>
+						</el-form-item>
+				</div>
+				<span slot="footer" class="dialog-footer" style="position: relative;left: -400px;">
    				 <el-button @click="add = false">取 消</el-button>
    				 <el-button type="primary" @click="addall">保存</el-button>
   				</span>
@@ -103,6 +118,13 @@ formLabelAlign:{
 				carlist: [],
 				list: [],
 				vehicleInfo:[],
+				rules: {
+					rname: [{
+						required: true,
+						message: '岗位名称不能为空',
+						trigger: 'blur'
+					}]
+				}
 	},
 	methods: {
 				delOne(rid) {

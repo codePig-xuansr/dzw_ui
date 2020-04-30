@@ -22,7 +22,7 @@
 	  <el-button type="primary" plain   @click="dcbb">导出</el-button>
 	<br />
 	<br />
-<el-dialog title="离职登记" :visible.sync="isShow2" style="width: 100%;margin-top: -50px;">
+<!--<el-dialog title="离职登记" :visible.sync="isShow2" style="width: 100%;margin-top: -50px;">
 						<template>
 							<div style="margin-left: -80px;">
 								<el-button type="text"  style="width: 200px;">员工姓名：
@@ -53,7 +53,43 @@
 							<el-pagination layout="prev, pager, next" @current-change="current1" @prev-click="prev1" @next-click="next1" :total="this.user.pages*10">
 							</el-pagination>
 						</div>
-					</el-dialog>    
+					</el-dialog>    -->
+					
+					
+					<el-dialog title="离职登记" :visible.sync="isShow2"  :before-close="handleClose" style="width: 100%;margin-top: -50px;">
+				<div>
+					
+						<el-form   :rules="rules" :inline="true"  :model="formData" :label-position="labelPosition">
+    <el-form-item label="员工姓名" prop="visitorName">
+        <el-input v-model="formData.visitorName" ></el-input>
+    </el-form-item>
+</el-form>
+<el-form  :rules="rules" :inline="true"  :model="leave" :label-position="labelPosition">
+						<el-form-item label="离职原因"  prop="content" >
+							<el-input v-model="leave.content" ></el-input>
+						</el-form-item>
+						</el-form>
+				</div>
+								<el-button type="primary" @click="addall" style="margin-left: 80px;">保存</el-button>
+							<el-table :data="user.list" border style="width: 100%">
+								<el-table-column fixed prop="uid" label="员工编号">
+								</el-table-column>
+								<el-table-column prop="username" label="员工姓名">
+								</el-table-column>
+								<el-table-column prop="sex" label="性别">
+								</el-table-column>
+								<el-table-column label="操作">
+									<template slot-scope="scope">
+										<el-button @click="check(scope.row)" type="text" size="small">选择</el-button>
+									</template>
+								</el-table-column>
+							</el-table>
+						</template>
+						<div class="page">
+							<el-pagination layout="prev, pager, next" @current-change="current1" @prev-click="prev1" @next-click="next1" :total="this.user.pages*10">
+							</el-pagination>
+						</div>
+			</el-dialog>
     
     <el-row >
 				<el-col :span="24">
@@ -80,7 +116,7 @@
 						</el-table-column>
     </el-table>
   </template>
-  <el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,prev, pager, next, jumper" :total="vehicleInfo.total"  :page-size="this.vehicleInfo.pages" >
+  <el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,prev, pager, next, jumper" :total="vehicleInfo.total"  :page-size="this.vehicleInfo.pageSize" >
   </el-col>	
 			</el-row>
     
@@ -121,12 +157,38 @@
 						
 					}
 				},
+				formData: {
+           visitorName: '',
+           cardType: 1,
+           cardCode: ''
+      },
 				isShow2: false,
 				modify:false,
 				piges: {},
 				carlist: [],
 				list: [],
 				vehicleInfo:[],
+					rules: {
+					name: [{
+						required: true,
+						message: '员工姓名不能为空',
+						trigger: 'blur'
+					}],
+					content: [{
+						required: true,
+						message: '离职原因不能为空',
+						trigger: 'blur'
+					}], visitorName: [
+               { required: true, message: '员工姓名不能为空', trigger: 'blur' },
+               { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' },
+               {
+                        required: true,
+                        pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9.·-]+$/,
+                        message: '姓名不支持特殊字符',
+                        trigger: 'blur'
+               }
+          ],
+				}
 			}
 			,filters: {
    },
@@ -170,7 +232,7 @@
 				},
 				/*选择发动机后回填数据*/
 				check(row) {
-					this.username = row.username;
+					this.formData.visitorName= row.username;
 				},queryBanzuList(n, s) {
 					let _this = this;
 					jQuery.getJSON(`http://127.0.0.1:8080/zxp/api/leave/findUser/${n}/${s}`, function(pg) {
@@ -200,7 +262,7 @@
 				//添加数据
 				addall() {
 					let _this=this;
-					_this.formLabelAlign.username=_this.username;
+					_this.formLabelAlign.username=_this.formData.visitorName;
 					_this.formLabelAlign.content=_this.leave.content;
 					jQuery.ajax("http://127.0.0.1:8080/zxp/api/leave/add",{
 						type:'post',
