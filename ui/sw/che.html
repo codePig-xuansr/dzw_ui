@@ -384,7 +384,7 @@
 			el: '#cheVm',
 			data: {
 				activeName: 'first',
-				dangans:{},
+				dangans: {},
 				pingpais: {},
 				fadongjis: {},
 				car: {
@@ -429,16 +429,20 @@
 				isShow5: false,
 				isShow6: false,
 				isShow7: false,
-				checkPid:0,
+				checkPid: 0,
 				ruleForm: {
-					name: '',
-					region: '',
-					date1: '',
-					date2: '',
-					delivery: false,
-					type: [],
-					resource: '',
-					desc: ''
+					kname: '',
+					kphone: '',
+					kaddress: '',
+					borndate: '',
+					carno: '',
+					carpp: '',
+					carxinghao: '',
+					driver: '',
+					driverphone: '',
+					ranyoutype: '',
+					jszlostdate: '',
+					carguishu: ''
 				},
 				rules: {
 					kname: [{
@@ -513,7 +517,7 @@
 				}
 			},
 			methods: {
-					/*选择车型后回填数据*/
+				/*选择车型后回填数据*/
 				check3(name) {
 					this.car.carxinghao = name;
 					this.isShow7 = false;
@@ -540,8 +544,8 @@
 						})
 				},
 				/*选择车牌后回填数据*/
-				check2(pid,name) {
-					this.checkPid=pid;
+				check2(pid, name) {
+					this.checkPid = pid;
 					this.car.carpp = name;
 					this.isShow6 = false;
 				},
@@ -588,7 +592,7 @@
 				},
 				/*上一页车辆查询*/
 				prev2(cpage) {
-					this.queryCl(cpage, 3,this.cl.list[0].kid);
+					this.queryCl(cpage, 3, this.cl.list[0].kid);
 				},
 				/*下一页车辆查询*/
 				next2(cpage) {
@@ -625,7 +629,7 @@
 					this.fadongji(cpage, 3);
 				},
 				/*选择发动机后回填数据*/
-				check(id,name) {
+				check(id, name) {
 					this.car.fadongjiid = id;
 					this.car.fadongjiname = name;
 					this.isShow2 = false;
@@ -793,7 +797,10 @@
 									vipcode: "",
 									vippwd: ""
 								};
+							} else {
+								alert('新增失败');
 							}
+
 						}
 					});
 				},
