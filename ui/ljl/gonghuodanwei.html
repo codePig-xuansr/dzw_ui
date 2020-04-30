@@ -73,7 +73,7 @@
 			</el-row>
 			<el-dialog title="添加供货单位" :visible.sync="addcs" width="40%">
 				<div>
-					<el-form label-width="80px" :rules="rules">
+					<el-form label-width="80px" :rules="rules" :model="guohuoadd">
 						<el-row>
 							<el-col :span="11">
 								<el-button type="text">
@@ -115,7 +115,7 @@
 			</el-dialog>
 			<el-dialog title="修改供货单位" :visible.sync="updatecs" width="40%">
 				<div>
-					<el-form label-width="80px" :rules="rules">
+					<el-form label-width="80px" :rules="rules" :model="guohuoadd">
 						<el-row>
 							<el-col :span="11">
 								<el-button type="text">
