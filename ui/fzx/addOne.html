@@ -63,7 +63,7 @@
 			  </el-col>
 			</el-row>
 			
-			<el-dialog title="维修班组" :visible.sync="isShow1" style="width: 50%;margin-left: 400px;">
+			<el-dialog append-to-body="true" title="维修班组" :visible.sync="isShow1" style="width: 50%;margin-left: 400px;">
 						<template>
 							<el-table :data="ar.list" border style="width: 100%">
 								<el-table-column fixed prop="bzid" label="班组id">
