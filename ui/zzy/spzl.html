@@ -41,7 +41,7 @@
 								</template>
 							</el-table-column>
 						</el-table>
-						<el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,sizes,prev, pager, next, jumper" :total="carlist.total" :page-sizes="[1,2,3,4,5]" :page-size="carlist.pageSize">
+						<el-pagination background prev-text="上一页" next-text="下一页" @size-change="sizec" @current-change="change" layout="total,prev, pager, next, jumper" :total="carlist.total" :page-sizes="[1,2,3,4,5]" :page-size="carlist.pageSize">
 					</template>
 				</el-col>
 			</el-row>
@@ -207,11 +207,11 @@
 					    message: '请输入商品名称',
 					    trigger: 'blur'
 					}],
-					pronum: [{
+					pronpp: [{
 						required: true,
 					    message: '请输入商品品牌',
 					    trigger: 'blur'
-					}],propp: [{
+					}],pronum: [{
 						required: true,
 						message: '请输入商品数量',
 						trigger: 'blur'
