@@ -150,7 +150,7 @@
 
 
 
-<el-dialog title="添加员工" :visible.sync="addd" width="72%" :before-close="handleClose">
+<el-dialog title="添加员工" :visible.sync="addd" width="50%" :before-close="handleClose">
 				<div>
 					<el-form  :rules="rules" :inline="true"  :model="user" :label-position="labelPosition">
 						<el-form-item label="员工编号"  prop="id" style="margin-left: -70px;">
@@ -210,7 +210,7 @@
 
 
 
-	<el-dialog title="职工信息修改" :visible.sync="modify" width="72%" :before-close="handleClose">
+	<el-dialog title="职工信息修改" :visible.sync="modify" width="50%" :before-close="handleClose">
 				<span style="position: relative;left: -63px;">员工编号：</span><el-input type="text" style="width: 200px;margin-left: -60px;" placeholder="" id="uid" maxlength="20" v-model="formLabelAlign.user.uid"/>&nbsp;&nbsp;&nbsp;
    	员工姓名：<el-input type="text" style="width: 200px;" placeholder="" id="name" maxlength="20" v-model="formLabelAlign.user.username" />&nbsp;&nbsp;&nbsp;
 	员工性别：
