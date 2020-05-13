@@ -393,7 +393,7 @@
 				},queryBanzuList(n, s) {
 					let _this = this;
 					_this.isShow3 = true;
-					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/banzu/queryBanzuAll/${n}/${s}`, function(pg) {
+					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/banzu/queryBanzuAll2/${n}/${s}`, function(pg) {
 						_this.queryBanzuListValue = pg;
 					});
 				},

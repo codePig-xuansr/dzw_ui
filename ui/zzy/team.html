@@ -523,7 +523,7 @@
 				},queryBanzuList(n, s) {
 					let _this = this;
 					_this.isShow3 = true;
-					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/banzu/queryBanzuAll/${n}/${s}`, function(pg) {
+					jQuery.getJSON(`http://127.0.0.1:8080/zzy/api/banzu/queryBanzuAll2/${n}/${s}`, function(pg) {
 						_this.queryBanzuListValue = pg;
 					});
 				},
@@ -579,7 +579,7 @@
 							success(msg) {
 								if(msg.code == "200") {
 									alert("删除成功");
-									_this.jgpage(1,5,null);
+									_this.jgpage(1,5);
 								} else {
 									alert("删除失败");
 								}
@@ -598,7 +598,7 @@
 							success(msg) {
 								if(msg.code == "200") {
 									alert("删除成功");
-									_this.page(1,5);
+									_this.page(1,2,null);
 								} else {
 									alert("删除失败");
 								}
@@ -664,7 +664,7 @@
 							}else{							
 								alert("新增成功！");
 								_this.addbz = false;
-								_this.page(1,2);
+								_this.page(1,2,null);
 								_this.formLabelAlign={
 									bzname:'',
 									bztype:'',
@@ -758,7 +758,7 @@
 							} else {
 								alert("修改成功！");
 								_this.modifybz = false;
-								_this.page(1,2);
+								_this.page(1,2,null);
 								_this.page(num, _this.carlist.pageSize);
 							}
 						}
