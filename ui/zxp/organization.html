@@ -150,10 +150,10 @@
 
 
 
-<el-dialog title="添加员工" :visible.sync="addd" width="50%" :before-close="handleClose">
+<el-dialog title="添加员工" :visible.sync="addd" width="65%" :before-close="handleClose">
 				<div>
 					<el-form  :rules="rules" :inline="true"  :model="user" :label-position="labelPosition">
-						<el-form-item label="员工编号"  prop="id" style="margin-left: -70px;">
+						<el-form-item label="员工编号"  prop="id" style="margin-left: -94px;">
 							<el-input v-model="finduid.uid" :disabled="true" ></el-input>
 						</el-form-item>
 						<el-form-item label="员工姓名" prop="username">
@@ -174,8 +174,8 @@
 						<el-form-item label="居住地址" prop="address">
 							<el-input v-model="user.address"></el-input>
 						</el-form-item>
-						<el-form-item label="入职时间" prop="comedate" style="margin-top: 15px;">
-							<el-date-picker v-model="user.comedate" type="date" placeholder="请选择入职日期" id="rtime" style="width: 180px;">
+						<el-form-item label="入职时间" prop="comedate" style="margin-top: 15px;margin-left: 5px;">
+							<el-date-picker v-model="user.comedate" type="date" placeholder="请选择入职日期" id="rtime" style="width: 210px;">
 							</el-date-picker>
 						</el-form-item>
 						<el-button type="text" @click="queryBanzuList(1,3)" prop="depname" >
@@ -201,6 +201,51 @@
 
 
 
+<el-dialog title="添加员工" :visible.sync="modify" width="65%" :before-close="handleClose">
+				<div>
+					<el-form  :rules="rules" :inline="true"  :model="user" :label-position="labelPosition">
+						<el-form-item label="员工编号"  prop="id" style="margin-left: -94px;">
+							<el-input v-model="formLabelAlign.user.uid" :disabled="true" ></el-input>
+						</el-form-item>
+						<el-form-item label="员工姓名" prop="username">
+							<el-input v-model="formLabelAlign.user.username"></el-input>
+						</el-form-item>
+						<el-form-item label="员工性别" >
+						<template >
+						  <el-radio  v-model="formLabelAlign.user.sex" label="男">男</el-radio>
+						 <el-radio v-model="formLabelAlign.user.sex" label="女">女</el-radio>
+						</template>
+						</el-form-item>
+						<el-form-item label="登录账号" prop="user">
+							<el-input v-model="formLabelAlign.user.user"></el-input>
+						</el-form-item>
+						<el-form-item label="登录密码" prop="pwd">
+							<el-input v-model="formLabelAlign.user.pwd" type="password"></el-input>
+						</el-form-item>
+						<el-form-item label="居住地址" prop="address">
+							<el-input v-model="formLabelAlign.user.address"></el-input>
+						</el-form-item>
+						<el-form-item label="入职时间" prop="comedate" style="margin-top: 15px;margin-left: 5px;">
+							<el-date-picker v-model="formLabelAlign.user.comedate" type="date" placeholder="请选择入职日期" id="rtime" style="width: 210px;">
+							</el-date-picker>
+						</el-form-item>
+						<el-button type="text" @click="queryBanzuList(1,3)" prop="depname" >
+								<el-form-item label="员工部门" prop="depname">
+								<el-input v-model="formLabelAlign.department.depname" placeholder="请选择"></el-input>
+								</el-form-item>
+							</el-button>
+						<el-button type="text" @click="queryStarList(1,3)" prop="bzname" >
+								<el-form-item label="员工职位" prop="rname">
+								<el-input v-model="formLabelAlign.role.rname" placeholder="请选择"></el-input>
+								</el-form-item>
+							</el-button>
+					</el-form>
+				</div>
+				<span slot="footer" class="dialog-footer" style="position: relative;left: -400px;">
+   				 <el-button @click="update = false">取 消</el-button>
+   				 <el-button type="primary" @click="updates">保存</el-button>
+  				</span>
+			</el-dialog>
 
 
 
@@ -209,8 +254,7 @@
 
 
 
-
-	<el-dialog title="职工信息修改" :visible.sync="modify" width="50%" :before-close="handleClose">
+	<!--<el-dialog title="职工信息修改" :visible.sync="modify" width="65%" :before-close="handleClose">
 				<span style="position: relative;left: -63px;">员工编号：</span><el-input type="text" style="width: 200px;margin-left: -60px;" placeholder="" id="uid" maxlength="20" v-model="formLabelAlign.user.uid"/>&nbsp;&nbsp;&nbsp;
    	员工姓名：<el-input type="text" style="width: 200px;" placeholder="" id="name" maxlength="20" v-model="formLabelAlign.user.username" />&nbsp;&nbsp;&nbsp;
 	员工性别：
@@ -238,36 +282,13 @@
 								</el-button>
           </el-select>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 
 		<br /><br />
-		<!--联系方式：
-		<el-input type="text" style="width: 200px;" placeholder=""  maxlength="20" v-model="formLabelAlign.phone" />&nbsp;&nbsp;&nbsp; 
-		邮箱地址：
-		<el-input type="text" style="width: 200px;" placeholder="" id="address" maxlength="20" v-model="formLabelAlign.email" />&nbsp;&nbsp;&nbsp; -->
-			<!--<el-button type="primary" @click="addAddress">添加明细</el-button>
-		<table class="table table-bordered table-hover">
-									<thead>
-										<tr style="background-color:#EBEBEB">
-											<th>序号</th>
-											<th>电子邮箱</th>
-											<th>联系方式</th>
-											<th>操作</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr v-for="(temp,index) in formLabelAlign.txl">
-											<td>{{index+1}}</td>
-											<td><input v-model="temp.phone" type="text" /></td>
-											<td><input v-model="temp.email" type="text" /></td>
-											<td><span @click="removeAddress(index)" class="glyphicon glyphicon-remove"></span></td>
-										</tr>
-									</tbody>
-								</table>-->
 		<br />
 		<br />
 		<span slot="footer" class="dialog-footer" style="position: relative;left: -400px;">
    				 <el-button @click="update = false">取 消</el-button>
    				 <el-button type="primary" @click="updates">保存</el-button>
   				</span>
-			</el-dialog>
+			</el-dialog>-->
 
 </div>
 	</body>
