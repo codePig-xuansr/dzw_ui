@@ -403,9 +403,7 @@
 				dqdate:'',
 				ruls4:{
 					yuanyin:[{required: true, message:'请填写误工原因', trigger: 'blur'}],
-					chufa:[{required: true, message:'请填写处罚金额', trigger: 'blur'}],
-					checkperson:[{required: true, message:'请填写负责人员姓名', trigger: 'blur'}]
-				},
+					chufa:[{required: true, message:'请填写处罚金额', trigger: 'blur'}],				},
 			},
 			methods:{
 				xq(recordid){
@@ -550,6 +548,7 @@
 				//竣工检查
 				comjg(){
 					let _this=this;
+					_this.jgrecord={};
 					this.$refs['jgrecord'].validate((valid)=>{
 						if(valid){
 							this.$confirm('确认竣工？', '警告', {
@@ -597,7 +596,7 @@
 															
 											}
 										})
-									
+										
 								}else if(this.hg=='2'){
 										let _this=this;
 										let status= this.fzxweixiuadd.status=this.hg;
