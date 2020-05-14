@@ -380,7 +380,9 @@
 					}
 
 					if(this.jsrecord.jstype == 3) {
-						_this.getPayImg(_this.jsrecord.recordid, _this.jsrecord.jsmoney);
+						alert("进入支付宝支付");
+						location.href=`http://127.0.0.1:8080/zkx/Pay/alipay/${_this.jsmoney}/${_this.pageInfo.list[0].recordid}`;
+						
 					} else {
 						_this.pay();
 					}
@@ -401,11 +403,11 @@
 									message: '订单支付成功',
 									type: 'success'
 								});
-								if(_this.jsrecord.jstype==3){
-									$.getJSON(`http://127.0.0.1:8080/zkx/api/pay/getResult/${smid}/${_this.prices[0].sum}`,function(html){
+								/*if(_this.jsrecord.jstype==3){
+									$.getJSON(`http://127.0.0.1:8080/zkx/api/pay/getResult/${ddNo}/${_this.prices[0].sum}`,function(html){
 										console.info(html);
 									});
-								}
+								}*/
 								_this.alipay = false;
 								_this.isShow4 = false;
 								_this.jsrecord = {
