@@ -548,7 +548,9 @@
 				//竣工检查
 				comjg(){
 					let _this=this;
-					_this.jgrecord={};
+					_this.jgrecord.yuanyin=null;
+					_this.jgrecord.chufa=null;
+					_this.jgrecord.checkperson=null;
 					this.$refs['jgrecord'].validate((valid)=>{
 						if(valid){
 							this.$confirm('确认竣工？', '警告', {
